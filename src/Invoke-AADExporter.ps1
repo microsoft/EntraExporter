@@ -1,6 +1,6 @@
 <# 
  .Synopsis
-  Produces the Azure AD Configuration reports required by the Azure AD assesment
+  Exports the Azure AD Configuration and settings for a tenant
  .Description
   This cmdlet reads the configuration information from the target Azure AD Tenant and produces the output files 
   in a target directory
@@ -9,7 +9,7 @@
     Full path of the directory where the output files will be generated.
 
 .EXAMPLE
-   .\Get-AADAssessmentReports -OutputDirectory "c:\temp\contoso" 
+   .\Invoke-AADExporter -Path "c:\temp\contoso" 
 
 #>
 
@@ -20,6 +20,8 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true)]
         [String]$Path
     )
+
+    $global:TenantID = (Get-MgContext).TenantId
 
     $itemsToExport = @{
 
