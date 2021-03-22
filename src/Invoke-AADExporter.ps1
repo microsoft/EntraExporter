@@ -24,17 +24,17 @@ Function Invoke-AADExporter {
     $global:TenantID = (Get-MgContext).TenantId
 
     $itemsToExport = @{
-
         "Get-AADExportOrganization"         = "Organization.json"
         "Get-AADExportSubscribedSkus"       = "SubscribedSkus.json"
         "Get-AADExportOrganizationBranding"     = "OrganizationBranding.json"
-        "Get-AADExportConditionalAccessPolicies"     = "ConditionalAccessPolicies.json"
-        "Get-AADExportUserFlows"                     = "UserFlows.json"
+        "Get-AADExportConditionalAccessPolicies"     = "Identity/Conditional/AccessPolicies.json"
+        #"Get-AADExportUserFlows"                     = "Identity/UserFlows.json" ## 0817c655-a853-4d8f-9723-3a333b5b9235' is not an Azure AD B2C directory. Access to this Api can only be made for an Azure AD B2C directory.
         "Get-AADExportDomains"              = "Domains.json"
         "Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy" = "Policies/IdentitySecurityDefaultsEnforcementPolicy.json"
         "Get-AADExportPoliciesAuthorizationPolicy" = "Policies/AuthorizationPolicy.json"
         "Get-AADExportIdentityProviders" = "IdentityProviders.json"
         "Get-AADExportCertificateBasedAuthConfiguration" ="Policies/CertificateBasedAuthConfiguration.json"
+        "Get-AADExportOrganizationSettings" = "Organization/Settings.json"
     }
 
     $totalExports = $itemsToExport.Count
@@ -42,9 +42,10 @@ Function Invoke-AADExporter {
 
     foreach ($item in $itemsToExport.GetEnumerator()) {
         $functionName = $item.Name
-        $outputFileName = Join-Path -Path $Path -ChildPath $item.Value
+        $filePath = $item.Value
+        $outputFileName = Join-Path -Path $Path -ChildPath $filePath
         $percentComplete = 100 * $processedItems / $totalExports
-        Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $functionName" -PercentComplete $percentComplete
+        Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $filePath" -PercentComplete $percentComplete
 
         Invoke-Expression -Command $functionName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
 

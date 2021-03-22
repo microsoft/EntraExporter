@@ -4,7 +4,7 @@
 
  .Description
   GET /identity/conditionalAccess/policies
-  https://docs.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy?view=graph-rest-beta
+  https://docs.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy
 
  .Example
   Get-AADExportConditionalAccessPolicies

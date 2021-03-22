@@ -77,6 +77,7 @@
         'Get-AADExportPoliciesAuthorizationPolicy.ps1'
         'Get-AADExportIdentityProviders.ps1'
         'Get-AADExportCertificateBasedAuthConfiguration.ps1'
+        'Get-AADExportOrganizationSettings.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -93,6 +94,7 @@
         'Get-AADExportPoliciesAuthorizationPolicy'
         'Get-AADExportIdentityProviders'
         'Get-AADExportCertificateBasedAuthConfiguration'
+        'Get-AADExportOrganizationSettings'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
