@@ -61,13 +61,17 @@
     
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules = @(
-        '.\internal\Invoke-Graph.ps1'
-        '.\Invoke-AADExporter.ps1'
+        'internal\Invoke-Graph.ps1'
+        'Get-AADExportOrganization.ps1'
+        'Connect-AADExporter.ps1'
+        'Invoke-AADExporter.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
         'Connect-AADExporter'
+        'Get-AADExportOrganization'
+        'Invoke-AADExporter'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

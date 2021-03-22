@@ -23,5 +23,5 @@ function Invoke-Graph{
     else {
         return Invoke-GraphRequest -Uri $uri -Body $body -Method $method
     }
-    
+
 }
