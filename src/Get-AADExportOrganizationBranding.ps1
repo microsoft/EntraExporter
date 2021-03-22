@@ -11,5 +11,5 @@
 #>
 
 Function Get-AADExportOrganizationBranding {
-  Invoke-Graph "/organization/$($TenantID)/branding/localizations"
+  Invoke-Graph "organization/$($TenantID)/branding/localizations"
 }
