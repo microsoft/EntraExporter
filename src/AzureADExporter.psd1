@@ -70,6 +70,7 @@
         'Get-AADExportOrganization.ps1'
         'Get-AADExportSubscribedSkus.ps1'
         'Get-AADExportOrganizationBranding.ps1'
+        'Get-AADExportDomains.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -79,6 +80,7 @@
         'Get-AADExportOrganization'
         'Get-AADExportSubscribedSkus'
         'Get-AADExportOrganizationBranding'
+        'Get-AADExportDomains'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
