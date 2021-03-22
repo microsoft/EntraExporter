@@ -22,7 +22,8 @@ Function Invoke-AADExporter {
     )
 
     $itemsToExport = @{
-        "Get-AADExportOrganization"     = "organization.json"
+        "Get-AADExportOrganization"         = "Organization.json"
+        "Get-AADExportSubscribedSkus"       = "SubscribedSkus.json"
     }
 
     $totalExports = $itemsToExport.Count
@@ -34,11 +35,8 @@ Function Invoke-AADExporter {
         $percentComplete = 100 * $processedItems / $totalExports
         Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $functionName" -PercentComplete $percentComplete
 
-        Write-Host "exporting " $functionName
         Invoke-Expression -Command $functionName | ConvertTo-Json -depth 100 | Out-File $outputFileName
 
         $processedItems++
     }
-
-    $percentComplete = 100 * $processedItems / $totalExports            
 }

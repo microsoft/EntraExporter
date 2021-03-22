@@ -62,16 +62,21 @@
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules = @(
         'internal\Invoke-Graph.ps1'
-        'Get-AADExportOrganization.ps1'
+        'internal\Get-ObjectProperty.ps1'
+        'internal\ConvertFrom-QueryString.ps1'
+        'internal\ConvertTo-QueryString.ps1'        
         'Connect-AADExporter.ps1'
         'Invoke-AADExporter.ps1'
+        'Get-AADExportOrganization.ps1'
+        'Get-AADExportSubscribedSkus.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
         'Connect-AADExporter'
-        'Get-AADExportOrganization'
         'Invoke-AADExporter'
+        'Get-AADExportOrganization'
+        'Get-AADExportSubscribedSkus'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

@@ -10,6 +10,6 @@
   Get-AADExportOrganization
 #>
 
-Function Get-AADExportOrganization {
-  Invoke-Graph 'organization'
+Function Get-AADExportSubscribedSkus {
+  Invoke-Graph 'subscribedSkus'
 }
