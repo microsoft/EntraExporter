@@ -35,6 +35,8 @@ Function Invoke-AADExporter {
         "Get-AADExportIdentityProviders" = "IdentityProviders.json"
         "Get-AADExportCertificateBasedAuthConfiguration" ="Policies/CertificateBasedAuthConfiguration.json"
         "Get-AADExportOrganizationSettings" = "Organization/Settings.json"
+        "Get-AADExportPoliciesAdminConsentRequestPolicy" = "Policies/AdminConsentRequestPolicy.json"
+        "Get-AADExportIdentityGovernanceEntitlementManagementSettings" = "/IdentityGovernance/EntitlementManagement/Settings.json"
     }
 
     $totalExports = $itemsToExport.Count
