@@ -40,6 +40,8 @@ Function Invoke-AADExporter {
         "Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator" = "AuthenticationMethodPolicy/MicrosoftAuthenticator.json"
         "Get-AADExportAuthenticationMethodPolicySMS" = "AuthenticationMethodPolicy/SMS.json"
         "Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass" = "AuthenticationMethodPolicy/TemporaryAccessPass.json"
+        "Get-AADExportPoliciesAdminConsentRequestPolicy" = "Policies/AdminConsentRequestPolicy.json"
+        "Get-AADExportIdentityGovernanceEntitlementManagementSettings" = "/IdentityGovernance/EntitlementManagement/Settings.json"
     }
 
     $totalExports = $itemsToExport.Count

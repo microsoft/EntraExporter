@@ -83,6 +83,8 @@
         'Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator.ps1'
         'Get-AADExportAuthenticationMethodPolicySMS.ps1'
         'Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass.ps1'
+        'Get-AADExportPoliciesAdminConsentRequestPolicy.ps1'
+        'Get-AADExportIdentityGovernanceEntitlementManagementSettings.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -105,6 +107,8 @@
         'Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator'
         'Get-AADExportAuthenticationMethodPolicySMS'
         'Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass'
+        'Get-AADExportPoliciesAdminConsentRequestPolicy'
+        'Get-AADExportIdentityGovernanceEntitlementManagementSettings'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
