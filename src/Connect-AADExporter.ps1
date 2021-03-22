@@ -17,7 +17,7 @@ function Connect-AADExporter {
         [Parameter(Mandatory = $false)]
         [string] $TenantId = 'common'
     )    
-    Connect-MgGraph -Scopes 'Directory.Read.All' -TenantId $TenantId
+    Connect-MgGraph -Scopes 'Directory.Read.All', 'Policy.Read.All' -TenantId $TenantId
     Get-MgContext
     $global:TenantID = (Get-MgContext).TenantId
 }
