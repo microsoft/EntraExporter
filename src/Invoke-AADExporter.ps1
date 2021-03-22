@@ -36,6 +36,30 @@ Function Invoke-AADExporter {
                     @{
                         "Command" = "Get-AADExportAuthenticationMethodFIDO2"
                         "Path" = "Authentication/FIDO2Methods"
+                    },
+                    @{
+                        "Command" = "Get-AADExportAuthenticationMethodMicrosoftAuthenticator"
+                        "Path" = "Authentication/MicrosoftAuthenticatorMethods"
+                    },
+                    @{
+                        "Command" = "Get-AADExportAuthenticationMethodWindowsHelloForBusiness"
+                        "Path" = "Authentication/WindowsHelloForBusinessMethods"
+                    },
+                    @{
+                        "Command" = "Get-AADExportAuthenticationMethodTemporaryAccessPass"
+                        "Path" = "Authentication/TemporaryAccessPassMethods"
+                    },
+                    @{
+                        "Command" = "Get-AADExportAuthenticationMethodPhone"
+                        "Path" = "Authentication/PhoneMethods"
+                    },
+                    @{
+                        "Command" = "Get-AADExportAuthenticationMethodEmail"
+                        "Path" = "Authentication/EmailMethods"
+                    },
+                    @{
+                        "Command" = "Get-AADExportAuthenticationMethodPassword"
+                        "Path" = "Authentication/PasswordMethods"
                     }
                 )
             },

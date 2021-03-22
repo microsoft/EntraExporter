@@ -87,6 +87,12 @@
         'Get-AADExportIdentityGovernanceEntitlementManagementSettings.ps1'
         'Get-AADExportUsers.ps1'
         'Get-AADExportAuthenticationMethodFIDO2.ps1'
+        'Get-AADExportAuthenticationMethodMicrosoftAuthenticator.ps1'
+        'Get-AADExportAuthenticationMethodWindowsHelloForBusiness.ps1'
+        'Get-AADExportAuthenticationMethodTemporaryAccessPass.ps1'
+        'Get-AADExportAuthenticationMethodPhone.ps1'
+        'Get-AADExportAuthenticationMethodEmail.ps1'
+        'Get-AADExportAuthenticationMethodPassword.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -113,6 +119,12 @@
         'Get-AADExportIdentityGovernanceEntitlementManagementSettings'
         'Get-AADExportUsers'
         'Get-AADExportAuthenticationMethodFIDO2'
+        'Get-AADExportAuthenticationMethodMicrosoftAuthenticator'
+        'Get-AADExportAuthenticationMethodWindowsHelloForBusiness'
+        'Get-AADExportAuthenticationMethodTemporaryAccessPass'
+        'Get-AADExportAuthenticationMethodPhone'
+        'Get-AADExportAuthenticationMethodEmail'
+        'Get-AADExportAuthenticationMethodPassword'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
