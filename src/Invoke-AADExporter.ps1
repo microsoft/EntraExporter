@@ -27,11 +27,14 @@ Function Invoke-AADExporter {
 
         "Get-AADExportOrganization"         = "Organization.json"
         "Get-AADExportSubscribedSkus"       = "SubscribedSkus.json"
-        "Get-AADExportOrganizationBranding" = "OrganizationBranding.json"
+        "Get-AADExportOrganizationBranding"     = "OrganizationBranding.json"
+        "Get-AADExportConditionalAccessPolicies"     = "ConditionalAccessPolicies.json"
+        "Get-AADExportUserFlows"                     = "UserFlows.json"
         "Get-AADExportDomains"              = "Domains.json"
         "Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy" = "Policies/IdentitySecurityDefaultsEnforcementPolicy.json"
         "Get-AADExportPoliciesAuthorizationPolicy" = "Policies/AuthorizationPolicy.json"
         "Get-AADExportIdentityProviders" = "IdentityProviders.json"
+        "Get-AADExportCertificateBasedAuthConfiguration" ="Policies/CertificateBasedAuthConfiguration.json"
     }
 
     $totalExports = $itemsToExport.Count

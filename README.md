@@ -4,6 +4,12 @@ The Azure AD Exporter is a PowerShell module that allows you to export your Azur
 You can run this as a nightly scheduled task or a DevOps component (Azure DevOps, GitHub, Jenkins) and commit the exported files to an internal GIT repository.
 This way you can have a complete version history of your tenant settings.
 
+##  Development Environment Setup
+Use the following command to Test the Program on your development environment
+```powershell
+    Import-Module AzureADExporter.psd1
+```
+
 ## Installing the module
 ```powershell
     Install-Module AzureADExporter

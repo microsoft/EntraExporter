@@ -1,10 +1,10 @@
 <# 
  .Synopsis
-  Get the properties and relationships of the currently authenticated organization. 
+  Get the tenant Branding
+  #to do : some of the binary properties are missing
 
  .Description
-  GET /organization
-  https://docs.microsoft.com/en-us/graph/api/organization-get
+  https://docs.microsoft.com/en-us/graph/api/resources/organizationalbrandingproperties?view=graph-rest-1.0
 
  .Example
   Get-AADExportOrganizationBranding
