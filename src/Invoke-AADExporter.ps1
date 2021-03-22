@@ -35,13 +35,14 @@ Function Invoke-AADExporter {
         "Get-AADExportIdentityProviders" = "IdentityProviders.json"
         "Get-AADExportCertificateBasedAuthConfiguration" ="Policies/CertificateBasedAuthConfiguration.json"
         "Get-AADExportOrganizationSettings" = "Organization/Settings.json"
-        "Get-AADExportAuthenticationMethodPolicyEmail" = "AuthenticationMethodPolicy/Email.json"
-        "Get-AADExportAuthenticationMethodPolicyFIDO2" = "AuthenticationMethodPolicy/FIDO2.json"
-        "Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator" = "AuthenticationMethodPolicy/MicrosoftAuthenticator.json"
-        "Get-AADExportAuthenticationMethodPolicySMS" = "AuthenticationMethodPolicy/SMS.json"
-        "Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass" = "AuthenticationMethodPolicy/TemporaryAccessPass.json"
+        "Get-AADExportAuthenticationMethodPolicyEmail" = "Policies/AuthenticationMethod/Email.json"
+        "Get-AADExportAuthenticationMethodPolicyFIDO2" = "Policies/AuthenticationMethod/FIDO2.json"
+        "Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator" = "Policies/AuthenticationMethod/MicrosoftAuthenticator.json"
+        "Get-AADExportAuthenticationMethodPolicySMS" = "Policies/AuthenticationMethod/SMS.json"
+        "Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass" = "Policies/AuthenticationMethod/TemporaryAccessPass.json"
         "Get-AADExportPoliciesAdminConsentRequestPolicy" = "Policies/AdminConsentRequestPolicy.json"
-        "Get-AADExportIdentityGovernanceEntitlementManagementSettings" = "/IdentityGovernance/EntitlementManagement/Settings.json"
+        "Get-AADExportIdentityGovernanceEntitlementManagementSettings" = "IdentityGovernance/EntitlementManagement/Settings.json"
+        "Get-AADExportUsers" = "Users"
     }
 
     $totalExports = $itemsToExport.Count
