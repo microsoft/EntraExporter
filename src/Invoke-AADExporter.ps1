@@ -35,6 +35,11 @@ Function Invoke-AADExporter {
         "Get-AADExportIdentityProviders" = "IdentityProviders.json"
         "Get-AADExportCertificateBasedAuthConfiguration" ="Policies/CertificateBasedAuthConfiguration.json"
         "Get-AADExportOrganizationSettings" = "Organization/Settings.json"
+        "Get-AADExportAuthenticationMethodPolicyEmail" = "AuthenticationMethodPolicy/Email.json"
+        "Get-AADExportAuthenticationMethodPolicyFIDO2" = "AuthenticationMethodPolicy/FIDO2.json"
+        "Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator" = "AuthenticationMethodPolicy/MicrosoftAuthenticator.json"
+        "Get-AADExportAuthenticationMethodPolicySMS" = "AuthenticationMethodPolicy/SMS.json"
+        "Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass" = "AuthenticationMethodPolicy/TemporaryAccessPass.json"
     }
 
     $totalExports = $itemsToExport.Count
@@ -47,7 +52,15 @@ Function Invoke-AADExporter {
         $percentComplete = 100 * $processedItems / $totalExports
         Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $filePath" -PercentComplete $percentComplete
 
-        Invoke-Expression -Command $functionName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        if ($outputFileName -match "\.json$") {
+            Invoke-Expression -Command $functionName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        } else {
+            $items = Invoke-Expression -Command $functionName
+            foreach($item in $items) {
+                $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath "$($item.id).json"
+                $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $itemOutputFileName -Force)
+            }
+        }
 
         $processedItems++
     }
