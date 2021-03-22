@@ -86,6 +86,7 @@
         'Get-AADExportPoliciesAdminConsentRequestPolicy.ps1'
         'Get-AADExportIdentityGovernanceEntitlementManagementSettings.ps1'
         'Get-AADExportUsers.ps1'
+        'Get-AADExportAuthenticationMethodFIDO2.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -111,6 +112,7 @@
         'Get-AADExportPoliciesAdminConsentRequestPolicy'
         'Get-AADExportIdentityGovernanceEntitlementManagementSettings'
         'Get-AADExportUsers'
+        'Get-AADExportAuthenticationMethodFIDO2'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

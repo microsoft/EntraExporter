@@ -20,7 +20,9 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true)]
         [String]$Path,
         [Parameter(Mandatory = $false)]
-        [object]$ExportSchema
+        [object]$ExportSchema,
+        [Parameter(Mandatory = $false)]
+        [string[]]$Parents
     )
 
     $global:TenantID = (Get-MgContext).TenantId
@@ -32,7 +34,7 @@ Function Invoke-AADExporter {
                 "Path" = "Users"
                 "Childrens" = @(
                     @{
-                        "Command" = "Get-AADExportUserAuthenticationMethodFIDO2"
+                        "Command" = "Get-AADExportAuthenticationMethodFIDO2"
                         "Path" = "Authentication/FIDO2Methods"
                     }
                 )
@@ -123,15 +125,31 @@ Function Invoke-AADExporter {
         $percentComplete = 100 * $processedItems / $totalExports
         Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $($item.Path)" -PercentComplete $percentComplete
 
-        if ($outputFileName -match "\.json$") {
-            Invoke-Expression -Command $item.Command | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
-        } else {
-            $resultItems = Invoke-Expression -Command $item.Command
-            foreach($resultItem in $resultItems) {
-                $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath "$($resultItem.id).json"
-                $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $itemOutputFileName -Force)
+        $command = $item.Command
+        if ($Parents){
+            if ($Parents.Count -gt 0) {
+                $command += " -Parents $Parents"
             }
         }
+
+        if ($outputFileName -match "\.json$") {
+            Invoke-Expression -Command $command | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        } else {
+            $resultItems = Invoke-Expression -Command $command
+            foreach($resultItem in $resultItems) {
+                if (!$resultItem.ContainsKey('id')) {
+                    continue
+                }
+                $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath $resultItem.id
+                $resultItem | ConvertTo-Json -depth 100 | Out-File (New-Item -Path "$($itemOutputFileName).json" -Force)
+                if ($item.ContainsKey("Childrens")) {
+                    $itemParents = $Parents
+                    $itemParents += $resultItem.Id
+                    Invoke-AADExporter -Path $itemOutputFileName -ExportSchema $item.Childrens -Parents $itemParents
+                }
+            }
+        }
+
         $processedItems++
     }
 }
