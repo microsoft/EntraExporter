@@ -30,6 +30,9 @@ Function Invoke-AADExporter {
         "Get-AADExportOrganizationBranding"     = "OrganizationBranding.json"
         "Get-AADExportConditionalAccessPolicies"     = "ConditionalAccessPolicies.json"
         "Get-AADExportUserFlows"                     = "UserFlows.json"
+        "Get-AADExportDomains"              = "Domains.json"
+        "Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy" = "Policies/IdentitySecurityDefaultsEnforcementPolicy.json"
+        "Get-AADExportPoliciesAuthorizationPolicy" = "Policies/AuthorizationPolicy.json"
     }
 
     $totalExports = $itemsToExport.Count
@@ -41,7 +44,7 @@ Function Invoke-AADExporter {
         $percentComplete = 100 * $processedItems / $totalExports
         Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $functionName" -PercentComplete $percentComplete
 
-        Invoke-Expression -Command $functionName | ConvertTo-Json -depth 100 | Out-File $outputFileName
+        Invoke-Expression -Command $functionName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
 
         $processedItems++
     }

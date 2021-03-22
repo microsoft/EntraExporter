@@ -72,6 +72,9 @@
         'Get-AADExportOrganizationBranding.ps1'
         'Get-AADExportConditionalAccessPolicies.ps1'
         'Get-AADExportUserFlows.ps1'
+        'Get-AADExportDomains.ps1'
+        'Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy.ps1'
+        'Get-AADExportPoliciesAuthorizationPolicy.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -83,6 +86,9 @@
         'Get-AADExportOrganizationBranding'
         'Get-AADExportConditionalAccessPolicies.ps1'
         'Get-AADExportUserFlows.ps1'
+        'Get-AADExportDomains'
+        'Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy'
+        'Get-AADExportPoliciesAuthorizationPolicy'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
