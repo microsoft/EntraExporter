@@ -28,6 +28,8 @@ Function Invoke-AADExporter {
         "Get-AADExportOrganization"         = "Organization.json"
         "Get-AADExportSubscribedSkus"       = "SubscribedSkus.json"
         "Get-AADExportOrganizationBranding"     = "OrganizationBranding.json"
+        "Get-AADExportConditionalAccessPolicies"     = "ConditionalAccessPolicies.json"
+        "Get-AADExportUserFlows"                     = "UserFlows.json"
     }
 
     $totalExports = $itemsToExport.Count
