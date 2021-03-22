@@ -1,3 +1,4 @@
+$global:TenantID = $null
 <#
 .SYNOPSIS
     Connect the Azure AD Exporter module to Azure AD tenant.
@@ -18,4 +19,5 @@ function Connect-AADExporter {
     )    
     Connect-MgGraph -Scopes 'Directory.Read.All' -TenantId $TenantId
     Get-MgContext
+    $global:TenantID = (Get-MgContext).TenantId
 }
