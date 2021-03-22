@@ -1,6 +1,6 @@
 <# 
  .Synopsis
-  Get the properties and relationships of the currently authenticated organization. 
+  Get certificateBasedAuthConfiguration of the tenant
 
  .Description
   GET /organization
