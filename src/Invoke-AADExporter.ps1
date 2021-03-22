@@ -18,53 +18,120 @@ Function Invoke-AADExporter {
     param
     (
         [Parameter(Mandatory = $true)]
-        [String]$Path
+        [String]$Path,
+        [Parameter(Mandatory = $false)]
+        [object]$ExportSchema
     )
 
     $global:TenantID = (Get-MgContext).TenantId
 
-    $itemsToExport = @{
-        "Get-AADExportOrganization"         = "Organization.json"
-        "Get-AADExportSubscribedSkus"       = "SubscribedSkus.json"
-        "Get-AADExportOrganizationBranding"     = "OrganizationBranding.json"
-        "Get-AADExportConditionalAccessPolicies"     = "Identity/Conditional/AccessPolicies.json"
-        #"Get-AADExportUserFlows"                     = "Identity/UserFlows.json" ## 0817c655-a853-4d8f-9723-3a333b5b9235' is not an Azure AD B2C directory. Access to this Api can only be made for an Azure AD B2C directory.
-        "Get-AADExportDomains"              = "Domains.json"
-        "Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy" = "Policies/IdentitySecurityDefaultsEnforcementPolicy.json"
-        "Get-AADExportPoliciesAuthorizationPolicy" = "Policies/AuthorizationPolicy.json"
-        "Get-AADExportIdentityProviders" = "IdentityProviders.json"
-        "Get-AADExportCertificateBasedAuthConfiguration" ="Policies/CertificateBasedAuthConfiguration.json"
-        "Get-AADExportOrganizationSettings" = "Organization/Settings.json"
-        "Get-AADExportAuthenticationMethodPolicyEmail" = "Policies/AuthenticationMethod/Email.json"
-        "Get-AADExportAuthenticationMethodPolicyFIDO2" = "Policies/AuthenticationMethod/FIDO2.json"
-        "Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator" = "Policies/AuthenticationMethod/MicrosoftAuthenticator.json"
-        "Get-AADExportAuthenticationMethodPolicySMS" = "Policies/AuthenticationMethod/SMS.json"
-        "Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass" = "Policies/AuthenticationMethod/TemporaryAccessPass.json"
-        "Get-AADExportPoliciesAdminConsentRequestPolicy" = "Policies/AdminConsentRequestPolicy.json"
-        "Get-AADExportIdentityGovernanceEntitlementManagementSettings" = "IdentityGovernance/EntitlementManagement/Settings.json"
-        "Get-AADExportUsers" = "Users"
+    if (!$ExportSchema) {
+        $ExportSchema = @(
+            @{
+                "Command" = "Get-AADExportUsers"
+                "Path" = "Users"
+                "Childrens" = @(
+                    @{
+                        "Command" = "Get-AADExportUserAuthenticationMethodFIDO2"
+                        "Path" = "Authentication/FIDO2Methods"
+                    }
+                )
+            },
+            @{
+                "Command" = "Get-AADExportOrganization" 
+                "Path" = "Organization.json"
+            },
+            @{
+                "Command" = "Get-AADExportSubscribedSkus"
+                "Path" = "SubscribedSkus.json"
+            },
+            @{
+                "Command" = "Get-AADExportOrganizationBranding"
+                "Path" = "OrganizationBranding.json"
+            },
+            @{
+                "Command" = "Get-AADExportConditionalAccessPolicies" 
+                "Path" =  "Identity/Conditional/AccessPolicies.json"
+            },
+            #@{ ## 0817c655-a853-4d8f-9723-3a333b5b9235' is not an Azure AD B2C directory. Access to this Api can only be made for an Azure AD B2C directory.
+            #    "Command" = "Get-AADExportUserFlows"
+            #    "Path" = "Identity/UserFlows.json"
+            #},
+            @{
+                "Command" = "Get-AADExportDomains"
+                "Path" = "Domains.json"
+            },
+            @{
+                "Command" = "Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy"
+                "Path" =  "Policies/IdentitySecurityDefaultsEnforcementPolicy.json"
+            },
+            @{
+                "Command" = "Get-AADExportPoliciesAuthorizationPolicy"
+                "Path" = "Policies/AuthorizationPolicy.json"
+            },
+            @{
+                "Command" = "Get-AADExportIdentityProviders"
+                "Path" = "IdentityProviders.json"
+            },
+            @{
+                "Command" = "Get-AADExportCertificateBasedAuthConfiguration"
+                "Path" = "Policies/CertificateBasedAuthConfiguration.json"
+            },
+            @{
+                "Command" = "Get-AADExportCertificateBasedAuthConfiguration"
+                "Path" = "Policies/CertificateBasedAuthConfiguration.json"
+            },
+            @{
+                "Command" = "Get-AADExportOrganizationSettings"
+                "Path" = "Organization/Settings.json"
+            },
+            @{
+                "Command" = "Get-AADExportAuthenticationMethodPolicyEmail"
+                "Path" = "Policies/AuthenticationMethod/Email.json"
+            },
+            @{
+                "Command" = "Get-AADExportAuthenticationMethodPolicyFIDO2"
+                "Path" = "Policies/AuthenticationMethod/FIDO2.json"
+            },
+            @{
+                "Command" = "Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator"
+                "Path" = "Policies/AuthenticationMethod/MicrosoftAuthenticator.json"
+            },
+            @{
+                "Command" = "Get-AADExportAuthenticationMethodPolicySMS"
+                "Path" = "Policies/AuthenticationMethod/SMS.json"
+            },
+            @{
+                "Command" =  "Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass"
+                "Path" = "Policies/AuthenticationMethod/TemporaryAccessPass.json"
+            },
+            @{
+                "Command" = "Get-AADExportPoliciesAdminConsentRequestPolicy"
+                "Path" = "Policies/AdminConsentRequestPolicy.json"
+            },
+            @{
+                "Command" = "Get-AADExportIdentityGovernanceEntitlementManagementSettings"
+                "Path" = "IdentityGovernance/EntitlementManagement/Settings.json"
+            }
+        )
     }
-
-    $totalExports = $itemsToExport.Count
+    $totalExports = $ExportSchema.Count
     $processedItems = 0
 
-    foreach ($item in $itemsToExport.GetEnumerator()) {
-        $functionName = $item.Name
-        $filePath = $item.Value
-        $outputFileName = Join-Path -Path $Path -ChildPath $filePath
+    foreach ($item in $ExportSchema) {
+        $outputFileName = Join-Path -Path $Path -ChildPath $item.Path
         $percentComplete = 100 * $processedItems / $totalExports
-        Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $filePath" -PercentComplete $percentComplete
+        Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $($item.Path)" -PercentComplete $percentComplete
 
         if ($outputFileName -match "\.json$") {
-            Invoke-Expression -Command $functionName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+            Invoke-Expression -Command $item.Command | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
         } else {
-            $items = Invoke-Expression -Command $functionName
-            foreach($item in $items) {
-                $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath "$($item.id).json"
+            $resultItems = Invoke-Expression -Command $item.Command
+            foreach($resultItem in $resultItems) {
+                $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath "$($resultItem.id).json"
                 $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $itemOutputFileName -Force)
             }
         }
-
         $processedItems++
     }
 }
