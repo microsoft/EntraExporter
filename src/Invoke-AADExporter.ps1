@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -36,6 +36,34 @@ Function Invoke-AADExporter {
 
     if (!$ExportSchema) {
         $ExportSchema = @(
+            @{
+                "Command" = "Get-AADExportApplications"
+                "Path" = "Applications"
+                "Tag" = @("All", "Applications")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "applications/{id}/extensionProperties"
+                        "Path" = "ExtensionProperties"
+                        "Tag" = @("All", "Applications")
+                    },
+                    @{
+                        "GraphUri" = "applications/{id}/owners"
+                        "Select" = "id, userPrincipalName, displayName"
+                        "Path" = "Owners"
+                        "Tag" = @("All", "Applications")
+                    },
+                    @{
+                        "GraphUri" = "applications/{id}/tokenIssuancePolicies"
+                        "Path" = "TokenIssuancePolicies"
+                        "Tag" = @("All", "Applications")
+                    },
+                    @{
+                        "GraphUri" = "applications/{id}/tokenLifetimePolicies"
+                        "Path" = "TokenLifetimePolicies"
+                        "Tag" = @("All", "Applications")
+                    }
+                )
+            },            
             @{
                 "Command" = "Get-AADExportUsers"
                 "Path" = "Users"
@@ -104,7 +132,7 @@ Function Invoke-AADExporter {
                 "Command" = "Get-AADExportGroupSettings"
                 "Path" = "GroupSettings.json"
                 "Tag" = @("All", "Config")
-            },
+            },        
             @{
                 "Command" = "Get-AADExportSubscribedSkus"
                 "Path" = "SubscribedSkus.json"
@@ -220,17 +248,29 @@ Function Invoke-AADExporter {
             Write-Host "Exporting $($item.Path)"
             #Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $($item.Path)" -PercentComplete $percentComplete
 
-            $command = $item.Command
-            if ($Parents){
-                if ($Parents.Count -gt 0) {
-                    $command += " -Parents $Parents"
+            $command = Get-ObjectProperty $item 'Command'
+            $graphUri = Get-ObjectProperty $item 'GraphUri'
+
+            if($command) {
+                if ($Parents){
+                    if ($Parents.Count -gt 0) {
+                        $command += " -Parents $Parents"
+                    }
                 }
+                $resultItems = Invoke-Expression -Command $command
+            }
+            else {
+                if ($Parents){
+                    if ($Parents.Count -gt 0) {
+                        $graphUri = $graphUri -replace '{id}', $Parents[0]
+                    }
+                }                
+                $resultItems = Invoke-Graph $graphUri -Select (Get-ObjectProperty $item 'Select')
             }
 
             if ($outputFileName -match "\.json$") {
-                Invoke-Expression -Command $command | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
-            } else {
-                $resultItems = Invoke-Expression -Command $command
+                $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+            } else {                
                 foreach($resultItem in $resultItems) {
                     if (!$resultItem.ContainsKey('id')) {
                         continue
