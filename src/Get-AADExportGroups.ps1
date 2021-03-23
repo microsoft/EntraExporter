@@ -12,9 +12,9 @@
 
 Function Get-AADExportGroups {
   if((Compare-Object $Type @('Config') -ExcludeDifferent)){
-    Invoke-Graph 'groups' -Filter "groupTypes/any(c:c eq 'DynamicMembership')"
+    Invoke-Graph 'groups' -Filter "groupTypes/any(c:c eq 'DynamicMembership')" -QueryParameters @{ expand = 'appRoleAssignments' }
   }
   else {
-    Invoke-Graph 'groups'
+    Invoke-Graph 'groups' -QueryParameters @{ expand = 'appRoleAssignments' }
   }
 }
