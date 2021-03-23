@@ -344,13 +344,23 @@ Function Invoke-AADExporter {
                         "Path" = "Members"
                         "Select" = "Id"
                         "Tag" = @("All", "Config")
-                    }
+                    },
                     @{
                         "GraphUri" = "directory/administrativeUnits/{id}/scopedRoleMembers"
                         "Path" = "ScopedRoleMembers"
                         "Tag" = @("All", "Config")
+                    },
+                    @{
+                        "GraphUri" = "directory/administrativeUnits/{id}/extensions"
+                        "Path" = "Extensions"
+                        "Tag" = @("All", "Config")
                     }
                 )
+            },
+            @{
+                "GraphUri" = "identity/continuousAccessEvaluationPolicy"
+                "Path" = "Identity/ContinuousAccessEvaluationPolicy"
+                "Tag" = @("All", "Config")
             }
         )
     }
