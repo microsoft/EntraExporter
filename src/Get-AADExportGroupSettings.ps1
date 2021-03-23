@@ -11,5 +11,5 @@
 #>
 
 Function Get-AADExportGroupSettings {
-  Invoke-Graph 'groupSettings'
+  Invoke-Graph 'groupSettings' -ApiVersion 'v1.0'
 }

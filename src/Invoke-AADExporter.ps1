@@ -100,11 +100,11 @@ Function Invoke-AADExporter {
                     }
                 )                
             },
-            # @{ #For some reason this is not available in /beta endpoint. Leaving here to see if it is just a bug
-            #     "Command" = "Get-AADExportGroupSettings"
-            #     "Path" = "GroupSettings.json"
-            #     "Tag" = @("All", "Config")
-            # },
+            @{
+                "Command" = "Get-AADExportGroupSettings"
+                "Path" = "GroupSettings.json"
+                "Tag" = @("All", "Config")
+            },
             @{
                 "Command" = "Get-AADExportSubscribedSkus"
                 "Path" = "SubscribedSkus.json"
