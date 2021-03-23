@@ -265,6 +265,11 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
+                "GraphUri" = "policies/featureRolloutPolicies"
+                "Path" = "Policies/FeatureRolloutPolicies"
+                "Tag" = @("All", "Config")
+            },
+            @{
                 "Command" = "Get-AADExportPoliciesActivityBasedTimeoutPolicy"
                 "Path" = "Policies/ActivityBasedTimeoutPolicy.json"
                 "Tag" = @("All", "Config")
