@@ -187,6 +187,24 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
+                "GraphUri" = "directoryRoles"
+                "Path" = "DirectoryRoles"
+                "Tag" = @("All", "Config")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "directoryRoles/{id}/members"
+                        "Select" = "id, userPrincipalName, displayName"
+                        "Path" = "Members"
+                        "Tag" = @("All", "Config")
+                    }
+                    @{
+                        "GraphUri" = "directoryroles/{id}/scopedMembers"
+                        "Path" = "ScopedMembers"
+                        "Tag" = @("All", "Config")
+                    }
+                )
+            },
+            @{
                 "Command" = "Get-AADExportOrganizationBranding"
                 "Path" = "OrganizationBranding.json"
                 "Tag" = @("All", "Config")
