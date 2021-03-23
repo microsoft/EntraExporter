@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -61,6 +61,54 @@ Function Invoke-AADExporter {
                         "GraphUri" = "applications/{id}/tokenLifetimePolicies"
                         "Path" = "TokenLifetimePolicies"
                         "Tag" = @("All", "Applications")
+                    }
+                )
+            },
+            @{
+                "GraphUri" = "servicePrincipals"
+                "Path" = "ServicePrincipals"
+                "Tag" = @("All", "ServicePrincipals")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/appRoleAssignments"
+                        "Path" = "AppRoleAssignments"
+                        "Tag" = @("All", "ServicePrincipals")
+                    },
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/oauth2PermissionGrants"
+                        "Path" = "Oauth2PermissionGrants"
+                        "Tag" = @("All", "ServicePrincipals")
+                    },
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/delegatedPermissionClassifications"
+                        "Path" = "DelegatedPermissionClassifications"
+                        "Tag" = @("All", "ServicePrincipals")
+                    },
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/owners"
+                        "Select" = "id, userPrincipalName, displayName"
+                        "Path" = "Owners"
+                        "Tag" = @("All", "ServicePrincipals")
+                    },
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/claimsMappingPolicies"
+                        "Path" = "claimsMappingPolicies"
+                        "Tag" = @("All", "ServicePrincipals")
+                    },
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/homeRealmDiscoveryPolicies"
+                        "Path" = "homeRealmDiscoveryPolicies"
+                        "Tag" = @("All", "ServicePrincipals")
+                    },
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/tokenIssuancePolicies"
+                        "Path" = "tokenIssuancePolicies"
+                        "Tag" = @("All", "ServicePrincipals")
+                    },
+                    @{
+                        "GraphUri" = "servicePrincipals/{id}/tokenLifetimePolicies"
+                        "Path" = "tokenLifetimePolicies"
+                        "Tag" = @("All", "ServicePrincipals")
                     }
                 )
             },            
