@@ -220,6 +220,11 @@ Function Invoke-AADExporter {
                 "Tag" = @("B2C")
             },
             @{
+                "Command" = "Get-AADExportUserFlowAttributes"
+                "Path" = "Identity/UserFlowAttributes.json"
+                "Tag" = @("B2C")
+            },
+            @{
                 "Command" = "Get-AADExportDomains"
                 "Path" = "Domains.json"
                 "Tag" = @("All", "Config")

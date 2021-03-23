@@ -4,7 +4,7 @@
 
  .Description
   GET /identity/userFlows
-  https://docs.microsoft.com/en-us/graph/api/identityuserflow
+  https://docs.microsoft.com/en-us/graph/api/identityuserflow-list?view=graph-rest-beta&tabs=http
 
  .Example
   Get-AADExportUserFlows
