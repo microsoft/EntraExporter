@@ -194,6 +194,16 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
+                "Command" = "Get-AADExportPoliciesTokenIssuancePolicy"
+                "Path" = "Policies/TokenIssuancePolicy.json"
+                "Tag" = @("All", "Config")
+            },
+            @{
+                "Command" = "Get-AADExportPoliciesTokenLifetimePolicy"
+                "Path" = "Policies/TokenLifetimePolicy.json"
+                "Tag" = @("All", "Config")
+            },
+            @{
                 "Command" = "Get-AADExportOrganizationSettings"
                 "Path" = "Organization/Settings.json"
                 "Tag" = @("All", "Config")
