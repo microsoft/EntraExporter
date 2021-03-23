@@ -161,6 +161,11 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
+                "Command" = "Get-AADExportPoliciesClaimsMappingPolicy"
+                "Path" = "Policies/ClaimsMappingPolicy.json"
+                "Tag" = @("All", "Config")
+            },
+            @{
                 "Command" = "Get-AADExportOrganizationSettings"
                 "Path" = "Organization/Settings.json"
                 "Tag" = @("All", "Config")
