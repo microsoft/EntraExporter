@@ -156,6 +156,11 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
+                "Command" = "Get-AADExportPoliciesHomeRealmDiscoveryPolicy"
+                "Path" = "Policies/HomeRealmDiscoveryPolicy.json"
+                "Tag" = @("All", "Config")
+            },
+            @{
                 "Command" = "Get-AADExportOrganizationSettings"
                 "Path" = "Organization/Settings.json"
                 "Tag" = @("All", "Config")
