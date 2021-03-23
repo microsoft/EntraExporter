@@ -94,6 +94,10 @@
         'Get-AADExportAuthenticationMethodEmail.ps1'
         'Get-AADExportAuthenticationMethodPassword.ps1'
         'Get-AADExportPoliciesActivityBasedTimeoutPolicy.ps1'
+        'Get-AADExportGroups.ps1'
+        'Get-AADExportGroupMembers.ps1'
+        'Get-AADExportGroupOwners.ps1'
+        'Get-AADExportGroupSettings.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -103,8 +107,8 @@
         'Get-AADExportOrganization'
         'Get-AADExportSubscribedSkus'
         'Get-AADExportOrganizationBranding'
-        'Get-AADExportConditionalAccessPolicies.ps1'
-        'Get-AADExportUserFlows.ps1'
+        'Get-AADExportConditionalAccessPolicies'
+        'Get-AADExportUserFlows'
         'Get-AADExportDomains'
         'Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy'
         'Get-AADExportPoliciesAuthorizationPolicy'
@@ -127,6 +131,10 @@
         'Get-AADExportAuthenticationMethodEmail'
         'Get-AADExportAuthenticationMethodPassword'
         'Get-AADExportPoliciesActivityBasedTimeoutPolicy'
+        'Get-AADExportGroups'
+        'Get-AADExportGroupMembers'
+        'Get-AADExportGroupOwners'
+        'Get-AADExportGroupSettings'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

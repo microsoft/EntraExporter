@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -30,7 +30,9 @@ Function Invoke-AADExporter {
         $All
     )
 
+    if($All) {$Type = @("All")}
     $global:TenantID = (Get-MgContext).TenantId
+    $global:Type = $Type
 
     if (!$ExportSchema) {
         $ExportSchema = @(
@@ -82,6 +84,28 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
+                "Command" = "Get-AADExportGroups" 
+                "Path" = "Groups"
+                "Tag" = @("All", "Config", "Groups")
+                "Childrens" = @(
+                    @{
+                        "Command" = "Get-AADExportGroupMembers"
+                        "Path" = "Members"
+                        "Tag" = @("All", "Groups")
+                    }
+                    @{
+                        "Command" = "Get-AADExportGroupOwners"
+                        "Path" = "Owners"
+                        "Tag" = @("All", "Config", "Groups")
+                    }
+                )                
+            },
+            # @{ #For some reason this is not available in /beta endpoint. Leaving here to see if it is just a bug
+            #     "Command" = "Get-AADExportGroupSettings"
+            #     "Path" = "GroupSettings.json"
+            #     "Tag" = @("All", "Config")
+            # },
+            @{
                 "Command" = "Get-AADExportSubscribedSkus"
                 "Path" = "SubscribedSkus.json"
                 "Tag" = @("All", "Config")
@@ -99,7 +123,7 @@ Function Invoke-AADExporter {
             @{
                 "Command" = "Get-AADExportUserFlows"
                 "Path" = "Identity/UserFlows.json"
-                "Tag" = @("B2C", "Config")
+                "Tag" = @("B2C")
             },
             @{
                 "Command" = "Get-AADExportDomains"
@@ -176,7 +200,7 @@ Function Invoke-AADExporter {
     $totalExports = $ExportSchema.Count
     $processedItems = 0
 
-    if($All) {$Type = @("All")}
+    
 
     foreach ($item in $ExportSchema) {
         $typeMatch = Compare-Object $item.Tag $Type -ExcludeDifferent -IncludeEqual

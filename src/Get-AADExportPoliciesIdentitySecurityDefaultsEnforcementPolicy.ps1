@@ -1,6 +1,6 @@
 <# 
  .Synopsis
-  Retrieve the properties of an identitySecurityDefaultsEnforcementPolicy object.
+  Represents the Azure Active Directory security defaults policy. Security defaults contain preconfigured security settings that protect against common attacks.
 
  .Description
   GET /policies/identitySecurityDefaultsEnforcementPolicy
