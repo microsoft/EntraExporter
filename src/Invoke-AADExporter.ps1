@@ -225,6 +225,11 @@ Function Invoke-AADExporter {
                 "Tag" = @("B2C")
             },
             @{
+                "Command" = "Get-AADExportAPIConnectors"
+                "Path" = "Identity/APIConnectors.json"
+                "Tag" = @("All")
+            },
+            @{
                 "Command" = "Get-AADExportDomains"
                 "Path" = "Domains.json"
                 "Tag" = @("All", "Config")

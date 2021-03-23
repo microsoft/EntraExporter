@@ -23,7 +23,9 @@ function Connect-AADExporter {
         'Organization.Read.All',
         'User.Read.All',
         'EntitlementManagement.Read.All',
-        'UserAuthenticationMethod.Read.All'
+        'UserAuthenticationMethod.Read.All',
+        'IdentityUserFlow.Read.All',
+        'APIConnectors.Read.All'
     Get-MgContext
     $global:TenantID = (Get-MgContext).TenantId
 }
