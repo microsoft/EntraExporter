@@ -127,8 +127,8 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportCertificateBasedAuthConfiguration"
-                "Path" = "Policies/CertificateBasedAuthConfiguration.json"
+                "Command" = "Get-AADExportPoliciesActivityBasedTimeoutPolicy"
+                "Path" = "Policies/ActivityBasedTimeoutPolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
@@ -179,7 +179,7 @@ Function Invoke-AADExporter {
     if($All) {$Type = @("All")}
 
     foreach ($item in $ExportSchema) {
-        $typeMatch = Compare-Object $item.Tag $Type -ExcludeDifferent
+        $typeMatch = Compare-Object $item.Tag $Type -ExcludeDifferent -IncludeEqual
         if( ($Type -contains 'All' -or $typeMatch)) {
             $outputFileName = Join-Path -Path $Path -ChildPath $item.Path
             $percentComplete = 100 * $processedItems / $totalExports
