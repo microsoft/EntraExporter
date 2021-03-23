@@ -215,6 +215,11 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config", "ConditionalAccess")
             },
             @{
+                "GraphUri" = "identity/conditionalAccess/namedLocations"
+                "Path" =  "Identity/Conditional/NamedLocations"
+                "Tag" = @("All", "Config", "ConditionalAccess")
+            },
+            @{
                 "Command" = "Get-AADExportUserFlows"
                 "Path" = "Identity/UserFlows.json"
                 "Tag" = @("B2C")
