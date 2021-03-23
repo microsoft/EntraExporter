@@ -151,6 +151,11 @@ Function Invoke-AADExporter {
                         "Command" = "Get-AADExportAuthenticationMethodPassword"
                         "Path" = "Authentication/PasswordMethods"
                         "Tag" = @("All", "Users")
+                    },
+                    @{
+                        "GraphUri" = "users/{id}/extensions"
+                        "Path" = "Extensions"
+                        "Tag" = @("All", "Users")
                     }
                 )
             },
@@ -172,6 +177,11 @@ Function Invoke-AADExporter {
                     @{
                         "Command" = "Get-AADExportGroupOwners"
                         "Path" = "Owners"
+                        "Tag" = @("All", "Config", "Groups")
+                    },
+                    @{
+                        "GraphUri" = "groups/{id}/extensions"
+                        "Path" = "Extensions"
                         "Tag" = @("All", "Config", "Groups")
                     }
                 )                
