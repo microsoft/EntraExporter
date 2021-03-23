@@ -73,7 +73,7 @@
         'Get-AADExportOrganizationBranding.ps1'
         'Get-AADExportConditionalAccessPolicies.ps1'
         'Get-AADExportUserFlows.ps1'
-        'Get-AADExportB2CUserFlows.ps1'
+        #'Get-AADExportB2CUserFlows.ps1'
         'Get-AADExportUserFlowAttributes.ps1'
         'Get-AADExportDomains.ps1'
         'Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy.ps1'

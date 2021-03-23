@@ -318,6 +318,24 @@ Function Invoke-AADExporter {
                 "Command" = "Get-AADExportIdentityGovernanceEntitlementManagementSettings"
                 "Path" = "IdentityGovernance/EntitlementManagement/Settings.json"
                 "Tag" = @("All", "Config")
+            },
+            @{
+                "GraphUri" = "directory/AdministrativeUnits"
+                "Path" = "Directory/AdministrativeUnits"
+                "Tag" = @("All", "Config")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "directory/administrativeUnits/{id}/members"
+                        "Path" = "Members"
+                        "Select" = "Id"
+                        "Tag" = @("All", "Config")
+                    }
+                    @{
+                        "GraphUri" = "directory/administrativeUnits/{id}/scopedRoleMembers"
+                        "Path" = "ScopedRoleMembers"
+                        "Tag" = @("All", "Config")
+                    }
+                )
             }
         )
     }
