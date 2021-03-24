@@ -447,7 +447,7 @@ Function Invoke-AADExporter {
                     @{
                         "GraphUri" = "administrativeUnits/{id}/extensions"
                         "Path" = "Extensions"
-                        "Tag" = @("All")
+                        "Tag" = @("All", "Config")
                     }
                 )
             },
