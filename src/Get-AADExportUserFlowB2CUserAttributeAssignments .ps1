@@ -15,7 +15,7 @@ Function Get-AADExportUserFlowB2CUserAttributeAssignments {
   param
   (
       [Parameter(Mandatory = $true)]
-      [string[]]$UserFlowID
+      [string[]]$Parents
   )
-    Invoke-Graph "identity/b2cUserFlows/$(UserFlowID[0])/userAttributeAssignments??$expand=userAttribute"
+    Invoke-Graph "identity/b2cUserFlows/$(Parents[0])/userAttributeAssignments??$expand=userAttribute"
   }
