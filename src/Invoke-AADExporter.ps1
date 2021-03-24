@@ -20,14 +20,14 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','AccessReviews')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','AccessReviews')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
         [Parameter(Mandatory = $false)]
         [string[]]$Parents,
         [switch]
-        $All
+        $Al
     )
 
     if($All) {$Type = @("All")}
@@ -271,6 +271,34 @@ Function Invoke-AADExporter {
                 "Command" = "Get-AADExportUserFlowAttributes"
                 "Path" = "Identity/UserFlowAttributes.json"
                 "Tag" = @("B2C")
+            },
+            @{
+                "GraphUri" = "identity/b2cUserFlows"
+                "Path" = "B2C/UserFlows"
+                "Tag" = @("B2C")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "identity/b2cUserFlows/{id}/identityProviders"
+                        "Path" = "IdentityProviders"
+                        "Select" = "Id"
+                        "Tag" = @("B2C")
+                    },
+                    @{
+                        "GraphUri" = "identity/b2cUserFlows/{id}/userAttributeAssignments?$expand=userAttribute"
+                        "Path" = "AttributeAssignments"
+                        "Tag" = @("B2C")
+                    },
+                    @{
+                        "GraphUri" = "identity/b2cUserFlows/{id}/apiConnectorConfiguration"
+                        "Path" = "APIConnectors"
+                        "Tag" = @("B2C")
+                    },
+                    @{
+                        "GraphUri" = "identity/b2cUserFlows/{id}/languages"
+                        "Path" = "Languages"
+                        "Tag" = @("B2C")
+                    }
+                )
             },
             @{
                 "Command" = "Get-AADExportAPIConnectors"

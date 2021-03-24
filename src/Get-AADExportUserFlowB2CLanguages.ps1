@@ -15,7 +15,7 @@ Function Get-AADExportUserFlowB2CLanguages {
   param
   (
       [Parameter(Mandatory = $true)]
-      [string[]]$UserFlowID
+      [string[]]$Parents
   )
-    Invoke-Graph "identity/b2cUserFlows/$(UserFlowID[0])/languages"
+    Invoke-Graph "identity/b2cUserFlows/$(Parents[0])/languages"
   }
