@@ -280,7 +280,6 @@ Function Invoke-AADExporter {
                     @{
                         "GraphUri" = "identity/b2cUserFlows/{id}/identityProviders"
                         "Path" = "IdentityProviders"
-                        "Select" = "Id"
                         "Tag" = @("B2C")
                     },
                     @{
