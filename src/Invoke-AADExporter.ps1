@@ -429,23 +429,23 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
-                "GraphUri" = "directory/AdministrativeUnits"
-                "Path" = "Directory/AdministrativeUnits"
+                "GraphUri" = "AdministrativeUnits"
+                "Path" = "AdministrativeUnits"
                 "Tag" = @("All", "Config")
                 "Childrens" = @(
                     @{
-                        "GraphUri" = "directory/administrativeUnits/{id}/members"
+                        "GraphUri" = "administrativeUnits/{id}/members"
                         "Path" = "Members"
                         "Select" = "Id"
                         "Tag" = @("All", "Config")
                     },
                     @{
-                        "GraphUri" = "directory/administrativeUnits/{id}/scopedRoleMembers"
+                        "GraphUri" = "administrativeUnits/{id}/scopedRoleMembers"
                         "Path" = "ScopedRoleMembers"
                         "Tag" = @("All", "Config")
                     },
                     @{
-                        "GraphUri" = "directory/administrativeUnits/{id}/extensions"
+                        "GraphUri" = "administrativeUnits/{id}/extensions"
                         "Path" = "Extensions"
                         "Tag" = @("All")
                     }
