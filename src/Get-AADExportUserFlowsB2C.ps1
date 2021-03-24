@@ -1,6 +1,6 @@
 <# 
  .Synopsis
-  Gets the userflows associated with the Active Directory B2C Tenant along with the Identity
+  Gets all the userflows associated with the Active Directory B2C Tenant along with the Identity
   Providers
 
  .Description
