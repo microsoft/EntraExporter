@@ -77,6 +77,11 @@ Function Invoke-AADExporter {
                 )
             },
             @{
+                "Command" = "Get-AADExportConnectedOrganizations"
+                "Path" = "IdentityGovernance/EntitlementManagement/ConnectedOrganizations"
+                "Tag" = @("All", "Config")
+            },
+            @{
                 "GraphUri" = "servicePrincipals"
                 "Path" = "ServicePrincipals"
                 "Tag" = @("All", "ServicePrincipals")
