@@ -210,7 +210,7 @@ Function Invoke-AADExporter {
                     @{
                         "GraphUri" = "groups/{id}/extensions"
                         "Path" = "Extensions"
-                        "Tag" = @("All", "Config", "Groups")
+                        "Tag" = @("All", "Groups")
                     }
                 )                
             },
@@ -420,7 +420,7 @@ Function Invoke-AADExporter {
                     @{
                         "GraphUri" = "directory/administrativeUnits/{id}/extensions"
                         "Path" = "Extensions"
-                        "Tag" = @("All", "Config")
+                        "Tag" = @("All")
                     }
                 )
             },
@@ -432,47 +432,41 @@ Function Invoke-AADExporter {
         )
     }
     $totalExports = $ExportSchema.Count
-    $processedItems = 0
-
-    
+    $processedItems = 0    
 
     foreach ($item in $ExportSchema) {
         $typeMatch = Compare-Object $item.Tag $Type -ExcludeDifferent -IncludeEqual
+        $hasParents = $Parents -and $Parents.Count -gt 0
         if( ($Type -contains 'All' -or $typeMatch)) {
             $outputFileName = Join-Path -Path $Path -ChildPath $item.Path
-            $percentComplete = 100 * $processedItems / $totalExports
-            Write-Host "Exporting $($item.Path)"
-            #Write-Progress -Activity "Reading Azure AD Configuration" -CurrentOperation "Exporting $($item.Path)" -PercentComplete $percentComplete
+
+            $spacer = ''
+            if($hasParents) { $spacer = ''.PadRight($Parents.Count + 3, ' ') + $Parents[$Parents.Count-1] }
+            
+            Write-Host "$spacer $($item.Path)"
 
             $command = Get-ObjectProperty $item 'Command'
             $graphUri = Get-ObjectProperty $item 'GraphUri'
 
             if($command) {
-                if ($Parents){
-                    if ($Parents.Count -gt 0) {
-                        $command += " -Parents $Parents"
-                    }
-                }
+                if ($hasParents){ $command += " -Parents $Parents" }
                 $resultItems = Invoke-Expression -Command $command
             }
             else {
-                if ($Parents){
-                    if ($Parents.Count -gt 0) {
-                        $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1]
-                    }
-                }                
+                if ($hasParents){ $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1] }
                 $resultItems = Invoke-Graph $graphUri -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters')
             }
 
             if ($outputFileName -match "\.json$") {
                 $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
-            } else {             
+            } else {
                 foreach($resultItem in $resultItems) {
                     if (!$resultItem.ContainsKey('id')) {
                         continue
                     }
                     $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath $resultItem.id
-                    $resultItem | ConvertTo-Json -depth 100 | Out-File (New-Item -Path "$($itemOutputFileName).json" -Force)
+                    $parentOutputFileName = Join-Path $itemOutputFileName -ChildPath $resultItem.id
+                    $resultItem | ConvertTo-Json -depth 100 | Out-File (New-Item -Path "$($parentOutputFileName).json" -Force)
                     if ($item.ContainsKey("Childrens")) {
                         $itemParents = $Parents
                         $itemParents += $resultItem.Id
