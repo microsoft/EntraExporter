@@ -109,7 +109,7 @@
         'Get-AADExportBusinessFlowTemplates.ps1'
         'Get-AADExportAccessReviews.ps1'
         'Get-AADExportConnectedOrganizations.ps1'
-        'Get-AADExportTermsOfUs.ps1'
+        'Get-AADExportTermsOfUse.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -158,7 +158,7 @@
         'Get-AADExportBusinessFlowTemplates'
         'Get-AADExportAccessReviews'
         'Get-AADExportConnectedOrganizations'
-        'Get-AADExportTermsOfUs'
+        'Get-AADExportTermsOfUse'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
