@@ -10,7 +10,7 @@
   Get-AADExportUserFlowB2CUserAttributeAssignments
 #>
 
-Function Get-AADExportUserFlowB2CUserAttributeAssignments {
+Function Get-AADExportUserFlowB2CUserAttributeAssignments{
   [CmdletBinding()]
   param
   (
