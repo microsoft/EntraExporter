@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','AccessReviews')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -67,17 +67,17 @@ Function Invoke-AADExporter {
             @{
                 "Command" = "Get-AADExportBusinessFlowTemplates"
                 "Path" = "IdentityGovernance/AccessReviews"
-                "Tag" = @("All","AccessReviews")
+                "Tag" = @("All","Config")
                 "Childrens" = @(
                     @{
                         "Command" = "Get-AADExportAccessReviews"
                         "Path" = ""
-                        "Tag" = @("All", "AccessReviews")
+                        "Tag" = @("All", "Config")
                         "Childrens" = @(
                             @{
                                 "GraphUri" = "accessReviews/{id}/reviewers"
                                 "Path" = "Reviewers"
-                                "Tag" = @("All", "AccessReviews")  
+                                "Tag" = @("All", "Config")  
                             }
                         )}
                 )
@@ -457,7 +457,7 @@ Function Invoke-AADExporter {
             else {
                 if ($Parents){
                     if ($Parents.Count -gt 0) {
-                        $graphUri = $graphUri -replace '{id}', $Parents[0]
+                        $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1]
                     }
                 }                
                 $resultItems = Invoke-Graph $graphUri -Select (Get-ObjectProperty $item 'Select')
