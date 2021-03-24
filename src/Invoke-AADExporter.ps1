@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -297,6 +297,34 @@ Function Invoke-AADExporter {
                         "GraphUri" = "identity/b2cUserFlows/{id}/languages"
                         "Path" = "Languages"
                         "Tag" = @("B2C")
+                    }
+                )
+            },
+            @{
+                "GraphUri" = "identity/b2xUserFlows"
+                "Path" = "B2B/UserFlows"
+                "Tag" = @("B2B")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "identity/b2xUserFlows/{id}/identityProviders"
+                        "Path" = "IdentityProviders"
+                        "Tag" = @("B2B")
+                    },
+                    @{
+                        "GraphUri" = "identity/b2xUserFlows/{id}/userAttributeAssignments"
+                        "QueryParameters" = @{ expand = 'userAttribute' }
+                        "Path" = "AttributeAssignments"
+                        "Tag" = @("B2B")
+                    },
+                    @{
+                        "GraphUri" = "identity/b2xUserFlows/{id}/apiConnectorConfiguration"
+                        "Path" = "APIConnectors"
+                        "Tag" = @("B2B")
+                    },
+                    @{
+                        "GraphUri" = "identity/b2xUserFlows/{id}/languages"
+                        "Path" = "Languages"
+                        "Tag" = @("B2B")
                     }
                 )
             },
