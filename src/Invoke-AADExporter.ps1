@@ -146,37 +146,37 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Users")
                 "Childrens" = @(
                     @{
-                        "Command" = "Get-AADExportAuthenticationMethodFIDO2"
+                        "GraphUri" = "users/{id}/authentication/fido2Methods"
                         "Path" = "Authentication/FIDO2Methods"
                         "Tag" = @("All", "Users")
                     },
                     @{
-                        "Command" = "Get-AADExportAuthenticationMethodMicrosoftAuthenticator"
+                        "GraphUri" = "users/{id}/authentication/microsoftAuthenticatorMethods"
                         "Path" = "Authentication/MicrosoftAuthenticatorMethods"
                         "Tag" = @("All", "Users")
                     },
                     @{
-                        "Command" = "Get-AADExportAuthenticationMethodWindowsHelloForBusiness"
+                        "GraphUri" = "users/{id}/authentication/windowsHelloForBusinessMethods"
                         "Path" = "Authentication/WindowsHelloForBusinessMethods"
                         "Tag" = @("All", "Users")
                     },
                     @{
-                        "Command" = "Get-AADExportAuthenticationMethodTemporaryAccessPass"
+                        "GraphUri" = "users/{id}/authentication/temporaryAccessPassMethods"
                         "Path" = "Authentication/TemporaryAccessPassMethods"
                         "Tag" = @("All", "Users")
                     },
                     @{
-                        "Command" = "Get-AADExportAuthenticationMethodPhone"
+                        "GraphUri" = "users/{id}/authentication/phoneMethods"
                         "Path" = "Authentication/PhoneMethods"
                         "Tag" = @("All", "Users")
                     },
                     @{
-                        "Command" = "Get-AADExportAuthenticationMethodEmail"
+                        "GraphUri" = "users/{id}/authentication/emailMethods"
                         "Path" = "Authentication/EmailMethods"
                         "Tag" = @("All", "Users")
                     },
                     @{
-                        "Command" = "Get-AADExportAuthenticationMethodPassword"
+                        "GraphUri" = "users/{id}/authentication/passwordMethods"
                         "Path" = "Authentication/PasswordMethods"
                         "Tag" = @("All", "Users")
                     },
@@ -394,27 +394,27 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportAuthenticationMethodPolicyEmail"
+                "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/email"
                 "Path" = "Policies/AuthenticationMethod/Email.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportAuthenticationMethodPolicyFIDO2"
+                "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2"
                 "Path" = "Policies/AuthenticationMethod/FIDO2.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportAuthenticationMethodPolicyMicrosoftAuthenticator"
+                "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/microsoftAuthenticator"
                 "Path" = "Policies/AuthenticationMethod/MicrosoftAuthenticator.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportAuthenticationMethodPolicySMS"
+                "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/sms"
                 "Path" = "Policies/AuthenticationMethod/SMS.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" =  "Get-AADExportAuthenticationMethodPolicyTemporaryAccessPass"
+                "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/temporaryAccessPass"
                 "Path" = "Policies/AuthenticationMethod/TemporaryAccessPass.json"
                 "Tag" = @("All", "Config")
             },
