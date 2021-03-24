@@ -27,7 +27,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $false)]
         [string[]]$Parents,
         [switch]
-        $Al
+        $All
     )
 
     if($All) {$Type = @("All")}
@@ -284,7 +284,8 @@ Function Invoke-AADExporter {
                         "Tag" = @("B2C")
                     },
                     @{
-                        "GraphUri" = "identity/b2cUserFlows/{id}/userAttributeAssignments?$expand=userAttribute"
+                        "GraphUri" = "identity/b2cUserFlows/{id}/userAttributeAssignments"
+                        "QueryParameters" = @{ expand = 'userAttribute' }
                         "Path" = "AttributeAssignments"
                         "Tag" = @("B2C")
                     },
@@ -460,7 +461,7 @@ Function Invoke-AADExporter {
                         $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1]
                     }
                 }                
-                $resultItems = Invoke-Graph $graphUri -Select (Get-ObjectProperty $item 'Select')
+                $resultItems = Invoke-Graph $graphUri -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters')
             }
 
             if ($outputFileName -match "\.json$") {
