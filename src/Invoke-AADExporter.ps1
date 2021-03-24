@@ -455,6 +455,11 @@ Function Invoke-AADExporter {
                 "GraphUri" = "identity/continuousAccessEvaluationPolicy"
                 "Path" = "Identity/ContinuousAccessEvaluationPolicy"
                 "Tag" = @("All", "Config")
+            },
+            @{
+                "GraphUri" = "policies/permissionGrantPolicies"
+                "Path" = "Policies/PermissionGrantPolicies"
+                "Tag" = @("All", "Config")
             }
         )
     }
