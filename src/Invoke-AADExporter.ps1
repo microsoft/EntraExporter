@@ -77,6 +77,11 @@ Function Invoke-AADExporter {
                 )
             },
             @{
+                "Command" = "Get-AADExportTermsOfUse"
+                "Path" = "IdentityGovernance/TermsOfUse"
+                "Tag" = @("All", "Config")
+            },
+            @{
                 "Command" = "Get-AADExportConnectedOrganizations"
                 "Path" = "IdentityGovernance/EntitlementManagement/ConnectedOrganizations"
                 "Tag" = @("All", "Config")
