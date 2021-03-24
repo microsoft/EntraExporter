@@ -65,6 +65,18 @@ Function Invoke-AADExporter {
                 )
             },
             @{
+                "Command" = "Get-AADExportBusinessFlowTemplates"
+                "Path" = "IdentityGovernance/BusinessFlowTemplates"
+                "Tag" = @("All", "Config")
+                "Childrens" = @(
+                    @{
+                        "Command" = "Get-AADExportAccessReviews"
+                        "Path" = "AccessReviews"
+                        "Tag" = @("All", "Config")
+                    }
+                )
+            },
+            @{
                 "GraphUri" = "servicePrincipals"
                 "Path" = "ServicePrincipals"
                 "Tag" = @("All", "ServicePrincipals")
