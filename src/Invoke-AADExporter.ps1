@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','AccessReviews')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -66,14 +66,20 @@ Function Invoke-AADExporter {
             },
             @{
                 "Command" = "Get-AADExportBusinessFlowTemplates"
-                "Path" = "IdentityGovernance/BusinessFlowTemplates"
-                "Tag" = @("All", "Config")
+                "Path" = "IdentityGovernance/AccessReviews"
+                "Tag" = @("All","AccessReviews")
                 "Childrens" = @(
                     @{
                         "Command" = "Get-AADExportAccessReviews"
-                        "Path" = "AccessReviews"
-                        "Tag" = @("All", "Config")
-                    }
+                        "Path" = ""
+                        "Tag" = @("All", "AccessReviews")
+                        "Childrens" = @(
+                            @{
+                                "GraphUri" = "accessReviews/{id}/reviewers"
+                                "Path" = "Reviewers"
+                                "Tag" = @("All", "AccessReviews")  
+                            }
+                        )}
                 )
             },
             @{
@@ -431,7 +437,7 @@ Function Invoke-AADExporter {
 
             if ($outputFileName -match "\.json$") {
                 $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
-            } else {                
+            } else {             
                 foreach($resultItem in $resultItems) {
                     if (!$resultItem.ContainsKey('id')) {
                         continue
