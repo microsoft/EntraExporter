@@ -1,6 +1,6 @@
 <# 
  .Synopsis
-  Gets the userflows associated with the Active Directory. 
+  Gets the userflow Attribute objects associated with the Active Directory. 
 
  .Description
   GET /identity/userFlowAttributes
