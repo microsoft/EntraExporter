@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B',"PIM")]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -460,6 +460,28 @@ Function Invoke-AADExporter {
                 "GraphUri" = "policies/permissionGrantPolicies"
                 "Path" = "Policies/PermissionGrantPolicies"
                 "Tag" = @("All", "Config")
+            },
+            @{
+                "GraphUri" = "privilegedAccess/aadroles/resources"
+                "Path" = "PrivilegedAccess/AADRoles/Resources"
+                "Tag" = @("All", "Config", "PIM")
+                Childrens = @(
+                    @{
+                        "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleDefinitions"
+                        "Path" = "RoleDefinitions"
+                        "Tag" = @("All", "Config", "PIM")
+                    },
+                    @{
+                        "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleSettings"
+                        "Path" = "RoleSettings"
+                        "Tag" = @("All", "Config", "PIM")
+                    },
+                    @{
+                        "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleAssignments"
+                        "Path" = "RoleAssignments"
+                        "Tag" = @("All", "Config", "PIM")
+                    }
+                )
             }
         )
     }

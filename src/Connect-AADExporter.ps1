@@ -28,7 +28,9 @@ function Connect-AADExporter {
         'APIConnectors.Read.All',
         'AccessReview.Read.All',
         'Agreement.Read.All',
-        'Policy.Read.PermissionGrant,'
+        'Policy.Read.PermissionGrant',
+        'PrivilegedAccess.Read.AzureResources',
+        'PrivilegedAccess.Read.AzureAD'
     Get-MgContext
     $global:TenantID = (Get-MgContext).TenantId
 }
