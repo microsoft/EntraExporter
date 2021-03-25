@@ -337,28 +337,28 @@ Function Invoke-AADExporter {
             @{
                 "GraphUri" = "identity/b2xUserFlows"
                 "Path" = "B2B/UserFlows"
-                "Tag" = @("B2B")
+                "Tag" = @("All","B2B")
                 "Childrens" = @(
                     @{
                         "GraphUri" = "identity/b2xUserFlows/{id}/identityProviders"
                         "Path" = "IdentityProviders"
-                        "Tag" = @("B2B")
+                        "Tag" = @("All","B2B")
                     },
                     @{
                         "GraphUri" = "identity/b2xUserFlows/{id}/userAttributeAssignments"
                         "QueryParameters" = @{ expand = 'userAttribute' }
                         "Path" = "AttributeAssignments"
-                        "Tag" = @("B2B")
+                        "Tag" = @("All","B2B")
                     },
                     @{
                         "GraphUri" = "identity/b2xUserFlows/{id}/apiConnectorConfiguration"
                         "Path" = "APIConnectors"
-                        "Tag" = @("B2B")
+                        "Tag" = @("All","B2B")
                     },
                     @{
                         "GraphUri" = "identity/b2xUserFlows/{id}/languages"
                         "Path" = "Languages"
-                        "Tag" = @("B2B")
+                        "Tag" = @("All","B2B")
                     }
                 )
             },
