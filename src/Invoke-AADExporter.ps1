@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B',"PIM")]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B',"PIM","PIMAzure","PIMAAD")]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -498,25 +498,50 @@ Function Invoke-AADExporter {
             @{
                 "GraphUri" = "privilegedAccess/aadroles/resources"
                 "Path" = "PrivilegedAccess/AADRoles/Resources"
-                "Tag" = @("All", "Config", "PIM")
+                "Tag" = @("All", "Config", "PIM", "PIMAAD")
                 Childrens = @(
                     @{
                         "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleDefinitions"
                         "Path" = "RoleDefinitions"
-                        "Filter" = "Type ne 'BuiltInRole'"
-                        "Tag" = @("All", "Config", "PIM")
+                        #"Filter" = "Type ne 'BuiltInRole'"
+                        "Tag" = @("All", "Config", "PIM", "PIMAAD")
                     },
                     @{
                         "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleSettings"
                         "Path" = "RoleSettings"
-                        "Filter" = "isDefault eq false"
-                        "Tag" = @("All", "Config", "PIM")
+                        #"Filter" = "isDefault eq false"
+                        "Tag" = @("All", "Config", "PIM", "PIMAAD")
                     },
                     @{
                         "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleAssignments"
                         "Path" = "RoleAssignments"
-                        "Filter" = "endDateTime eq null"
-                        "Tag" = @("All", "Config", "PIM")
+                        #"Filter" = "endDateTime eq null"
+                        "Tag" = @("All", "Config", "PIM", "PIMAAD")
+                    }
+                )
+            },
+            @{
+                "GraphUri" = "privilegedAccess/azureResources/resources"
+                "Path" = "PrivilegedAccess/AzureResources/Resources"
+                "Tag" = @("All", "Config", "PIM", "PIMAzure")
+                Childrens = @(
+                    @{
+                        "GraphUri" = "privilegedAccess/azureResources/resources/{id}/roleDefinitions"
+                        "Path" = "RoleDefinitions"
+                        #"Filter" = "Type ne 'BuiltInRole'"
+                        "Tag" = @("All", "PIM", "PIMAAzure")
+                    },
+                    @{
+                        "GraphUri" = "privilegedAccess/azureResources/resources/{id}/roleSettings"
+                        "Path" = "RoleSettings"
+                        #"Filter" = "isDefault eq false"
+                        "Tag" = @("All", "PIM", "PIMAAzure")
+                    },
+                    @{
+                        "GraphUri" = "privilegedAccess/azureResources/resources/{id}/roleAssignments"
+                        "Path" = "RoleAssignments"
+                        #"Filter" = "endDateTime eq null"
+                        "Tag" = @("All", "PIM", "PIMAzure")
                     }
                 )
             }
