@@ -104,6 +104,10 @@
         'Get-AADExportAccessReviews.ps1'
         'Get-AADExportConnectedOrganizations.ps1'
         'Get-AADExportTermsOfUse.ps1'
+        'Get-AADExportAccessPackages.ps1'
+        'Get-AADExportAccessPackageAssignmentPolicies.ps1'
+        'Get-AADExportAccessPackageAssignments.ps1'
+        'Get-AADExportAccessPackageResourceScopes.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -147,6 +151,10 @@
         'Get-AADExportAccessReviews'
         'Get-AADExportConnectedOrganizations'
         'Get-AADExportTermsOfUse'
+        'Get-AADExportAccessPackages'
+        'Get-AADExportAccessPackageAssignmentPolicies'
+        'Get-AADExportAccessPackageAssignments'
+        'Get-AADExportAccessPackageResourceScopes'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

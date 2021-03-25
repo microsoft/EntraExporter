@@ -65,6 +65,28 @@ Function Invoke-AADExporter {
                 )
             },
             @{
+                "Command" = "Get-AADExportAccessPackages"
+                "Path" = "IdentityGovernance\EntitlementManagement\AccessPackages"
+                "Tag" = @("All", "Config")
+                "Childrens" = @(
+                    @{
+                        "Command" = "Get-AADExportAccessPackageAssignmentPolicies"
+                        "Path" = "AssignmentPolicies"
+                        "Tag" = @("All", "Config")
+                    },
+                    @{
+                        "Command" = "Get-AADExportAccessPackageAssignments"
+                        "Path" = "Assignments"
+                        "Tag" = @("All", "Config")
+                    },
+                    @{
+                        "Command" = "Get-AADExportAccessPackageResourceScopes"
+                        "Path" = "ResourceScopes"
+                        "Tag" = @("All", "Config")
+                    }
+                )
+            },
+            @{
                 "Command" = "Get-AADExportBusinessFlowTemplates"
                 "Path" = "IdentityGovernance/AccessReviews"
                 "Tag" = @("All","Config")
