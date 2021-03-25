@@ -324,6 +324,7 @@ Function Invoke-AADExporter {
                     },
                     @{
                         "GraphUri" = "identity/b2cUserFlows/{id}/apiConnectorConfiguration"
+                        "QueryParameters" = @{ expand = 'postFederationSignup,postAttributeCollection' }
                         "Path" = "APIConnectors"
                         "Tag" = @("B2C")
                     },
@@ -352,6 +353,7 @@ Function Invoke-AADExporter {
                     },
                     @{
                         "GraphUri" = "identity/b2xUserFlows/{id}/apiConnectorConfiguration"
+                        "QueryParameters" = @{ expand = 'postFederationSignup,postAttributeCollection' }
                         "Path" = "APIConnectors"
                         "Tag" = @("All","B2B")
                     },

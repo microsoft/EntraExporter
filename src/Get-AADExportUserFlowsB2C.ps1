@@ -4,7 +4,7 @@
   Providers
 
  .Description
-  GET /identity/b2cUserFlow?$expand=identityProviders
+  GET /identity/b2cUserFlows?$expand=identityProviders
   https://docs.microsoft.com/en-us/graph/api/identitycontainer-list-b2cuserflows?view=graph-rest-beta&tabs=http
  
   .Example
@@ -12,5 +12,5 @@
 #>
 
 Function Get-AADExportUserFlowsB2C {
-    Invoke-Graph 'identity/b2cUserFlow?$expand=identityProviders'
+    Invoke-Graph 'identity/b2cUserFlows?$expand=identityProviders'
   }
