@@ -469,16 +469,19 @@ Function Invoke-AADExporter {
                     @{
                         "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleDefinitions"
                         "Path" = "RoleDefinitions"
+                        "Filter" = "Type ne 'BuiltInRole'"
                         "Tag" = @("All", "Config", "PIM")
                     },
                     @{
                         "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleSettings"
                         "Path" = "RoleSettings"
+                        "Filter" = "isDefault eq false"
                         "Tag" = @("All", "Config", "PIM")
                     },
                     @{
                         "GraphUri" = "privilegedAccess/aadroles/resources/{id}/roleAssignments"
                         "Path" = "RoleAssignments"
+                        "Filter" = "endDateTime eq null"
                         "Tag" = @("All", "Config", "PIM")
                     }
                 )
@@ -508,7 +511,7 @@ Function Invoke-AADExporter {
             }
             else {
                 if ($hasParents){ $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1] }
-                $resultItems = Invoke-Graph $graphUri -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters')
+                $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters')
             }
 
             if ($outputFileName -match "\.json$") {
