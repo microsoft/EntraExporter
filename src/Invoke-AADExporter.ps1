@@ -113,6 +113,18 @@ Function Invoke-AADExporter {
                 "Command" = "Get-AADExportConnectedOrganizations"
                 "Path" = "IdentityGovernance/EntitlementManagement/ConnectedOrganizations"
                 "Tag" = @("All", "Config")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "identityGovernance/entitlementManagement/connectedOrganizations/{id}/externalSponsors"
+                        "Path" = "ExternalSponsors"
+                        "Tag" = @("All", "Config")
+                    },
+                    @{
+                        "GraphUri" = "identityGovernance/entitlementManagement/connectedOrganizations/{id}/internalSponsors"
+                        "Path" = "InternalSponsors"
+                        "Tag" = @("All", "Config")
+                    }
+                )    
             },
             @{
                 "GraphUri" = "servicePrincipals"
