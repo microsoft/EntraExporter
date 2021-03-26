@@ -295,17 +295,18 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config", "ConditionalAccess")
             },
             @{
-                "Command" = "Get-AADExportUserFlows"
+                "GraphUri" = "identity/userFlows"
                 "Path" = "Identity/UserFlows.json"
                 "Tag" = @("B2C")
             },
             @{
-                "Command" = "Get-AADExportUserFlowsB2C"
+                "GraphUri" = "identity/b2cUserFlows"
+                "QueryParameters" = @{ expand = 'identityProviders' }
                 "Path" = "Identity/B2CUserFlows.json"
                 "Tag" = @("B2C")
             },
             @{
-                "Command" = "Get-AADExportUserFlowAttributes"
+                "GraphUri" = "identity/userFlowAttributes"
                 "Path" = "Identity/UserFlowAttributes.json"
                 "Tag" = @("B2C")
             },
@@ -368,7 +369,7 @@ Function Invoke-AADExporter {
                 )
             },
             @{
-                "Command" = "Get-AADExportAPIConnectors"
+                "GraphUri" = "identity/apiConnectors"
                 "Path" = "Identity/APIConnectors.json"
                 "Tag" = @("All")
             },
