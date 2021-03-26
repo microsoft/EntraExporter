@@ -32,7 +32,7 @@ Function Invoke-AADExporter {
 
     if($All) {$Type = @("All")}
     $global:TenantID = (Get-MgContext).TenantId
-    $global:Type = $Type
+    $global:Type = $Type #Used in places like Groups where Config flag will limit the resultset to just dynamic groups.
 
     if (!$ExportSchema) {
         $ExportSchema = @(
@@ -555,7 +555,7 @@ Function Invoke-AADExporter {
     foreach ($item in $ExportSchema) {
         $typeMatch = Compare-Object $item.Tag $Type -ExcludeDifferent -IncludeEqual
         $hasParents = $Parents -and $Parents.Count -gt 0
-        if( ($Type -contains 'All' -or $typeMatch)) {
+        if( ($typeMatch)) {
             $outputFileName = Join-Path -Path $Path -ChildPath $item.Path
 
             $spacer = ''
