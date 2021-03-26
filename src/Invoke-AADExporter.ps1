@@ -87,7 +87,7 @@ Function Invoke-AADExporter {
                 )
             },
             @{
-                "Command" = "Get-AADExportBusinessFlowTemplates"
+                "GraphUri" = "businessFlowTemplates"
                 "Path" = "IdentityGovernance/AccessReviews"
                 "Tag" = @("All","Config")
                 "Childrens" = @(
@@ -233,12 +233,14 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config", "Groups")
                 "Childrens" = @(
                     @{
-                        "Command" = "Get-AADExportGroupMembers"
+                        "GraphUri" = "groups/{id}/members" 
+                        "Select" = "id, userPrincipalName, displayName"
                         "Path" = "Members"
                         "Tag" = @("All", "Groups")
                     }
                     @{
-                        "Command" = "Get-AADExportGroupOwners"
+                        "GraphUri" =  "groups/{id}/owners"
+                        "Select" = "id, userPrincipalName, displayName"
                         "Path" = "Owners"
                         "Tag" = @("All", "Config", "Groups")
                     },
