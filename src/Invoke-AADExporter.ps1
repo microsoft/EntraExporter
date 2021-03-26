@@ -37,7 +37,7 @@ Function Invoke-AADExporter {
     if (!$ExportSchema) {
         $ExportSchema = @(
             @{
-                "Command" = "Get-AADExportApplications"
+                "GraphUri" = "applications"
                 "Path" = "Applications"
                 "Tag" = @("All", "Applications")
                 "Childrens" = @(
@@ -65,7 +65,7 @@ Function Invoke-AADExporter {
                 )
             },
             @{
-                "Command" = "Get-AADExportAccessPackages"
+                "GraphUri" = "identityGovernance/entitlementManagement/accessPackages"
                 "Path" = "IdentityGovernance\EntitlementManagement\AccessPackages"
                 "Tag" = @("All", "Config")
                 "Childrens" = @(
@@ -101,16 +101,17 @@ Function Invoke-AADExporter {
                                 "Path" = "Reviewers"
                                 "Tag" = @("All", "Config")  
                             }
-                        )}
+                        )
+                    }
                 )
             },
             @{
-                "Command" = "Get-AADExportTermsOfUse"
+                "GraphUri" = "identityGovernance/termsOfUse/agreements"
                 "Path" = "IdentityGovernance/TermsOfUse"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportConnectedOrganizations"
+                "GraphUri" = "identityGovernance/entitlementManagement/connectedOrganizations"
                 "Path" = "IdentityGovernance/EntitlementManagement/ConnectedOrganizations"
                 "Tag" = @("All", "Config")
                 "Childrens" = @(
@@ -222,7 +223,7 @@ Function Invoke-AADExporter {
                 )
             },
             @{
-                "Command" = "Get-AADExportOrganization" 
+                "GraphUri" = "organization" 
                 "Path" = "Organization.json"
                 "Tag" = @("All", "Config")
             },
@@ -254,7 +255,7 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },        
             @{
-                "Command" = "Get-AADExportSubscribedSkus"
+                "GraphUri" = "subscribedSkus"
                 "Path" = "SubscribedSkus.json"
                 "Tag" = @("All", "Config")
             },
@@ -282,7 +283,7 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportConditionalAccessPolicies"
+                "GraphUri" = "identity/conditionalAccess/policies"
                 "Path" =  "Identity/Conditional/AccessPolicies"
                 "Tag" = @("All", "Config", "ConditionalAccess")
             },
@@ -370,22 +371,22 @@ Function Invoke-AADExporter {
                 "Tag" = @("All")
             },
             @{
-                "Command" = "Get-AADExportDomains"
+                "GraphUri" = "domains"
                 "Path" = "Domains.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesIdentitySecurityDefaultsEnforcementPolicy"
+                "GraphUri" = "policies/identitySecurityDefaultsEnforcementPolicy"
                 "Path" =  "Policies/IdentitySecurityDefaultsEnforcementPolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesAuthorizationPolicy"
+                "GraphUri" = "policies/authorizationPolicy"
                 "Path" = "Policies/AuthorizationPolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportIdentityProviders"
+                "GraphUri" = "identityProviders"
                 "Path" = "IdentityProviders.json"
                 "Tag" = @("All", "Config")
             },
@@ -400,27 +401,27 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesActivityBasedTimeoutPolicy"
+                "GraphUri" = "policies/activityBasedTimeoutPolicies"
                 "Path" = "Policies/ActivityBasedTimeoutPolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesHomeRealmDiscoveryPolicy"
+                "GraphUri" = "policies/homeRealmDiscoveryPolicies"
                 "Path" = "Policies/HomeRealmDiscoveryPolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesClaimsMappingPolicy"
+                "GraphUri" = "policies/claimsMappingPolicies"
                 "Path" = "Policies/ClaimsMappingPolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesTokenIssuancePolicy"
+                "GraphUri" = "policies/tokenIssuancePolicies"
                 "Path" = "Policies/TokenIssuancePolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesTokenLifetimePolicy"
+                "GraphUri" = "policies/tokenLifetimePolicies"
                 "Path" = "Policies/TokenLifetimePolicy.json"
                 "Tag" = @("All", "Config")
             },
@@ -455,12 +456,12 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportPoliciesAdminConsentRequestPolicy"
+                "GraphUri" = "policies/adminConsentRequestPolicy"
                 "Path" = "Policies/AdminConsentRequestPolicy.json"
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportIdentityGovernanceEntitlementManagementSettings"
+                "GraphUri" = "identityGovernance/entitlementManagement/settings"
                 "Path" = "IdentityGovernance/EntitlementManagement/Settings.json"
                 "Tag" = @("All", "Config")
             },
