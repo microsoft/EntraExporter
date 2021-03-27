@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B',"PIM","PIMAzure","PIMAAD")]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B','PIM','PIMAzure','PIMAAD', 'AppProxy')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -107,7 +107,7 @@ Function Invoke-AADExporter {
             },
             @{
                 "GraphUri" = "identityGovernance/termsOfUse/agreements"
-                "Path" = "IdentityGovernance/TermsOfUse"
+                "Path" = "IdentityGovernance/TermsOfUse/Agreements"
                 "Tag" = @("All", "Config")
             },
             @{
@@ -224,7 +224,7 @@ Function Invoke-AADExporter {
             },
             @{
                 "GraphUri" = "organization" 
-                "Path" = "Organization.json"
+                "Path" = "Organization"
                 "Tag" = @("All", "Config")
             },
             @{
@@ -253,12 +253,12 @@ Function Invoke-AADExporter {
             },
             @{
                 "Command" = "Get-AADExportGroupSettings"
-                "Path" = "GroupSettings.json"
+                "Path" = "GroupSettings"
                 "Tag" = @("All", "Config")
             },        
             @{
                 "GraphUri" = "subscribedSkus"
-                "Path" = "SubscribedSkus.json"
+                "Path" = "SubscribedSkus"
                 "Tag" = @("All", "Config")
             },
             @{
@@ -281,7 +281,7 @@ Function Invoke-AADExporter {
             },
             @{
                 "Command" = "Get-AADExportOrganizationBranding"
-                "Path" = "OrganizationBranding.json"
+                "Path" = "Organization/Branding/Localizations.json"
                 "Tag" = @("All", "Config")
             },
             @{
@@ -296,18 +296,18 @@ Function Invoke-AADExporter {
             },
             @{
                 "GraphUri" = "identity/userFlows"
-                "Path" = "Identity/UserFlows.json"
+                "Path" = "Identity/UserFlows"
                 "Tag" = @("B2C")
             },
             @{
                 "GraphUri" = "identity/b2cUserFlows"
                 "QueryParameters" = @{ expand = 'identityProviders' }
-                "Path" = "Identity/B2CUserFlows.json"
+                "Path" = "Identity/B2CUserFlows"
                 "Tag" = @("B2C")
             },
             @{
                 "GraphUri" = "identity/userFlowAttributes"
-                "Path" = "Identity/UserFlowAttributes.json"
+                "Path" = "Identity/UserFlowAttributes"
                 "Tag" = @("B2C")
             },
             @{
@@ -370,32 +370,32 @@ Function Invoke-AADExporter {
             },
             @{
                 "GraphUri" = "identity/apiConnectors"
-                "Path" = "Identity/APIConnectors.json"
+                "Path" = "Identity/APIConnectors"
                 "Tag" = @("All")
             },
             @{
                 "GraphUri" = "domains"
-                "Path" = "Domains.json"
+                "Path" = "Domains"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/identitySecurityDefaultsEnforcementPolicy"
-                "Path" =  "Policies/IdentitySecurityDefaultsEnforcementPolicy.json"
+                "Path" =  "Policies/IdentitySecurityDefaultsEnforcementPolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/authorizationPolicy"
-                "Path" = "Policies/AuthorizationPolicy.json"
+                "Path" = "Policies/AuthorizationPolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "identityProviders"
-                "Path" = "IdentityProviders.json"
+                "Path" = "IdentityProviders"
                 "Tag" = @("All", "Config")
             },
             @{
                 "Command" = "Get-AADExportCertificateBasedAuthConfiguration"
-                "Path" = "Policies/CertificateBasedAuthConfiguration.json"
+                "Path" = "Policies/CertificateBasedAuthConfiguration"
                 "Tag" = @("All", "Config")
             },
             @{
@@ -405,67 +405,67 @@ Function Invoke-AADExporter {
             },
             @{
                 "GraphUri" = "policies/activityBasedTimeoutPolicies"
-                "Path" = "Policies/ActivityBasedTimeoutPolicy.json"
+                "Path" = "Policies/ActivityBasedTimeoutPolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/homeRealmDiscoveryPolicies"
-                "Path" = "Policies/HomeRealmDiscoveryPolicy.json"
+                "Path" = "Policies/HomeRealmDiscoveryPolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/claimsMappingPolicies"
-                "Path" = "Policies/ClaimsMappingPolicy.json"
+                "Path" = "Policies/ClaimsMappingPolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/tokenIssuancePolicies"
-                "Path" = "Policies/TokenIssuancePolicy.json"
+                "Path" = "Policies/TokenIssuancePolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/tokenLifetimePolicies"
-                "Path" = "Policies/TokenLifetimePolicy.json"
+                "Path" = "Policies/TokenLifetimePolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "Command" = "Get-AADExportOrganizationSettings"
-                "Path" = "Organization/Settings.json"
+                "Path" = "Organization/Settings"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/email"
-                "Path" = "Policies/AuthenticationMethod/Email.json"
+                "Path" = "Policies/AuthenticationMethod/Email"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2"
-                "Path" = "Policies/AuthenticationMethod/FIDO2.json"
+                "Path" = "Policies/AuthenticationMethod/FIDO2"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/microsoftAuthenticator"
-                "Path" = "Policies/AuthenticationMethod/MicrosoftAuthenticator.json"
+                "Path" = "Policies/AuthenticationMethod/MicrosoftAuthenticator"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/sms"
-                "Path" = "Policies/AuthenticationMethod/SMS.json"
+                "Path" = "Policies/AuthenticationMethod/SMS"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/authenticationMethodsPolicy/authenticationMethodConfigurations/temporaryAccessPass"
-                "Path" = "Policies/AuthenticationMethod/TemporaryAccessPass.json"
+                "Path" = "Policies/AuthenticationMethod/TemporaryAccessPass"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "policies/adminConsentRequestPolicy"
-                "Path" = "Policies/AdminConsentRequestPolicy.json"
+                "Path" = "Policies/AdminConsentRequestPolicy"
                 "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "identityGovernance/entitlementManagement/settings"
-                "Path" = "IdentityGovernance/EntitlementManagement/Settings.json"
+                "Path" = "IdentityGovernance/EntitlementManagement/Settings"
                 "Tag" = @("All", "Config")
             },
             @{
@@ -548,6 +548,53 @@ Function Invoke-AADExporter {
                         "Path" = "RoleAssignments"
                         #"Filter" = "endDateTime eq null"
                         "Tag" = @("All", "PIM", "PIMAzure")
+                    }
+                )
+            },
+            #Application Proxy
+            @{
+                "GraphUri" = "onPremisesPublishingProfiles/provisioning"
+                "QueryParameters" = @{ expand = 'publishedResources,agents,agentGroups' }
+                "Path" = "OnPremisesPublishingProfiles/Provisioning.json"
+                "Tag" = @("All", "Config", "AppProxy")
+            },
+            @{
+                "GraphUri" = "onPremisesPublishingProfiles/provisioning/publishedResources"
+                "QueryParameters" = @{ expand = 'agentGroups' }
+                "Path" = "OnPremisesPublishingProfiles/Provisioning/PublishedResources"
+                "Tag" = @("All", "Config", "AppProxy")
+            },
+            @{
+                "GraphUri" = "onPremisesPublishingProfiles/provisioning/agentGroups"
+                "QueryParameters" = @{ expand = 'agents,publishedResources' }
+                "Path" = "OnPremisesPublishingProfiles/Provisioning/AgentGroups"
+                "Tag" = @("All", "Config", "AppProxy")
+            },
+            @{
+                "GraphUri" = "onPremisesPublishingProfiles/provisioning/agents"
+                "QueryParameters" = @{ expand = 'agentGroups' }
+                "Path" = "OnPremisesPublishingProfiles/Provisioning/Agents"
+                "Tag" = @("All", "Config", "AppProxy")
+            },
+            @{
+                "GraphUri" = "onPremisesPublishingProfiles/applicationProxy/connectors"
+                "Path" = "OnPremisesPublishingProfiles/ApplicationProxy/Connectors"
+                "Tag" = @("All", "Config", "AppProxy")
+            },
+            @{
+                "GraphUri" = "onPremisesPublishingProfiles/applicationProxy/connectorGroups"
+                "Path" = "OnPremisesPublishingProfiles/ApplicationProxy/ConnectorGroups"
+                "Tag" = @("All", "Config", "AppProxy")
+                Childrens = @(
+                    @{
+                        "GraphUri" = "onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/applications"
+                        "Path" = "Applications"
+                        "Tag" = @("All", "Config", "AppProxy")
+                    },
+                    @{
+                        "GraphUri" = "onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/members"
+                        "Path" = "Members"
+                        "Tag" = @("All", "Config", "AppProxy")
                     }
                 )
             }
