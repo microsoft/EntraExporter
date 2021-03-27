@@ -20,7 +20,7 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B','PIM','PIMAzure','PIMAAD', 'AppProxy')]
+        [ValidateSet('All', 'Config', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B','PIM','PIMAzure','PIMAAD', 'AppProxy', 'Organization')]
         [String[]]$Type = 'Config',
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
@@ -225,7 +225,24 @@ Function Invoke-AADExporter {
             @{
                 "GraphUri" = "organization" 
                 "Path" = "Organization"
-                "Tag" = @("All", "Config")
+                "Tag" = @("All", "Config", "Organization")
+                "Childrens" = @(
+                    @{
+                        "GraphUri" = "organization/{id}/settings"
+                        "Path" = "Settings.json"
+                        "Tag" = @("All", "Config", "Organization")
+                    },
+                    @{
+                        "GraphUri" = "organization/{id}/branding/localizations"
+                        "Path" = "Branding/localizations.json"
+                        "Tag" = @("All", "Config", "Organization")
+                    },
+                    @{
+                        "GraphUri" = "organization/{id}/certificateBasedAuthConfiguration"
+                        "Path" = "CertificateBasedAuthConfiguration.json"
+                        "Tag" = @("All", "Config", "Organization")
+                    }
+                )
             },
             @{
                 "Command" = "Get-AADExportGroups" 
@@ -278,11 +295,6 @@ Function Invoke-AADExporter {
                         "Tag" = @("All", "Config")
                     }
                 )
-            },
-            @{
-                "Command" = "Get-AADExportOrganizationBranding"
-                "Path" = "Organization/Branding/Localizations.json"
-                "Tag" = @("All", "Config")
             },
             @{
                 "GraphUri" = "identity/conditionalAccess/policies"
@@ -394,11 +406,6 @@ Function Invoke-AADExporter {
                 "Tag" = @("All", "Config")
             },
             @{
-                "Command" = "Get-AADExportCertificateBasedAuthConfiguration"
-                "Path" = "Policies/CertificateBasedAuthConfiguration"
-                "Tag" = @("All", "Config")
-            },
-            @{
                 "GraphUri" = "policies/featureRolloutPolicies"
                 "Path" = "Policies/FeatureRolloutPolicies"
                 "Tag" = @("All", "Config")
@@ -426,11 +433,6 @@ Function Invoke-AADExporter {
             @{
                 "GraphUri" = "policies/tokenLifetimePolicies"
                 "Path" = "Policies/TokenLifetimePolicy"
-                "Tag" = @("All", "Config")
-            },
-            @{
-                "Command" = "Get-AADExportOrganizationSettings"
-                "Path" = "Organization/Settings"
                 "Tag" = @("All", "Config")
             },
             @{
