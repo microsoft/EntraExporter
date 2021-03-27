@@ -63,6 +63,7 @@
     NestedModules = @(
         'internal\Invoke-Graph.ps1'
         'internal\Get-ObjectProperty.ps1'
+        'internal\ConvertTo-OrderedDictionary.ps1'
         'internal\ConvertFrom-QueryString.ps1'
         'internal\ConvertTo-QueryString.ps1'        
         'Connect-AADExporter.ps1'

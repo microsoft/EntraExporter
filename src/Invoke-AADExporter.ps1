@@ -627,7 +627,7 @@ Function Invoke-AADExporter {
             }
 
             if ($outputFileName -match "\.json$") {
-                $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+                ConvertTo-OrderedDictionary $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
             } else {
                 foreach($resultItem in $resultItems) {
                     if (!$resultItem.ContainsKey('id')) {
@@ -635,7 +635,7 @@ Function Invoke-AADExporter {
                     }
                     $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath $resultItem.id
                     $parentOutputFileName = Join-Path $itemOutputFileName -ChildPath $resultItem.id
-                    $resultItem | ConvertTo-Json -depth 100 | Out-File (New-Item -Path "$($parentOutputFileName).json" -Force)
+                    ConvertTo-OrderedDictionary $resultItem | ConvertTo-Json -depth 100 | Out-File (New-Item -Path "$($parentOutputFileName).json" -Force)
                     if ($item.ContainsKey("Childrens")) {
                         $itemParents = $Parents
                         $itemParents += $resultItem.Id
