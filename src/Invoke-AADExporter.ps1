@@ -657,12 +657,14 @@ Function Invoke-AADExporter {
                         GraphUri = "onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/applications"
                         Path = "Applications"
                         ApiVersion = "beta"
+                        IgnoreError = "ApplicationsForGroup_NotFound"
                         Tag = @("All", "Config", "AppProxy")
                     },
                     @{
                         GraphUri = "onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/members"
                         Path = "Members"
                         ApiVersion = "beta"
+                        IgnoreError = "ConnectorGroup_NotFound"
                         Tag = @("All", "Config", "AppProxy")
                     }
                 )
