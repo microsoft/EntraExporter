@@ -26,7 +26,7 @@ function Invoke-Graph{
         [string] $ApiVersion = 'v1.0',
         # Specifies consistency level.
         [Parameter(Mandatory = $false)]
-        [string] $ConsistencyLevel = "eventual",
+        [string] $ConsistencyLevel = 'eventual',
         # Only return first page of results.
         [Parameter(Mandatory = $false)]
         [switch] $DisablePaging,
