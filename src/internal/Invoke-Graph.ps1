@@ -45,7 +45,7 @@ function Invoke-Graph{
         $listRequests = New-Object 'System.Collections.Generic.List[psobject]'
 
         function Format-Result ($results, $RawOutput) {
-            if (!$RawOutput -and (Get-ObjectProperty $results 'value')) {
+            if (!$RawOutput -and $results -and (Get-ObjectProperty $results 'value')) {
                 foreach ($result in $results.value) {
                     if ($result -is [hashtable]) {
                         $result.Add('@odata.context', ('{0}/$entity' -f $results.'@odata.context'))
@@ -71,6 +71,7 @@ function Invoke-Graph{
 
     process {
         ## Initialize
+        $results = $null
         if (!$UniqueId) { [string[]] $UniqueId = '' }
         if ($DisableBatching -and ($RelativeUri.Count -gt 1 -or $UniqueId.Count -gt 1)) {
             Write-Warning ('This command is invoking {0} individual Graph requests. For better performance, remove the -DisableBatching parameter.' -f ($RelativeUri.Count * $UniqueId.Count))

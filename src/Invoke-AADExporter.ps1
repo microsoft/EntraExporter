@@ -60,6 +60,7 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "organization/$($TenantID)/settings"
                 Path = "Organization/Settings.json"
+                ApiVersion = "beta"
                 Tag = @("All", "Config")
             },
             @{
@@ -76,6 +77,8 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "identity/apiConnectors"
                 Path = "Identity/APIConnectors"
+                ApiVersion = "beta"
+                IgnoreError = "The feature self service sign up is not enabled for the tenant"
                 Tag = @("All")
             },
             @{
@@ -91,6 +94,7 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "identity/continuousAccessEvaluationPolicy"
                 Path = "Identity/ContinuousAccessEvaluationPolicy"
+                ApiVersion = "beta"
                 Tag = @("All", "Config")
             },
             @{
@@ -275,8 +279,6 @@ Function Invoke-AADExporter {
                 Tag = @("All", "Config")
             },
 
-
-
             # B2C
             @{
                 GraphUri = "identity/userFlows"
@@ -445,6 +447,7 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "identityGovernance/entitlementManagement/accessPackages"
                 Path = "IdentityGovernance\EntitlementManagement\AccessPackages"
+                ApiVersion = "beta"
                 Tag = @("All", "Config")
                 Children = @(
                     @{
@@ -467,6 +470,7 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "businessFlowTemplates"
                 Path = "IdentityGovernance/AccessReviews"
+                ApiVersion = "beta"
                 Tag = @("All","Config", "AccessReviews")
                 Children = @(
                     @{
@@ -477,6 +481,7 @@ Function Invoke-AADExporter {
                             @{
                                 GraphUri = "accessReviews/{id}/reviewers"
                                 Path = "Reviewers"
+                                ApiVersion = "beta"
                                 Tag = @("All","Config", "AccessReviews")
                             }
                         )
@@ -491,16 +496,19 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "identityGovernance/entitlementManagement/connectedOrganizations"
                 Path = "IdentityGovernance/EntitlementManagement/ConnectedOrganizations"
+                ApiVersion = "beta"
                 Tag = @("All", "Config")
                 Children = @(
                     @{
                         GraphUri = "identityGovernance/entitlementManagement/connectedOrganizations/{id}/externalSponsors"
                         Path = "ExternalSponsors"
+                        ApiVersion = "beta"
                         Tag = @("All", "Config")
                     },
                     @{
                         GraphUri = "identityGovernance/entitlementManagement/connectedOrganizations/{id}/internalSponsors"
                         Path = "InternalSponsors"
+                        ApiVersion = "beta"
                         Tag = @("All", "Config")
                     }
                 )    
@@ -508,27 +516,32 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "identityGovernance/entitlementManagement/settings"
                 Path = "IdentityGovernance/EntitlementManagement/Settings"
+                ApiVersion = "beta"
                 Tag = @("All", "Config")
             },
             @{
                 GraphUri = "AdministrativeUnits"
                 Path = "AdministrativeUnits"
+                ApiVersion = "beta"
                 Tag = @("All", "Config")
                 Children = @(
                     @{
                         GraphUri = "administrativeUnits/{id}/members"
-                        Path = "Members"
                         Select = "Id"
+                        Path = "Members"
+                        ApiVersion = "beta"
                         Tag = @("All", "Config")
                     },
                     @{
                         GraphUri = "administrativeUnits/{id}/scopedRoleMembers"
                         Path = "ScopedRoleMembers"
+                        ApiVersion = "beta"
                         Tag = @("All", "Config")
                     },
                     @{
                         GraphUri = "administrativeUnits/{id}/extensions"
                         Path = "Extensions"
+                        ApiVersion = "beta"
                         Tag = @("All", "Config")
                     }
                 )
@@ -538,23 +551,27 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "privilegedAccess/aadroles/resources"
                 Path = "PrivilegedAccess/AADRoles/Resources"
+                ApiVersion = "beta"
                 Tag = @("All", "Config", "PIM", "PIMAAD")
                 Children = @(
                     @{
                         GraphUri = "privilegedAccess/aadroles/resources/{id}/roleDefinitions"
                         Path = "RoleDefinitions"
+                        ApiVersion = "beta"
                         #"Filter" = "Type ne 'BuiltInRole'"
                         Tag = @("All", "Config", "PIM", "PIMAAD")
                     },
                     @{
                         GraphUri = "privilegedAccess/aadroles/resources/{id}/roleSettings"
                         Path = "RoleSettings"
+                        ApiVersion = "beta"
                         #"Filter" = "isDefault eq false"
                         Tag = @("All", "Config", "PIM", "PIMAAD")
                     },
                     @{
                         GraphUri = "privilegedAccess/aadroles/resources/{id}/roleAssignments"
                         Path = "RoleAssignments"
+                        ApiVersion = "beta"
                         #"Filter" = "endDateTime eq null"
                         Tag = @("All", "Config", "PIM", "PIMAAD")
                     }
@@ -563,23 +580,28 @@ Function Invoke-AADExporter {
             @{
                 GraphUri = "privilegedAccess/azureResources/resources"
                 Path = "PrivilegedAccess/AzureResources/Resources"
+                ApiVersion = "beta"
+                IgnoreError = "The tenant has not onboarded to PIM."
                 Tag = @("All", "Config", "PIM", "PIMAzure")
                 Children = @(
                     @{
                         GraphUri = "privilegedAccess/azureResources/resources/{id}/roleDefinitions"
                         Path = "RoleDefinitions"
+                        ApiVersion = "beta"
                         #"Filter" = "Type ne 'BuiltInRole'"
                         Tag = @("All", "PIM", "PIMAAzure")
                     },
                     @{
                         GraphUri = "privilegedAccess/azureResources/resources/{id}/roleSettings"
                         Path = "RoleSettings"
+                        ApiVersion = "beta"
                         #"Filter" = "isDefault eq false"
                         Tag = @("All", "PIM", "PIMAAzure")
                     },
                     @{
                         GraphUri = "privilegedAccess/azureResources/resources/{id}/roleAssignments"
                         Path = "RoleAssignments"
+                        ApiVersion = "beta"
                         #"Filter" = "endDateTime eq null"
                         Tag = @("All", "PIM", "PIMAzure")
                     }
@@ -591,44 +613,52 @@ Function Invoke-AADExporter {
                 GraphUri = "onPremisesPublishingProfiles/provisioning"
                 QueryParameters = @{ expand = 'publishedResources,agents,agentGroups' }
                 Path = "OnPremisesPublishingProfiles/Provisioning.json"
+                ApiVersion = "beta"
                 Tag = @("All", "Config", "AppProxy")
             },
             @{
                 GraphUri = "onPremisesPublishingProfiles/provisioning/publishedResources"
                 QueryParameters = @{ expand = 'agentGroups' }
                 Path = "OnPremisesPublishingProfiles/Provisioning/PublishedResources"
+                ApiVersion = "beta"
                 Tag = @("All", "Config", "AppProxy")
             },
             @{
                 GraphUri = "onPremisesPublishingProfiles/provisioning/agentGroups"
                 QueryParameters = @{ expand = 'agents,publishedResources' }
                 Path = "OnPremisesPublishingProfiles/Provisioning/AgentGroups"
+                ApiVersion = "beta"
                 Tag = @("All", "Config", "AppProxy")
             },
             @{
                 GraphUri = "onPremisesPublishingProfiles/provisioning/agents"
                 QueryParameters = @{ expand = 'agentGroups' }
                 Path = "OnPremisesPublishingProfiles/Provisioning/Agents"
+                ApiVersion = "beta"
                 Tag = @("All", "Config", "AppProxy")
             },
             @{
                 GraphUri = "onPremisesPublishingProfiles/applicationProxy/connectors"
                 Path = "OnPremisesPublishingProfiles/ApplicationProxy/Connectors"
+                ApiVersion = "beta"
                 Tag = @("All", "Config", "AppProxy")
             },
             @{
                 GraphUri = "onPremisesPublishingProfiles/applicationProxy/connectorGroups"
                 Path = "OnPremisesPublishingProfiles/ApplicationProxy/ConnectorGroups"
+                ApiVersion = "beta"
                 Tag = @("All", "Config", "AppProxy")
                 Children = @(
                     @{
                         GraphUri = "onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/applications"
                         Path = "Applications"
+                        ApiVersion = "beta"
                         Tag = @("All", "Config", "AppProxy")
                     },
                     @{
                         GraphUri = "onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/members"
                         Path = "Members"
+                        ApiVersion = "beta"
                         Tag = @("All", "Config", "AppProxy")
                     }
                 )
@@ -651,18 +681,30 @@ Function Invoke-AADExporter {
 
             $command = Get-ObjectProperty $item 'Command'
             $graphUri = Get-ObjectProperty $item 'GraphUri'
-
+            $apiVersion = Get-ObjectProperty $item 'ApiVersion'
+            $ignoreError = Get-ObjectProperty $item 'IgnoreError'
+            if (!$apiVersion) { $apiVersion = 'v1.0' }
+            $resultItems = $null
             if($command) {
                 if ($hasParents){ $command += " -Parents $Parents" }
                 $resultItems = Invoke-Expression -Command $command
             }
             else {
                 if ($hasParents){ $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1] }
-                $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters')
+                try {
+                    $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion    
+                }
+                catch {
+                    if(!$_.ErrorDetails.Message.Contains($ignoreError)){
+                        Write-Error $_
+                    }
+                }
             }
 
             if ($outputFileName -match "\.json$") {
-                ConvertTo-OrderedDictionary $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+                if($resultItems){
+                    ConvertTo-OrderedDictionary $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+                }
             } else {
                 foreach($resultItem in $resultItems) {
                     if (!$resultItem.ContainsKey('id')) {
