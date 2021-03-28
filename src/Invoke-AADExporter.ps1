@@ -51,6 +51,10 @@ Function Invoke-AADExporter {
         $All
     )
 
+    if ($null -eq (Get-MgContext)) {
+        Write-Error "No active connection. Run Connect-AADExporter to sign in and then retry."
+        exit
+    }
     if($All) {$Type = @('All')}
     $global:TenantID = (Get-MgContext).TenantId
     $global:Type = $Type #Used in places like Groups where Config flag will limit the resultset to just dynamic groups.
@@ -125,168 +129,6 @@ Function Invoke-AADExporter {
                         Tag = @('All', 'Config')
                     }
                 )
-            },
-            # Applications
-            @{
-                GraphUri = 'applications'
-                Path = 'Applications'
-                Tag = @('All', 'Applications')
-                Children = @(
-                    @{
-                        GraphUri = 'applications/{id}/extensionProperties'
-                        Path = 'ExtensionProperties'
-                        Tag = @('All', 'Applications')
-                    },
-                    @{
-                        GraphUri = 'applications/{id}/owners'
-                        Select = 'id, userPrincipalName, displayName'
-                        Path = 'Owners'
-                        Tag = @('All', 'Applications')
-                    },
-                    @{
-                        GraphUri = 'applications/{id}/tokenIssuancePolicies'
-                        Path = 'TokenIssuancePolicies'
-                        Tag = @('All', 'Applications')
-                    },
-                    @{
-                        GraphUri = 'applications/{id}/tokenLifetimePolicies'
-                        Path = 'TokenLifetimePolicies'
-                        Tag = @('All', 'Applications')
-                    }
-                )
-            },
-            @{
-                GraphUri = 'servicePrincipals'
-                Path = 'ServicePrincipals'
-                Tag = @('All', 'ServicePrincipals')
-                Children = @(
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/appRoleAssignments'
-                        Path = 'AppRoleAssignments'
-                        Tag = @('All', 'ServicePrincipals')
-                    },
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/oauth2PermissionGrants'
-                        Path = 'Oauth2PermissionGrants'
-                        Tag = @('All', 'ServicePrincipals')
-                    },
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/delegatedPermissionClassifications'
-                        Path = 'DelegatedPermissionClassifications'
-                        Tag = @('All', 'ServicePrincipals')
-                    },
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/owners'
-                        Select = 'id, userPrincipalName, displayName'
-                        Path = 'Owners'
-                        Tag = @('All', 'ServicePrincipals')
-                    },
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/claimsMappingPolicies'
-                        Path = 'claimsMappingPolicies'
-                        Tag = @('All', 'ServicePrincipals')
-                    },
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/homeRealmDiscoveryPolicies'
-                        Path = 'homeRealmDiscoveryPolicies'
-                        Tag = @('All', 'ServicePrincipals')
-                    },
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/tokenIssuancePolicies'
-                        Path = 'tokenIssuancePolicies'
-                        Tag = @('All', 'ServicePrincipals')
-                    },
-                    @{
-                        GraphUri = 'servicePrincipals/{id}/tokenLifetimePolicies'
-                        Path = 'tokenLifetimePolicies'
-                        Tag = @('All', 'ServicePrincipals')
-                    }
-                )
-            },
-            
-            # Users
-            @{
-                Command = 'Get-AADExportUsers'
-                Path = 'Users'
-                Tag = @('All', 'Users')
-                Children = @(
-                    @{
-                        GraphUri = 'users/{id}/authentication/fido2Methods'
-                        Path = 'Authentication/FIDO2Methods'
-                        Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/authentication/microsoftAuthenticatorMethods'
-                        Path = 'Authentication/MicrosoftAuthenticatorMethods'
-                        Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/authentication/windowsHelloForBusinessMethods'
-                        Path = 'Authentication/WindowsHelloForBusinessMethods'
-                        Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/authentication/temporaryAccessPassMethods'
-                        Path = 'Authentication/TemporaryAccessPassMethods'
-                        ApiVersion = 'beta'
-                        Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/authentication/phoneMethods'
-                        Path = 'Authentication/PhoneMethods'
-                        ApiVersion = 'beta'
-                        Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/authentication/emailMethods'
-                        Path = 'Authentication/EmailMethods'
-                        ApiVersion = 'beta'
-                        Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/authentication/passwordMethods'
-                        Path = 'Authentication/PasswordMethods'
-                        ApiVersion = 'beta'
-                        Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/extensions'
-                        Path = 'Extensions'
-                        Tag = @('All', 'Users')
-                    }
-                )
-            },
-
-
-            # Groups
-            @{
-                Command = 'Get-AADExportGroups' 
-                Path = 'Groups'
-                Tag = @('All', 'Config', 'Groups')
-                Children = @(
-                    @{
-                        GraphUri = 'groups/{id}/members' 
-                        Select = 'id, userPrincipalName, displayName'
-                        Path = 'Members'
-                        Tag = @('All', 'Groups')
-                    }
-                    @{
-                        GraphUri =  'groups/{id}/owners'
-                        Select = 'id, userPrincipalName, displayName'
-                        Path = 'Owners'
-                        Tag = @('All', 'Config', 'Groups')
-                    },
-                    @{
-                        GraphUri = 'groups/{id}/extensions'
-                        Path = 'Extensions'
-                        Tag = @('All', 'Groups')
-                    }
-                )                
-            },
-            @{
-                GraphUri = 'groupSettings'
-                Path = 'GroupSettings'
-                Tag = @('All', 'Config')
             },
 
             # B2C
@@ -673,6 +515,170 @@ Function Invoke-AADExporter {
                         ApiVersion = 'beta'
                         IgnoreError = 'ConnectorGroup_NotFound'
                         Tag = @('All', 'Config', 'AppProxy')
+                    }
+                )
+            },
+
+            # Groups
+            @{
+                Command = 'Get-AADExportGroups' 
+                Path = 'Groups'
+                Tag = @('All', 'Config', 'Groups')
+                Children = @(
+                    @{
+                        GraphUri = 'groups/{id}/members' 
+                        Select = 'id, userPrincipalName, displayName'
+                        Path = 'Members'
+                        Tag = @('All', 'Groups')
+                    }
+                    @{
+                        GraphUri =  'groups/{id}/owners'
+                        Select = 'id, userPrincipalName, displayName'
+                        Path = 'Owners'
+                        Tag = @('All', 'Config', 'Groups')
+                    },
+                    @{
+                        GraphUri = 'groups/{id}/extensions'
+                        Path = 'Extensions'
+                        Tag = @('All', 'Groups')
+                    }
+                )                
+            },
+            @{
+                GraphUri = 'groupSettings'
+                Path = 'GroupSettings'
+                Tag = @('All', 'Config')
+            },
+
+            # Applications
+            @{
+                GraphUri = 'applications'
+                Path = 'Applications'
+                Tag = @('All', 'Applications')
+                Children = @(
+                    @{
+                        GraphUri = 'applications/{id}/extensionProperties'
+                        Path = 'ExtensionProperties'
+                        Tag = @('All', 'Applications')
+                    },
+                    @{
+                        GraphUri = 'applications/{id}/owners'
+                        Select = 'id, userPrincipalName, displayName'
+                        Path = 'Owners'
+                        Tag = @('All', 'Applications')
+                    },
+                    @{
+                        GraphUri = 'applications/{id}/tokenIssuancePolicies'
+                        Path = 'TokenIssuancePolicies'
+                        Tag = @('All', 'Applications')
+                    },
+                    @{
+                        GraphUri = 'applications/{id}/tokenLifetimePolicies'
+                        Path = 'TokenLifetimePolicies'
+                        Tag = @('All', 'Applications')
+                    }
+                )
+            },
+
+            # Service Principals
+            @{
+                GraphUri = 'servicePrincipals'
+                Path = 'ServicePrincipals'
+                Tag = @('All', 'ServicePrincipals')
+                Children = @(
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/appRoleAssignments'
+                        Path = 'AppRoleAssignments'
+                        Tag = @('All', 'ServicePrincipals')
+                    },
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/oauth2PermissionGrants'
+                        Path = 'Oauth2PermissionGrants'
+                        Tag = @('All', 'ServicePrincipals')
+                    },
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/delegatedPermissionClassifications'
+                        Path = 'DelegatedPermissionClassifications'
+                        Tag = @('All', 'ServicePrincipals')
+                    },
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/owners'
+                        Select = 'id, userPrincipalName, displayName'
+                        Path = 'Owners'
+                        Tag = @('All', 'ServicePrincipals')
+                    },
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/claimsMappingPolicies'
+                        Path = 'claimsMappingPolicies'
+                        Tag = @('All', 'ServicePrincipals')
+                    },
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/homeRealmDiscoveryPolicies'
+                        Path = 'homeRealmDiscoveryPolicies'
+                        Tag = @('All', 'ServicePrincipals')
+                    },
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/tokenIssuancePolicies'
+                        Path = 'tokenIssuancePolicies'
+                        Tag = @('All', 'ServicePrincipals')
+                    },
+                    @{
+                        GraphUri = 'servicePrincipals/{id}/tokenLifetimePolicies'
+                        Path = 'tokenLifetimePolicies'
+                        Tag = @('All', 'ServicePrincipals')
+                    }
+                )
+            },
+            
+            # Users
+            @{
+                Command = 'Get-AADExportUsers'
+                Path = 'Users'
+                Tag = @('All', 'Users')
+                Children = @(
+                    @{
+                        GraphUri = 'users/{id}/authentication/fido2Methods'
+                        Path = 'Authentication/FIDO2Methods'
+                        Tag = @('All', 'Users')
+                    },
+                    @{
+                        GraphUri = 'users/{id}/authentication/microsoftAuthenticatorMethods'
+                        Path = 'Authentication/MicrosoftAuthenticatorMethods'
+                        Tag = @('All', 'Users')
+                    },
+                    @{
+                        GraphUri = 'users/{id}/authentication/windowsHelloForBusinessMethods'
+                        Path = 'Authentication/WindowsHelloForBusinessMethods'
+                        Tag = @('All', 'Users')
+                    },
+                    @{
+                        GraphUri = 'users/{id}/authentication/temporaryAccessPassMethods'
+                        Path = 'Authentication/TemporaryAccessPassMethods'
+                        ApiVersion = 'beta'
+                        Tag = @('All', 'Users')
+                    },
+                    @{
+                        GraphUri = 'users/{id}/authentication/phoneMethods'
+                        Path = 'Authentication/PhoneMethods'
+                        ApiVersion = 'beta'
+                        Tag = @('All', 'Users')
+                    },
+                    @{
+                        GraphUri = 'users/{id}/authentication/emailMethods'
+                        Path = 'Authentication/EmailMethods'
+                        ApiVersion = 'beta'
+                        Tag = @('All', 'Users')
+                    },
+                    @{
+                        GraphUri = 'users/{id}/authentication/passwordMethods'
+                        Path = 'Authentication/PasswordMethods'
+                        ApiVersion = 'beta'
+                        Tag = @('All', 'Users')
+                    },
+                    @{
+                        GraphUri = 'users/{id}/extensions'
+                        Path = 'Extensions'
+                        Tag = @('All', 'Users')
                     }
                 )
             }
