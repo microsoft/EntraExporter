@@ -17,5 +17,5 @@ Function Get-AADExportAccessPackageAssignments {
       [Parameter(Mandatory = $true)]
       [string[]]$Parents
   )
-    Invoke-Graph 'identityGovernance/entitlementManagement/accessPackageAssignments' -Filter "(accessPackage/id eq '$($Parents[0])')"  
+    Invoke-Graph 'identityGovernance/entitlementManagement/accessPackageAssignments' -Filter "(accessPackage/id eq '$($Parents[0])')"  -ApiVersion 'beta'
 }

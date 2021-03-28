@@ -18,5 +18,5 @@ Function Get-AADExportAccessReviews {
       [string[]]$Parents
   )
   
-  Invoke-Graph  'accessReviews' -Filter "(businessFlowTemplateId eq '$($Parents[0])')"  
+  Invoke-Graph  'accessReviews' -Filter "(businessFlowTemplateId eq '$($Parents[0])')" -ApiVersion 'beta'
 }

@@ -23,7 +23,7 @@ function Invoke-Graph{
         # API Version.
         [Parameter(Mandatory = $false)]
         [ValidateSet('v1.0', 'beta')]
-        [string] $ApiVersion = 'beta',
+        [string] $ApiVersion = 'v1.0',
         # Specifies consistency level.
         [Parameter(Mandatory = $false)]
         [string] $ConsistencyLevel = "eventual",
