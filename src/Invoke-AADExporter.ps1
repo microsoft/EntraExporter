@@ -222,21 +222,25 @@ Function Invoke-AADExporter {
                     @{
                         GraphUri = "users/{id}/authentication/temporaryAccessPassMethods"
                         Path = "Authentication/TemporaryAccessPassMethods"
+                        ApiVersion = "beta"
                         Tag = @("All", "Users")
                     },
                     @{
                         GraphUri = "users/{id}/authentication/phoneMethods"
                         Path = "Authentication/PhoneMethods"
+                        ApiVersion = "beta"
                         Tag = @("All", "Users")
                     },
                     @{
                         GraphUri = "users/{id}/authentication/emailMethods"
                         Path = "Authentication/EmailMethods"
+                        ApiVersion = "beta"
                         Tag = @("All", "Users")
                     },
                     @{
                         GraphUri = "users/{id}/authentication/passwordMethods"
                         Path = "Authentication/PasswordMethods"
+                        ApiVersion = "beta"
                         Tag = @("All", "Users")
                     },
                     @{
@@ -589,21 +593,21 @@ Function Invoke-AADExporter {
                         Path = "RoleDefinitions"
                         ApiVersion = "beta"
                         #"Filter" = "Type ne 'BuiltInRole'"
-                        Tag = @("All", "PIM", "PIMAAzure")
+                        Tag = @("All", "Config", "PIM", "PIMAAzure")
                     },
                     @{
                         GraphUri = "privilegedAccess/azureResources/resources/{id}/roleSettings"
                         Path = "RoleSettings"
                         ApiVersion = "beta"
                         #"Filter" = "isDefault eq false"
-                        Tag = @("All", "PIM", "PIMAAzure")
+                        Tag = @("All", "Config", "PIM", "PIMAAzure")
                     },
                     @{
                         GraphUri = "privilegedAccess/azureResources/resources/{id}/roleAssignments"
                         Path = "RoleAssignments"
                         ApiVersion = "beta"
                         #"Filter" = "endDateTime eq null"
-                        Tag = @("All", "PIM", "PIMAzure")
+                        Tag = @("All", "Config", "PIM", "PIMAzure")
                     }
                 )
             },
@@ -665,8 +669,6 @@ Function Invoke-AADExporter {
             }
         )
     }
-    $totalExports = $ExportSchema.Count
-    $processedItems = 0    
 
     foreach ($item in $ExportSchema) {
         $typeMatch = Compare-Object $item.Tag $Type -ExcludeDifferent -IncludeEqual
@@ -695,7 +697,11 @@ Function Invoke-AADExporter {
                     $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion    
                 }
                 catch {
-                    if(!$_.ErrorDetails.Message.Contains($ignoreError)){
+                    $e = $_.ErrorDetails.Message
+                    if($e.Contains($ignoreError) -or $e.Contains('Encountered an internal server error')){
+                        Write-Debug $_
+                    }
+                    else {
                         Write-Error $_
                     }
                 }
@@ -721,7 +727,5 @@ Function Invoke-AADExporter {
                 }
             }
         }
-
-        $processedItems++
     }
 }
