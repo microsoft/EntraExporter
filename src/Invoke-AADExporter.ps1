@@ -17,15 +17,21 @@
 .EXAMPLE
    .\Invoke-AADExporter -Path "c:\temp\contoso"
 
+   Runs a default export and includes the key tenant configuration settings. Does not include large data collections such as Users, Groups, Applications, Service Principals, etc.
 .EXAMPLE
    .\Invoke-AADExporter -Path "c:\temp\contoso" -All
+   
+   Runs a full export of all objects and configuration settings.
 
 .EXAMPLE
    .\Invoke-AADExporter -Path "c:\temp\contoso" -Type ConditionalAccess, AppProxy
 
+   Runs an export that includes just the Conditional Access and Application Proxy settings.
+
 .EXAMPLE
    .\Invoke-AADExporter -Path "c:\temp\contoso" -Type B2C
 
+   Runs an export of all B2C settings.
 #>
 
 Function Invoke-AADExporter {
