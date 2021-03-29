@@ -1,14 +1,78 @@
 # Azure AD Exporter
 
-The Azure AD Exporter is a PowerShell module that allows you to export your Azure AD / Identity related objects and settings.
-You can run this as a nightly scheduled task or a DevOps component (Azure DevOps, GitHub, Jenkins) and commit the exported files to an internal GIT repository.
-This way you can have a complete version history of your tenant settings.
+The Azure AD Exporter is a PowerShell module that allows you to export your Azure AD and Azure AD B2C configuration settings to local .json files.
 
-##  Development Environment Setup
-Use the following command to Test the Program on your development environment
-```powershell
-    Import-Module .\AzureADExporter.psd1
-```
+This module can be run as a nightly scheduled task or a DevOps component (Azure DevOps, GitHub, Jenkins) and the exported files can be version controlled in GIT or SharePoint.
+
+This will provide tenant administrators with a historical view of all the settings in the tenant including the change history over the years.
+
+Note: This project is not intended to be a backup or disaster recovery solution for Azure Active Directory.
+
+## Exported settings include
+* Users
+* Groups
+  * Dynamic and Assigned groups (incl. Members and Owners)
+  * Group Settings
+* External Identities
+  * Authorization Policy
+  * API Connectors
+  * User Flows
+* Roles and Administrators
+* Administrative Units
+* Applications
+  * Enterprise Applications
+  * App Registrations
+  * Claims Mapping Policy
+  * Extension Properties
+  * Admin Consent Request Policy
+  * Permission Grant Policies
+  * Token Issuance Policies
+  * Token Lifetime Policies
+* Identity Governance
+  * Entitlement Management
+    * Access Packages
+    * Catalogs
+    * Connected Organizations
+  * Access Reviews
+  * Privileged Identity Management
+    * Azure AD Roles
+    * Azure Resources
+  * Terms of Use
+* Application Proxy
+  * Connectors and Connect Groups
+  * Agents and Agent Groups
+  * Published Resources
+* Licences
+* Custom domain names
+* Company branding
+  * Profile Card Properties
+* User settings
+* Tenant Properties
+  * Technical contacts
+* Security
+  * Conditional Access Policies
+  * Named Locations
+  * Authentication Methods Policies
+  * Continouse Access Evaluation Policy
+  * Identity Security Defaults Enforcement Policy
+  * Permission Grant Policies
+* Tenant Policies and Settings
+  * Feature Rollout Policies
+  * Certificate Based Auth Configuration
+  * Activity Based Timeout Policies
+* Hybrid Authentication
+  * Identity Providers
+  * Home Realm Discovery Policies
+
+* B2C Settings
+  * B2C User Flows
+    * Identity Providers
+    * User Attribute Assignments
+    * API Connector Configuration
+    * Languages
+
+
+Note: This module exports all settings that are available through the Microsoft Graph API. Azure AD settings and objects that are not yet available in the Graph API are not included.
 
 ## Installing the module
 ```powershell
