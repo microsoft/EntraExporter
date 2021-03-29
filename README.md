@@ -22,9 +22,44 @@ Use the following command to Test the Program on your development environment
     Connect-AzureADExporter
 ```
 
-### Exporting all objects and settings
+### Exporting objects and settings
+
+To export object and settings use the following command:
+
 ```powershell
     Invoke-AADExporter -Path 'C:\AzureADBackup\'
+```
+
+This will export the most common set of object and settings.
+
+The following object and settings are not exported by default:
+* B2C
+* B2B
+* Static Groups and group memberships
+* Applications
+* ServicePrincipals
+* Users
+* Priviledge Identity Management (built in roles, default roles settings, non permanent role assignement)
+
+To export all the objects and settings supported (no filter applied):
+
+```powershell
+    Invoke-AADExporter -Path 'C:\AzureADBackup\' -All
+```
+
+To Select specific object and settings to export the ``-Type`` parameter can be used. The default type is "Config":
+
+```powershell
+    # export default all users as well as default objects and settings
+    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "Config","Users"
+    # export applications only
+    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "Applications"
+```
+
+A filter can be applied to only export user and groups that are not synced from onprem (cloud users and groups):
+
+```powershell
+    Invoke-AADExporter -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
 ```
 
 ## Contributing
