@@ -9,7 +9,8 @@
   Get-AADExportDefaultSchema
 #>
 
-function Get-AADExportDefaultSchema()  {
+function Get-AADExportDefaultSchema  {
+    $global:TenantID = (Get-MgContext).TenantId
     return  @(
         # Organization
         @{
@@ -107,21 +108,21 @@ function Get-AADExportDefaultSchema()  {
             GraphUri = 'identity/userFlows'
             Path = 'Identity/UserFlows'
             Tag = @('B2C')
-            DelegatedPermission = '	IdentityUserFlow.Read.All'
+            DelegatedPermission = 'IdentityUserFlow.Read.All'
             ApplicationPermission = 'IdentityUserFlow.Read.All'
         },
         @{
             GraphUri = 'identity/b2cUserFlows'
             Path = 'Identity/B2CUserFlows'
             Tag = @('B2C')
-            DelegatedPermission = '	IdentityUserFlow.Read.All'
+            DelegatedPermission = 'IdentityUserFlow.Read.All'
             ApplicationPermission = 'IdentityUserFlow.Read.All'
             Children = @(
                 @{
                     GraphUri = 'identity/b2cUserFlows/{id}/identityProviders'
                     Path = 'IdentityProviders'
                     Tag = @('B2C')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
@@ -129,7 +130,7 @@ function Get-AADExportDefaultSchema()  {
                     QueryParameters = @{ expand = 'userAttribute' }
                     Path = 'UserAttributeAssignments'
                     Tag = @('B2C')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
@@ -137,14 +138,14 @@ function Get-AADExportDefaultSchema()  {
                     QueryParameters = @{ expand = 'postFederationSignup,postAttributeCollection' }
                     Path = 'ApiConnectorConfiguration'
                     Tag = @('B2C')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
                     GraphUri = 'identity/b2cUserFlows/{id}/languages'
                     Path = 'Languages'
                     Tag = @('B2C')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 }
             )
@@ -156,7 +157,7 @@ function Get-AADExportDefaultSchema()  {
             Path = 'Identity/UserFlowAttributes'
             ApiVersion = 'beta'
             Tag = @('Config', 'B2B', 'B2C')
-            DelegatedPermission = '	IdentityUserFlow.Read.All'
+            DelegatedPermission = 'IdentityUserFlow.Read.All'
             ApplicationPermission = 'IdentityUserFlow.Read.All'
         },
         @{
@@ -164,7 +165,7 @@ function Get-AADExportDefaultSchema()  {
             Path = 'Identity/B2XUserFlows'
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'B2B')
-            DelegatedPermission = '	IdentityUserFlow.Read.All'
+            DelegatedPermission = 'IdentityUserFlow.Read.All'
             ApplicationPermission = 'IdentityUserFlow.Read.All'
             Children = @(
                 @{
@@ -172,7 +173,7 @@ function Get-AADExportDefaultSchema()  {
                     Path = 'IdentityProviders'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'B2B')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
@@ -181,7 +182,7 @@ function Get-AADExportDefaultSchema()  {
                     Path = 'AttributeAssignments'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'B2B')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
@@ -190,7 +191,7 @@ function Get-AADExportDefaultSchema()  {
                     Path = 'APIConnectors'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'B2B')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
@@ -198,7 +199,7 @@ function Get-AADExportDefaultSchema()  {
                     Path = 'Languages'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'B2B')
-                    DelegatedPermission = '	IdentityUserFlow.Read.All'
+                    DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 }
             )
@@ -393,7 +394,7 @@ function Get-AADExportDefaultSchema()  {
             GraphUri = 'identityGovernance/termsOfUse/agreements'
             Path = 'IdentityGovernance/TermsOfUse/Agreements'
             Tag = @('All', 'Config', 'Governance')
-            DelegatePermission = 'Agreement.Read.All'
+            DelegatedPermission = 'Agreement.Read.All'
         },
         @{
             GraphUri = 'identityGovernance/entitlementManagement/connectedOrganizations'
