@@ -74,6 +74,7 @@
         'Get-AADExportAccessPackageAssignments.ps1'
         'Get-AADExportAccessPackageResourceScopes.ps1'
         'Get-AADExportDefaultSchema.ps1'
+        'Get-AADExportRequiredScopes.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -86,6 +87,7 @@
         'Get-AADExportAccessPackageAssignments'
         'Get-AADExportAccessPackageResourceScopes'
         'Get-AADExportDefaultSchema'
+        'Get-AADExportRequiredScopes'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
