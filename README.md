@@ -7,7 +7,7 @@ This way you can have a complete version history of your tenant settings.
 ##  Development Environment Setup
 Use the following command to Test the Program on your development environment
 ```powershell
-    Import-Module AzureADExporter.psd1
+    Import-Module .\AzureADExporter.psd1
 ```
 
 ## Installing the module
@@ -19,7 +19,7 @@ Use the following command to Test the Program on your development environment
 
 ### Connecting to your tenant
 ```powershell
-    Connect-AzureADExporter
+    Connect-AADExporter
 ```
 
 ### Exporting objects and settings
@@ -54,6 +54,10 @@ To Select specific object and settings to export the ``-Type`` parameter can be 
     Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "Config","Users"
     # export applications only
     Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "Applications"
+     # export B2C specific properties only
+    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "B2C"
+    # export B2B properties along with AD properties
+    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "B2B","Config"
 ```
 
 A filter can be applied to only export user and groups that are not synced from onprem (cloud users and groups):
