@@ -68,7 +68,6 @@
         'internal\ConvertTo-QueryString.ps1'        
         'Connect-AADExporter.ps1'
         'Invoke-AADExporter.ps1'
-        'Get-AADExportUsers.ps1'
         'Get-AADExportGroups.ps1'
         'Get-AADExportAccessReviews.ps1'
         'Get-AADExportAccessPackageAssignmentPolicies.ps1'
@@ -80,7 +79,6 @@
     FunctionsToExport = @(
         'Connect-AADExporter'
         'Invoke-AADExporter'
-        'Get-AADExportUsers'
         'Get-AADExportGroups'
         'Get-AADExportAccessReviews'
         'Get-AADExportAccessPackageAssignmentPolicies'

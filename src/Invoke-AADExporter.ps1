@@ -48,7 +48,11 @@ Function Invoke-AADExporter {
         [Parameter(Mandatory = $false)]
         [string[]]$Parents,
         [switch]
-        $All
+        $All,
+        [switch]
+        $CloudUsersAndGroupsOnly,
+        [switch]
+        $AllGroups
     )
 
     if ($null -eq (Get-MgContext)) {
@@ -411,21 +415,21 @@ Function Invoke-AADExporter {
                         GraphUri = 'privilegedAccess/aadroles/resources/{id}/roleDefinitions'
                         Path = 'RoleDefinitions'
                         ApiVersion = 'beta'
-                        #'Filter' = 'Type ne 'BuiltInRole''
+                        Filter = "Type ne 'BuiltInRole'"
                         Tag = @('All', 'Config', 'PIM', 'PIMAAD')
                     },
                     @{
                         GraphUri = 'privilegedAccess/aadroles/resources/{id}/roleSettings'
                         Path = 'RoleSettings'
                         ApiVersion = 'beta'
-                        #'Filter' = 'isDefault eq false'
+                        Filter = 'isDefault eq false'
                         Tag = @('All', 'Config', 'PIM', 'PIMAAD')
                     },
                     @{
                         GraphUri = 'privilegedAccess/aadroles/resources/{id}/roleAssignments'
                         Path = 'RoleAssignments'
                         ApiVersion = 'beta'
-                        #'Filter' = 'endDateTime eq null'
+                        Filter = 'endDateTime eq null'
                         Tag = @('All', 'Config', 'PIM', 'PIMAAD')
                     }
                 )
@@ -441,21 +445,21 @@ Function Invoke-AADExporter {
                         GraphUri = 'privilegedAccess/azureResources/resources/{id}/roleDefinitions'
                         Path = 'RoleDefinitions'
                         ApiVersion = 'beta'
-                        #'Filter' = 'Type ne 'BuiltInRole''
+                        Filter = "Type ne 'BuiltInRole'"
                         Tag = @('All', 'Config', 'PIM', 'PIMAAzure')
                     },
                     @{
                         GraphUri = 'privilegedAccess/azureResources/resources/{id}/roleSettings'
                         Path = 'RoleSettings'
                         ApiVersion = 'beta'
-                        #'Filter' = 'isDefault eq false'
+                        Filter = 'isDefault eq false'
                         Tag = @('All', 'Config', 'PIM', 'PIMAAzure')
                     },
                     @{
                         GraphUri = 'privilegedAccess/azureResources/resources/{id}/roleAssignments'
                         Path = 'RoleAssignments'
                         ApiVersion = 'beta'
-                        #'Filter' = 'endDateTime eq null'
+                        Filter = 'endDateTime eq null'
                         Tag = @('All', 'Config', 'PIM', 'PIMAzure')
                     }
                 )
@@ -520,9 +524,14 @@ Function Invoke-AADExporter {
             },
 
             # Groups
+            # need to looks at app roles assignements
+            # expanding app roles assignements breaks 'ne' filtering (needs eventual consistency and count)
             @{
-                Command = 'Get-AADExportGroups' 
+                GraphUri = 'groups'
+                Filter = "groupTypes/any(c:c eq 'DynamicMembership')" 
                 Path = 'Groups'
+                QueryParameters = @{ '$count' = 'true'; expand = 'extensions' }
+                ApiVersion = 'beta'
                 Tag = @('All', 'Config', 'Groups')
                 Children = @(
                     @{
@@ -536,11 +545,6 @@ Function Invoke-AADExporter {
                         Select = 'id, userPrincipalName, displayName'
                         Path = 'Owners'
                         Tag = @('All', 'Config', 'Groups')
-                    },
-                    @{
-                        GraphUri = 'groups/{id}/extensions'
-                        Path = 'Extensions'
-                        Tag = @('All', 'Groups')
                     }
                 )                
             },
@@ -631,9 +635,13 @@ Function Invoke-AADExporter {
             },
             
             # Users
+            # Todo look at app roles assignments
             @{
-                Command = 'Get-AADExportUsers'
+                GraphUri = 'users'
                 Path = 'Users'
+                Filter = $null
+                QueryParameters = @{ '$count' = 'true'; expand = "extensions" }
+                ApiVersion = 'beta'
                 Tag = @('All', 'Users')
                 Children = @(
                     @{
@@ -674,15 +682,28 @@ Function Invoke-AADExporter {
                         Path = 'Authentication/PasswordMethods'
                         ApiVersion = 'beta'
                         Tag = @('All', 'Users')
-                    },
-                    @{
-                        GraphUri = 'users/{id}/extensions'
-                        Path = 'Extensions'
-                        Tag = @('All', 'Users')
                     }
                 )
             }
         )
+    }
+    
+
+    # aditional filters
+    foreach ($entry in $ExportSchema) {
+        $graphUri = Get-ObjectProperty $entry "GraphUri"
+        # filter out synced users or groups
+        if ($CloudUsersAndGroupsOnly -and ($graphUri -in "users","groups")) {
+            $entry.Filter = "onPremisesSyncEnabled ne true"
+        }
+        # get all groups
+        if (($All -or $AllGroups) -and ($graphUri -eq "groups")) {
+            $entry.Filter = $null
+        }
+        # get all PIM elements
+        if ($All -and ($graphUri -in "privilegedAccess/aadroles/resources","privilegedAccess/azureResources/resources")) {
+            $entry.Fitler = $null
+        }
     }
 
     foreach ($item in $ExportSchema) {
@@ -709,7 +730,7 @@ Function Invoke-AADExporter {
             else {
                 if ($hasParents){ $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1] }
                 try {
-                    $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion    
+                    $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion
                 }
                 catch {
                     $e = $_.ErrorDetails.Message
