@@ -549,6 +549,7 @@ function Get-AADExportDefaultSchema()  {
             Path = 'OnPremisesPublishingProfiles/Provisioning.json'
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'AppProxy')
+            DelegatedPermission = 'OnPremisesPublishingProfiles.ReadWrite.All'
         },
         @{
             GraphUri = 'onPremisesPublishingProfiles/provisioning/publishedResources'
@@ -556,6 +557,7 @@ function Get-AADExportDefaultSchema()  {
             Path = 'OnPremisesPublishingProfiles/Provisioning/PublishedResources'
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'AppProxy')
+            DelegatedPermission = 'OnPremisesPublishingProfiles.ReadWrite.All'
         },
         @{
             GraphUri = 'onPremisesPublishingProfiles/provisioning/agentGroups'
@@ -563,6 +565,7 @@ function Get-AADExportDefaultSchema()  {
             Path = 'OnPremisesPublishingProfiles/Provisioning/AgentGroups'
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'AppProxy')
+            DelegatedPermission = 'OnPremisesPublishingProfiles.ReadWrite.All'
         },
         @{
             GraphUri = 'onPremisesPublishingProfiles/provisioning/agents'
@@ -570,18 +573,21 @@ function Get-AADExportDefaultSchema()  {
             Path = 'OnPremisesPublishingProfiles/Provisioning/Agents'
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'AppProxy')
+            DelegatedPermission = 'OnPremisesPublishingProfiles.ReadWrite.All'
         },
         @{
             GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectors'
             Path = 'OnPremisesPublishingProfiles/ApplicationProxy/Connectors'
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'AppProxy')
+            DelegatedPermission = 'Directory.ReadWrite.All'
         },
         @{
             GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectorGroups'
             Path = 'OnPremisesPublishingProfiles/ApplicationProxy/ConnectorGroups'
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'AppProxy')
+            DelegatedPermission = 'Directory.ReadWrite.All'
             Children = @(
                 @{
                     GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/applications'
@@ -589,6 +595,7 @@ function Get-AADExportDefaultSchema()  {
                     ApiVersion = 'beta'
                     IgnoreError = 'ApplicationsForGroup_NotFound'
                     Tag = @('All', 'Config', 'AppProxy')
+                    DelegatedPermission = 'Directory.ReadWrite.All'
                 },
                 @{
                     GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/members'
@@ -596,6 +603,7 @@ function Get-AADExportDefaultSchema()  {
                     ApiVersion = 'beta'
                     IgnoreError = 'ConnectorGroup_NotFound'
                     Tag = @('All', 'Config', 'AppProxy')
+                    DelegatedPermission = 'Directory.ReadWrite.All'
                 }
             )
         },
@@ -610,18 +618,24 @@ function Get-AADExportDefaultSchema()  {
             QueryParameters = @{ '$count' = 'true'; expand = 'extensions' }
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'Groups')
+            DelegatedPermission = 'Directory.Read.All'
+            ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
                     GraphUri = 'groups/{id}/members' 
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Members'
                     Tag = @('All', 'Groups')
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 }
                 @{
                     GraphUri =  'groups/{id}/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'Config', 'Groups')
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 }
             )                
         },
@@ -629,6 +643,8 @@ function Get-AADExportDefaultSchema()  {
             GraphUri = 'groupSettings'
             Path = 'GroupSettings'
             Tag = @('All', 'Config', 'Groups')
+            DelegatedPermission = 'Directory.Read.All'
+            ApplicationPermission = 'Directory.Read.All'
         },
 
         # Applications
@@ -636,27 +652,37 @@ function Get-AADExportDefaultSchema()  {
             GraphUri = 'applications'
             Path = 'Applications'
             Tag = @('All', 'Applications')
+            DelegatedPermission = 'Applications.Read.All'
+            ApplicationPermission = 'Applications.Read.All'
             Children = @(
                 @{
                     GraphUri = 'applications/{id}/extensionProperties'
                     Path = 'ExtensionProperties'
                     Tag = @('All', 'Applications')
+                    DelegatedPermission = 'Applications.Read.All'
+                    ApplicationPermission = 'Applications.Read.All'
                 },
                 @{
                     GraphUri = 'applications/{id}/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'Applications')
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
                     GraphUri = 'applications/{id}/tokenIssuancePolicies'
                     Path = 'TokenIssuancePolicies'
                     Tag = @('All', 'Applications')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
                     GraphUri = 'applications/{id}/tokenLifetimePolicies'
                     Path = 'TokenLifetimePolicies'
                     Tag = @('All', 'Applications')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 }
             )
         },
@@ -666,47 +692,65 @@ function Get-AADExportDefaultSchema()  {
             GraphUri = 'servicePrincipals'
             Path = 'ServicePrincipals'
             Tag = @('All', 'ServicePrincipals')
+            DelegatedPermission = 'Applications.Read.All'
+            ApplicationPermission = 'Applications.Read.All'
             Children = @(
                 @{
                     GraphUri = 'servicePrincipals/{id}/appRoleAssignments'
                     Path = 'AppRoleAssignments'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Applications.Read.All'
+                    ApplicationPermission = 'Applications.Read.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/oauth2PermissionGrants'
                     Path = 'Oauth2PermissionGrants'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/delegatedPermissionClassifications'
                     Path = 'DelegatedPermissionClassifications'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Applications.Read.All'
+                    ApplicationPermission = 'Applications.Read.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Applications.Read.All'
+                    ApplicationPermission = 'Applications.Read.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/claimsMappingPolicies'
                     Path = 'claimsMappingPolicies'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/homeRealmDiscoveryPolicies'
                     Path = 'homeRealmDiscoveryPolicies'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/tokenIssuancePolicies'
                     Path = 'tokenIssuancePolicies'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/tokenLifetimePolicies'
                     Path = 'tokenLifetimePolicies'
                     Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 }
             )
         },
@@ -720,45 +764,61 @@ function Get-AADExportDefaultSchema()  {
             QueryParameters = @{ '$count' = 'true'; expand = "extensions" }
             ApiVersion = 'beta'
             Tag = @('All', 'Users')
+            DelegatedPermission = 'Directory.Read.All'
+            ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
                     GraphUri = 'users/{id}/authentication/fido2Methods'
                     Path = 'Authentication/FIDO2Methods'
                     Tag = @('All', 'Users')
+                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
+                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
                 },
                 @{
                     GraphUri = 'users/{id}/authentication/microsoftAuthenticatorMethods'
                     Path = 'Authentication/MicrosoftAuthenticatorMethods'
                     Tag = @('All', 'Users')
+                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
+                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
                 },
                 @{
                     GraphUri = 'users/{id}/authentication/windowsHelloForBusinessMethods'
                     Path = 'Authentication/WindowsHelloForBusinessMethods'
                     Tag = @('All', 'Users')
+                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
+                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
                 },
                 @{
                     GraphUri = 'users/{id}/authentication/temporaryAccessPassMethods'
                     Path = 'Authentication/TemporaryAccessPassMethods'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Users')
+                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
+                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
                 },
                 @{
                     GraphUri = 'users/{id}/authentication/phoneMethods'
                     Path = 'Authentication/PhoneMethods'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Users')
+                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
+                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
                 },
                 @{
                     GraphUri = 'users/{id}/authentication/emailMethods'
                     Path = 'Authentication/EmailMethods'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Users')
+                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
+                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
                 },
                 @{
                     GraphUri = 'users/{id}/authentication/passwordMethods'
                     Path = 'Authentication/PasswordMethods'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Users')
+                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
+                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
                 }
             )
         }
