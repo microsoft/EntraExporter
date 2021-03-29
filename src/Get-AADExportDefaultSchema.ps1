@@ -653,15 +653,15 @@ function Get-AADExportDefaultSchema  {
             GraphUri = 'applications'
             Path = 'Applications'
             Tag = @('All', 'Applications')
-            DelegatedPermission = 'Applications.Read.All'
-            ApplicationPermission = 'Applications.Read.All'
+            DelegatedPermission = 'Directory.Read.All'
+            ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
                     GraphUri = 'applications/{id}/extensionProperties'
                     Path = 'ExtensionProperties'
                     Tag = @('All', 'Applications')
-                    DelegatedPermission = 'Applications.Read.All'
-                    ApplicationPermission = 'Applications.Read.All'
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
                     GraphUri = 'applications/{id}/owners'
@@ -693,15 +693,15 @@ function Get-AADExportDefaultSchema  {
             GraphUri = 'servicePrincipals'
             Path = 'ServicePrincipals'
             Tag = @('All', 'ServicePrincipals')
-            DelegatedPermission = 'Applications.Read.All'
-            ApplicationPermission = 'Applications.Read.All'
+            DelegatedPermission = 'Directory.Read.All'
+            ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
                     GraphUri = 'servicePrincipals/{id}/appRoleAssignments'
                     Path = 'AppRoleAssignments'
                     Tag = @('All', 'ServicePrincipals')
-                    DelegatedPermission = 'Applications.Read.All'
-                    ApplicationPermission = 'Applications.Read.All'
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/oauth2PermissionGrants'
@@ -714,16 +714,16 @@ function Get-AADExportDefaultSchema  {
                     GraphUri = 'servicePrincipals/{id}/delegatedPermissionClassifications'
                     Path = 'DelegatedPermissionClassifications'
                     Tag = @('All', 'ServicePrincipals')
-                    DelegatedPermission = 'Applications.Read.All'
-                    ApplicationPermission = 'Applications.Read.All'
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'ServicePrincipals')
-                    DelegatedPermission = 'Applications.Read.All'
-                    ApplicationPermission = 'Applications.Read.All'
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
                     GraphUri = 'servicePrincipals/{id}/claimsMappingPolicies'
