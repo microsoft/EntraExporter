@@ -130,6 +130,50 @@ A filter can be applied to only export user and groups that are not synced from 
     Invoke-AADExporter -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
 ```
 
+## Integrate to Azure DevOps Pipeline
+
+Exporting Azure AD settings to json file makes them usefull to integrate with DevOps pipelines.
+
+> **note**: 
+> Delegated authentication will require a dedicated agent where the authentication has been pre-configured.
+
+Bellow is an sample of exporting in two steps
+1. export Azure AD to local json files
+2. update a git repository with the files
+
+To export the configuration (replace variables with ``<>`` with the values suited to your situation):
+```powershell
+$tenantPath = './<tenant export path>'
+$tenantId = '<tenant id>'
+Write-Host 'git checkout main...'
+git config --global core.longpaths true #needed for Windows
+git checkout main
+
+Write-Host 'Clean git folder...'
+Remove-Item $tenanPath -Force -Recurse
+
+Write-Host 'Installing modules...'
+Install-Module Microsoft.Graph.Authentication -Scope CurrentUser -Force
+Install-Module AzureADExporter -Scope CurrentUser -Force
+
+Write-Host 'Connecting to AzureAD...'
+Connect-AADExporter -TenantId $tenantId
+
+Write-Host 'Starting backup...'
+Invoke-AADExporter $tenantPath -All
+```
+
+To update the git repository with the generated files:
+```powershell
+Write-Host 'Updating repo...'
+git config user.email "<email>"
+git config user.name "<name>"
+git add -u
+git add -A
+git commit -m "ADO Update"
+git push origin
+```
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
