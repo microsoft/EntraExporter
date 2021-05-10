@@ -2,7 +2,7 @@
 
 The Azure AD Exporter is a PowerShell module that allows you to export your Azure AD and Azure AD B2C configuration settings to local .json files.
 
-This module can be run as a nightly scheduled task or a DevOps component (Azure DevOps, GitHub, Jenkins) and the exported files can be version controlled in GIT or SharePoint.
+This module can be run as a nightly scheduled task or a DevOps component (Azure DevOps, GitHub, Jenkins) and the exported files can be version controlled in Git or SharePoint.
 
 This will provide tenant administrators with a historical view of all the settings in the tenant including the change history over the years.
 
@@ -83,7 +83,7 @@ Note: This module exports all settings that are available through the Microsoft 
 
 ### Connecting to your tenant
 ```powershell
-    Connect-AADExporter
+    Connect-AzureADExporter
 ```
 
 ### Exporting objects and settings
@@ -91,7 +91,7 @@ Note: This module exports all settings that are available through the Microsoft 
 To export object and settings use the following command:
 
 ```powershell
-    Invoke-AADExporter -Path 'C:\AzureADBackup\'
+    Export-AzureAD -Path 'C:\AzureADBackup\'
 ```
 
 This will export the most common set of object and settings.
@@ -108,26 +108,26 @@ The following object and settings are not exported by default:
 To export all the objects and settings supported (no filter applied):
 
 ```powershell
-    Invoke-AADExporter -Path 'C:\AzureADBackup\' -All
+    Export-AzureAD -Path 'C:\AzureADBackup\' -All
 ```
 
 To Select specific object and settings to export the ``-Type`` parameter can be used. The default type is "Config":
 
 ```powershell
     # export default all users as well as default objects and settings
-    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "Config","Users"
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Config","Users"
     # export applications only
-    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "Applications"
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Applications"
      # export B2C specific properties only
-    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "B2C"
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2C"
     # export B2B properties along with AD properties
-    Invoke-AADExporter -Path 'C:\AzureADBackup\' -Type "B2B","Config"
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2B","Config"
 ```
 
 A filter can be applied to only export user and groups that are not synced from onprem (cloud users and groups):
 
 ```powershell
-    Invoke-AADExporter -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
+    Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
 ```
 
 ## Integrate to Azure DevOps Pipeline
@@ -138,8 +138,8 @@ Exporting Azure AD settings to json file makes them usefull to integrate with De
 > Delegated authentication will require a dedicated agent where the authentication has been pre-configured.
 
 Bellow is an sample of exporting in two steps
-1. export Azure AD to local json files
-2. update a git repository with the files
+1. Export Azure AD to local json files
+2. Update a git repository with the files
 
 To export the configuration (replace variables with ``<>`` with the values suited to your situation):
 ```powershell
@@ -160,7 +160,7 @@ Write-Host 'Connecting to AzureAD...'
 Connect-AADExporter -TenantId $tenantId
 
 Write-Host 'Starting backup...'
-Invoke-AADExporter $tenantPath -All
+Export-AzureAD $tenantPath -All
 ```
 
 To update the git repository with the generated files:

@@ -66,8 +66,8 @@
         'internal\ConvertTo-OrderedDictionary.ps1'
         'internal\ConvertFrom-QueryString.ps1'
         'internal\ConvertTo-QueryString.ps1'        
-        'Connect-AADExporter.ps1'
-        'Invoke-AADExporter.ps1'
+        'Connect-AzureADExporter.ps1'
+        'Export-AzureAD.ps1'
         'Get-AADExportGroups.ps1'
         'Get-AADExportAccessReviews.ps1'
         'Get-AADExportAccessPackageAssignmentPolicies.ps1'
@@ -79,15 +79,8 @@
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
-        'Connect-AADExporter'
-        'Invoke-AADExporter'
-        'Get-AADExportGroups'
-        'Get-AADExportAccessReviews'
-        'Get-AADExportAccessPackageAssignmentPolicies'
-        'Get-AADExportAccessPackageAssignments'
-        'Get-AADExportAccessPackageResourceScopes'
-        'Get-AADExportDefaultSchema'
-        'Get-AADExportRequiredScopes'
+        'Connect-AzureADExporter'
+        'Export-AzureAD'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -117,10 +110,10 @@
             Tags = 'Microsoft', 'Identity', 'Azure', 'AzureActiveDirectory', 'AzureAD', 'AAD', 'PSEdition_Desktop', 'Windows', 'Export', 'Backup', 'DR'
     
             # A URL to the license for this module.
-            LicenseUri = 'https://raw.githubusercontent.com/merill/azureadexporter/main/LICENSE'
+            LicenseUri = 'https://raw.githubusercontent.com/microsoft/azureadexporter/main/LICENSE'
     
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/merill/azureadexporter'
+            ProjectUri = 'https://github.com/microsoft/azureadexporter'
     
             # A URL to an icon representing this module.
             # IconUri = ''
@@ -139,5 +132,3 @@
     # DefaultCommandPrefix = ''
     
     }
-    
-    

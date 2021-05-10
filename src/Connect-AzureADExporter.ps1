@@ -6,13 +6,13 @@ $global:TenantID = $null
     This command will connect Microsoft.Graph to your Azure AD tenant.
     You can also directly call Connect-MgGraph if you require other options to connect
 .EXAMPLE
-    PS C:\>Connect-AADExporter
+    PS C:\>Connect-AzureADExporter
     Connect to home tenant of authenticated user.
 .EXAMPLE
-    PS C:\>Connect-AADExporter -TenantId 3043-343434-343434
+    PS C:\>Connect-AzureADExporter -TenantId 3043-343434-343434
     Connect to a specific Tenant
 #>
-function Connect-AADExporter {
+function Connect-AzureADExporter {
     param(
         [Parameter(Mandatory = $false)]
         [string] $TenantId = 'common'

@@ -159,6 +159,7 @@ function Get-AADExportDefaultSchema  {
             Tag = @('Config', 'B2B', 'B2C')
             DelegatedPermission = 'IdentityUserFlow.Read.All'
             ApplicationPermission = 'IdentityUserFlow.Read.All'
+            IgnoreError = 'The feature self service sign up is not enabled for the tenant'
         },
         @{
             GraphUri = 'identity/b2xUserFlows'

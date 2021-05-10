@@ -15,26 +15,26 @@
     If specified performs a full export of all objects and configuration in the tenant.
 
 .EXAMPLE
-   .\Invoke-AADExporter -Path 'c:\temp\contoso'
+   .\Export-AzureAD -Path 'c:\temp\contoso'
 
    Runs a default export and includes the key tenant configuration settings. Does not include large data collections such as Users, Groups, Applications, Service Principals, etc.
 .EXAMPLE
-   .\Invoke-AADExporter -Path 'c:\temp\contoso' -All
+   .\Export-AzureAD -Path 'c:\temp\contoso' -All
    
    Runs a full export of all objects and configuration settings.
 
 .EXAMPLE
-   .\Invoke-AADExporter -Path 'c:\temp\contoso' -Type ConditionalAccess, AppProxy
+   .\Export-AzureAD -Path 'c:\temp\contoso' -Type ConditionalAccess, AppProxy
 
    Runs an export that includes just the Conditional Access and Application Proxy settings.
 
 .EXAMPLE
-   .\Invoke-AADExporter -Path 'c:\temp\contoso' -Type B2C
+   .\Export-AzureAD -Path 'c:\temp\contoso' -Type B2C
 
    Runs an export of all B2C settings.
 #>
 
-Function Invoke-AADExporter {
+Function Export-AzureAD {
     [CmdletBinding()]
     param
     (
@@ -56,7 +56,7 @@ Function Invoke-AADExporter {
     )
 
     if ($null -eq (Get-MgContext)) {
-        Write-Error "No active connection. Run Connect-AADExporter to sign in and then retry."
+        Write-Error "No active connection. Run Connect-AzureADExporter to sign in and then retry."
         exit
     }
     if($All) {$Type = @('All')}
@@ -137,7 +137,7 @@ Function Invoke-AADExporter {
                     if ($item.ContainsKey('Children')) {
                         $itemParents = $Parents
                         $itemParents += $resultItem.Id
-                        Invoke-AADExporter -Path $itemOutputFileName -Type $Type -ExportSchema $item.Children -Parents $itemParents
+                        Export-AzureAD -Path $itemOutputFileName -Type $Type -ExportSchema $item.Children -Parents $itemParents
                     }
                 }
             }
