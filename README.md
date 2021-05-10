@@ -8,6 +8,63 @@ This will provide tenant administrators with a historical view of all the settin
 
 Note: This project is not intended to be a backup or disaster recovery solution for Azure Active Directory.
 
+## Installing the module
+```powershell
+    Install-Module AzureADExporter
+```
+
+## Using the module
+
+### Connecting to your tenant
+```powershell
+    Connect-AzureADExporter
+```
+
+### Exporting objects and settings
+
+To export object and settings use the following command:
+
+```powershell
+    Export-AzureAD -Path 'C:\AzureADBackup\'
+```
+
+This will export the most common set of object and settings.
+
+The following object and settings are not exported by default:
+* B2C
+* B2B
+* Static Groups and group memberships
+* Applications
+* ServicePrincipals
+* Users
+* Priviledge Identity Management (built in roles, default roles settings, non permanent role assignement)
+
+To export all the objects and settings supported (no filter applied):
+
+```powershell
+    Export-AzureAD -Path 'C:\AzureADBackup\' -All
+```
+
+To Select specific object and settings to export the ``-Type`` parameter can be used. The default type is "Config":
+
+```powershell
+    # export default all users as well as default objects and settings
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Config","Users"
+    # export applications only
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Applications"
+     # export B2C specific properties only
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2C"
+    # export B2B properties along with AD properties
+    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2B","Config"
+```
+
+A filter can be applied to only export user and groups that are not synced from onprem (cloud users and groups):
+
+```powershell
+    Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
+```
+Note: This module exports all settings that are available through the Microsoft Graph API. Azure AD settings and objects that are not yet available in the Graph API are not included.
+
 ## Exported settings include
 * Users
 * Groups
@@ -72,63 +129,6 @@ Note: This project is not intended to be a backup or disaster recovery solution 
     * Languages
 
 
-Note: This module exports all settings that are available through the Microsoft Graph API. Azure AD settings and objects that are not yet available in the Graph API are not included.
-
-## Installing the module
-```powershell
-    Install-Module AzureADExporter
-```
-
-## Using the module
-
-### Connecting to your tenant
-```powershell
-    Connect-AzureADExporter
-```
-
-### Exporting objects and settings
-
-To export object and settings use the following command:
-
-```powershell
-    Export-AzureAD -Path 'C:\AzureADBackup\'
-```
-
-This will export the most common set of object and settings.
-
-The following object and settings are not exported by default:
-* B2C
-* B2B
-* Static Groups and group memberships
-* Applications
-* ServicePrincipals
-* Users
-* Priviledge Identity Management (built in roles, default roles settings, non permanent role assignement)
-
-To export all the objects and settings supported (no filter applied):
-
-```powershell
-    Export-AzureAD -Path 'C:\AzureADBackup\' -All
-```
-
-To Select specific object and settings to export the ``-Type`` parameter can be used. The default type is "Config":
-
-```powershell
-    # export default all users as well as default objects and settings
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Config","Users"
-    # export applications only
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Applications"
-     # export B2C specific properties only
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2C"
-    # export B2B properties along with AD properties
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2B","Config"
-```
-
-A filter can be applied to only export user and groups that are not synced from onprem (cloud users and groups):
-
-```powershell
-    Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
-```
 
 ## Integrate to Azure DevOps Pipeline
 
