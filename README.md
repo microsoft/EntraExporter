@@ -150,7 +150,7 @@ git config --global core.longpaths true #needed for Windows
 git checkout main
 
 Write-Host 'Clean git folder...'
-Remove-Item $tenanPath -Force -Recurse
+Remove-Item $tenantPath -Force -Recurse
 
 Write-Host 'Installing modules...'
 Install-Module Microsoft.Graph.Authentication -Scope CurrentUser -Force
