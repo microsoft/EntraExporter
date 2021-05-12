@@ -519,7 +519,7 @@ function Get-AADExportDefaultSchema  {
                     Path = 'RoleDefinitions'
                     ApiVersion = 'beta'
                     Filter = "Type ne 'BuiltInRole'"
-                    Tag = @('All', 'Config', 'PIM', 'PIMAAzure')
+                    Tag = @('All', 'Config', 'PIM', 'PIMAzure')
                     DelegatedPermission = 'PrivilegedAccess.ReadWrite.AzureResources'
                     ApplicationPermission = 'PrivilegedAccess.Read.AzureResources'
                 },
@@ -528,7 +528,7 @@ function Get-AADExportDefaultSchema  {
                     Path = 'RoleSettings'
                     ApiVersion = 'beta'
                     Filter = 'isDefault eq false'
-                    Tag = @('All', 'Config', 'PIM', 'PIMAAzure')
+                    Tag = @('All', 'Config', 'PIM', 'PIMAzure')
                     DelegatedPermission = 'PrivilegedAccess.ReadWrite.AzureResources'
                     ApplicationPermission = 'PrivilegedAccess.Read.AzureResources'
                 },

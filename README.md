@@ -58,12 +58,48 @@ To Select specific object and settings to export the ``-Type`` parameter can be 
     Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2B","Config"
 ```
 
-A filter can be applied to only export user and groups that are not synced from onprem (cloud users and groups):
+The currently valid types are:
+* All (all elements)
+* Config (default configuration) 
+* AccessReviews
+* ConditionalAccess
+* Users
+* Groups 
+* Applications
+* ServicePrincipals
+* B2C 
+* B2B 
+* PIM 
+* PIMAzure
+* PIMAAD
+* AppProxy
+* Organization
+* Domains
+* EntitlementManagement
+* Policies
+* AdministrativeUnits
 
+This list can also be retrieved via:
 ```powershell
-    Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
+(get-command Export-AzureAD | select -expand Parameters)['Type'].Attributes.ValidValues
 ```
-Note: This module exports all settings that are available through the Microsoft Graph API. Azure AD settings and objects that are not yet available in the Graph API are not included.
+
+Additional filters can be applied:
+* To only export user and groups that are not synced from on-premises
+```powershell
+Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
+```
+* All groups (by default only dynamic groups are exported)
+```powershell
+Export-AzureAD -Path 'C:\AzureADBackup\' -AllGroups
+```
+* All will export all types and remove filters from groups and PIM:
+```powershell
+Export-AzureAD -Path 'C:\AzureADBackup\' -All
+```
+
+> [!NOTE]
+> This module exports all settings that are available through the Microsoft Graph API. Azure AD settings and objects that are not yet available in the Graph API are not included.
 
 ## Exported settings include
 * Users
