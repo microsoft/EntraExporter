@@ -78,6 +78,10 @@ The currently valid types are:
 * EntitlementManagement
 * Policies
 * AdministrativeUnits
+* SKUs
+* Identity
+* Roles
+* Governance
 
 This list can also be retrieved via:
 ```powershell
