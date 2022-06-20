@@ -91,7 +91,7 @@ This list can also be retrieved via:
 Additional filters can be applied:
 * To only export user and groups that are not synced from on-premises
 ```powershell
-Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersOrGroupsOnly
+Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersAndGroupsOnly
 ```
 * All groups (by default only dynamic groups are exported)
 ```powershell
