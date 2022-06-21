@@ -81,7 +81,7 @@ Function Export-AzureAD {
         }
         # get all PIM elements
         if ($All -and ($graphUri -in "privilegedAccess/aadroles/resources","privilegedAccess/azureResources/resources")) {
-            $entry.Fitler = $null
+            $entry.Filter = $null
         }
     }
 
