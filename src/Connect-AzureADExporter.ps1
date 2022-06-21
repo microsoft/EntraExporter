@@ -15,9 +15,12 @@ $global:TenantID = $null
 function Connect-AzureADExporter {
     param(
         [Parameter(Mandatory = $false)]
-        [string] $TenantId = 'common'
+            [string] $TenantId = 'common',
+        [Parameter(Mandatory = $false)]
+            [ValidateSet("Global","China","USGovDoD","USGov","Germany")]
+            [string] $Environment = 'Global'
     )    
-    Connect-MgGraph -TenantId $TenantId -Scopes 'Directory.Read.All', 
+    Connect-MgGraph -TenantId $TenantId -Environment $Environment -Scopes 'Directory.Read.All', 
         'Policy.Read.All', 
         'IdentityProvider.Read.All', 
         'Organization.Read.All',
