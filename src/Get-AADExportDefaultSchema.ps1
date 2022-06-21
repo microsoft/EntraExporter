@@ -705,6 +705,13 @@ function Get-AADExportDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
+                    GraphUri = 'servicePrincipals/{id}/appRoleAssignedTo'
+                    Path = 'AppRoleAssignedTo'
+                    Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
+                },
+                @{
                     GraphUri = 'servicePrincipals/{id}/oauth2PermissionGrants'
                     Path = 'Oauth2PermissionGrants'
                     Tag = @('All', 'ServicePrincipals')
