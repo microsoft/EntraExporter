@@ -6,8 +6,6 @@ This module can be run as a nightly scheduled task or a DevOps component (Azure 
 
 This will provide tenant administrators with a historical view of all the settings in the tenant including the change history over the years.
 
-Note: This project is not intended to be a backup or disaster recovery solution for Azure Active Directory.
-
 ## Installing the module
 ```powershell
     Install-Module AzureADExporter
