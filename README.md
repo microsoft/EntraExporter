@@ -195,7 +195,7 @@ Install-Module Microsoft.Graph.Authentication -Scope CurrentUser -Force
 Install-Module AzureADExporter -Scope CurrentUser -Force
 
 Write-Host 'Connecting to AzureAD...'
-Connect-AADExporter -TenantId $tenantId
+Connect-AzureADExporter -TenantId $tenantId
 
 Write-Host 'Starting backup...'
 Export-AzureAD $tenantPath -All
