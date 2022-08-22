@@ -26,16 +26,16 @@ To export object and settings use the following command:
     Export-AzureAD -Path 'C:\AzureADBackup\'
 ```
 
-This will export the most common set of object and settings.
+This will export the most common set of objects and settings.
 
-The following object and settings are not exported by default:
+The following objects and settings are not exported by default:
 * B2C
 * B2B
 * Static Groups and group memberships
 * Applications
 * ServicePrincipals
 * Users
-* Priviledge Identity Management (built in roles, default roles settings, non permanent role assignement)
+* Priviledged Identity Management (built in roles, default roles settings, non permanent role assignements)
 
 To export all the objects and settings supported (no filter applied):
 
@@ -43,7 +43,7 @@ To export all the objects and settings supported (no filter applied):
     Export-AzureAD -Path 'C:\AzureADBackup\' -All
 ```
 
-To Select specific object and settings to export the ``-Type`` parameter can be used. The default type is "Config":
+The ``-Type`` parameter can be used to select specific objects and settings to export. The default type is "Config":
 
 ```powershell
     # export default all users as well as default objects and settings
@@ -83,7 +83,7 @@ The currently valid types are:
 
 This list can also be retrieved via:
 ```powershell
-(get-command Export-AzureAD | select -expand Parameters)['Type'].Attributes.ValidValues
+(Get-Command Export-AzureAD | Select-Object -Expand Parameters)['Type'].Attributes.ValidValues
 ```
 
 Additional filters can be applied:
@@ -170,9 +170,9 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
 
 ## Integrate to Azure DevOps Pipeline
 
-Exporting Azure AD settings to json file makes them usefull to integrate with DevOps pipelines.
+Exporting Azure AD settings to json files makes them useful to integrate with DevOps pipelines.
 
-> **note**: 
+> **Note**: 
 > Delegated authentication will require a dedicated agent where the authentication has been pre-configured.
 
 Bellow is an sample of exporting in two steps
