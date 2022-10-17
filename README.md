@@ -211,6 +211,20 @@ git add -A
 git commit -m "ADO Update"
 git push origin
 ```
+## FAQs
+
+### Error 'Could not find a part of the path' when exported JSON file paths are longer than 260 characters
+A workaround to this is to enable long paths via the Windows registry or a GPO setting. Run the following from an elevated PowerShell session and then close PowerShell before trying your export again: 
+
+```powershell
+New-ItemProperty `
+    -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
+    -Name "LongPathsEnabled" `
+    -Value 1 `
+    -PropertyType DWORD `
+    -Force
+```
+Credit: @shaunluttin via https://bigfont.ca/enable-long-paths-in-windows-with-powershell/ and https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell.
 
 ## Contributing
 
