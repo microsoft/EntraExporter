@@ -7,6 +7,7 @@ This module can be run as a nightly scheduled task or a DevOps component (Azure 
 This will provide tenant administrators with a historical view of all the settings in the tenant including the change history over the years.
 
 ## Installing the module
+
 ```powershell
     Install-Module AzureADExporter
 ```
@@ -14,6 +15,7 @@ This will provide tenant administrators with a historical view of all the settin
 ## Using the module
 
 ### Connecting to your tenant
+
 ```powershell
     Connect-AzureADExporter
 ```
@@ -29,13 +31,14 @@ To export object and settings use the following command:
 This will export the most common set of objects and settings.
 
 The following objects and settings are not exported by default:
+
 * B2C
 * B2B
 * Static Groups and group memberships
 * Applications
 * ServicePrincipals
 * Users
-* Priviledged Identity Management (built in roles, default roles settings, non permanent role assignements)
+* Privileged Identity Management (built in roles, default roles settings, non permanent role assignements)
 
 To export all the objects and settings supported (no filter applied):
 
@@ -57,17 +60,18 @@ The ``-Type`` parameter can be used to select specific objects and settings to e
 ```
 
 The currently valid types are:
+
 * All (all elements)
-* Config (default configuration) 
+* Config (default configuration)
 * AccessReviews
 * ConditionalAccess
 * Users
-* Groups 
+* Groups
 * Applications
 * ServicePrincipals
-* B2C 
-* B2B 
-* PIM 
+* B2C
+* B2B
+* PIM
 * PIMAzure
 * PIMAAD
 * AppProxy
@@ -82,20 +86,27 @@ The currently valid types are:
 * Governance
 
 This list can also be retrieved via:
+
 ```powershell
 (Get-Command Export-AzureAD | Select-Object -Expand Parameters)['Type'].Attributes.ValidValues
 ```
 
 Additional filters can be applied:
+
 * To only export user and groups that are not synced from on-premises
+
 ```powershell
 Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersAndGroupsOnly
 ```
+
 * All groups (by default only dynamic groups are exported)
+
 ```powershell
 Export-AzureAD -Path 'C:\AzureADBackup\' -AllGroups
 ```
+
 * All will export all types and remove filters from groups and PIM:
+
 ```powershell
 Export-AzureAD -Path 'C:\AzureADBackup\' -All
 ```
@@ -104,6 +115,7 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
 > This module exports all settings that are available through the Microsoft Graph API. Azure AD settings and objects that are not yet available in the Graph API are not included.
 
 ## Exported settings include
+
 * Users
 * Groups
   * Dynamic and Assigned groups (incl. Members and Owners)
@@ -148,7 +160,7 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
   * Conditional Access Policies
   * Named Locations
   * Authentication Methods Policies
-  * Continouse Access Evaluation Policy
+  * Continous Access Evaluation Policy
   * Identity Security Defaults Enforcement Policy
   * Permission Grant Policies
 * Tenant Policies and Settings
@@ -166,20 +178,20 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
     * API Connector Configuration
     * Languages
 
-
-
 ## Integrate to Azure DevOps Pipeline
 
 Exporting Azure AD settings to json files makes them useful to integrate with DevOps pipelines.
 
-> **Note**: 
+> **Note**:
 > Delegated authentication will require a dedicated agent where the authentication has been pre-configured.
 
 Bellow is an sample of exporting in two steps
+
 1. Export Azure AD to local json files
 2. Update a git repository with the files
 
 To export the configuration (replace variables with ``<>`` with the values suited to your situation):
+
 ```powershell
 $tenantPath = './<tenant export path>'
 $tenantId = '<tenant id>'
@@ -202,6 +214,7 @@ Export-AzureAD $tenantPath -All
 ```
 
 To update the git repository with the generated files:
+
 ```powershell
 Write-Host 'Updating repo...'
 git config user.email "<email>"
@@ -211,9 +224,11 @@ git add -A
 git commit -m "ADO Update"
 git push origin
 ```
+
 ## FAQs
 
 ### Error 'Could not find a part of the path' when exported JSON file paths are longer than 260 characters
+
 A workaround to this is to enable long paths via the Windows registry or a GPO setting. Run the following from an elevated PowerShell session and then close PowerShell before trying your export again: 
 
 ```powershell
@@ -224,6 +239,7 @@ New-ItemProperty `
     -PropertyType DWORD `
     -Force
 ```
+
 Credit: @shaunluttin via https://bigfont.ca/enable-long-paths-in-windows-with-powershell/ and https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell.
 
 ## Contributing
