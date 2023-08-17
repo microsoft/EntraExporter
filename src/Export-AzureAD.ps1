@@ -112,7 +112,11 @@ Function Export-AzureAD {
                     $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion
                 }
                 catch {
-                    $e = $_.ErrorDetails.Message
+                    $e = ""
+                    if($_.ErrorDetails -and $_.ErrorDetails.Message) {
+                        $e = $_.ErrorDetails.Message
+                    }
+                    
                     if($e.Contains($ignoreError) -or $e.Contains('Encountered an internal server error')){
                         Write-Debug $_
                     }

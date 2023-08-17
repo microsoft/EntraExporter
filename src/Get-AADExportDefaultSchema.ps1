@@ -64,14 +64,6 @@ function Get-AADExportDefaultSchema  {
             DelegatedPermission = 'IdentityProvider.Read.All'
         },
         @{
-            GraphUri = 'identity/continuousAccessEvaluationPolicy'
-            Path = 'Identity/ContinuousAccessEvaluationPolicy'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Identity')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
-        },
-        @{
             GraphUri = 'subscribedSkus'
             Path = 'SubscribedSkus'
             Tag = @('All', 'Config', 'SKUs')
@@ -261,46 +253,62 @@ function Get-AADExportDefaultSchema  {
             Tag = @('All', 'Config', 'Policies')
             DelegatedPermission = 'Policy.Read.All'
             ApplicationPermission = 'Policy.Read.All'
-        },            
+        },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/email'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/Email.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            ApplicationPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            # Beta missing Application permission?
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/FIDO2.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            ApplicationPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            # Beta missing Application permission?
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/microsoftAuthenticator'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/MicrosoftAuthenticator.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            ApplicationPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            # Beta missing Application permission?
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/sms'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/SMS.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            ApplicationPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            # Beta missing Application permission?
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/temporaryAccessPass'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/TemporaryAccessPass.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            ApplicationPermission = 'Policy.ReadWrite.AuthenticationMethod'
-            # Beta missing Application permission?
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/softwareOath'
+            Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/SoftwareOath.json'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/voice'
+            Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/Voice.json'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/x509Certificate'
+            Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/X509Certificate.json'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
         },
         @{
             GraphUri = 'policies/adminConsentRequestPolicy'
@@ -315,6 +323,46 @@ function Get-AADExportDefaultSchema  {
             Tag = @('All', 'Config', 'Policies')
             DelegatedPermission = 'Policy.Read.PermissionGrant'
             ApplicationPermission = 'Policy.Read.PermissionGrant'
+        },
+        @{
+            GraphUri = 'policies/externalIdentitiesPolicy'
+            Path = 'Policies/ExternalIdentitiesPolicy'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/crossTenantAccessPolicy'
+            Path = 'Policies/CrossTenantAccessPolicy'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/crossTenantAccessPolicy/default'
+            Path = 'Policies/CrossTenantAccessPolicy/Default'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/crossTenantAccessPolicy/partners'
+            Path = 'Policies/CrossTenantAccessPolicy/Partners'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'identity/customAuthenticationExtensions'
+            Path = 'Identity/CustomAuthenticationExtensions'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config')
+            DelegatedPermission = 'Application.Read.All'
+            ApplicationPermission = 'Application.Read.All'
         },
         # Conditional Access
         @{
@@ -337,28 +385,28 @@ function Get-AADExportDefaultSchema  {
             GraphUri = 'identityGovernance/entitlementManagement/accessPackages'
             Path = 'IdentityGovernance\EntitlementManagement\AccessPackages'
             ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Governance', 'EntitlementManagement')
+            Tag = @('All', 'Governance', 'EntitlementManagement')
             DelegatedPermission = 'EntitlementManagement.Read.All'
             ApplicationPermission = 'EntitlementManagement.Read.All'
             Children = @(
                 @{
                     Command = 'Get-AADExportAccessPackageAssignmentPolicies'
                     Path = 'AssignmentPolicies'
-                    Tag = @('All', 'Config', 'Governance', 'EntitlementManagement')
+                    Tag = @('All', 'Governance', 'EntitlementManagement')
                     DelegatedPermission = 'EntitlementManagement.Read.All'
                     ApplicationPermission = 'EntitlementManagement.Read.All'
                 },
                 @{
                     Command = 'Get-AADExportAccessPackageAssignments'
                     Path = 'Assignments'
-                    Tag = @('All', 'Config', 'Governance', 'EntitlementManagement')
+                    Tag = @('All', 'Governance', 'EntitlementManagement')
                     DelegatedPermission = 'EntitlementManagement.Read.All'
                     ApplicationPermission = 'EntitlementManagement.Read.All'
                 },
                 @{
                     Command = 'Get-AADExportAccessPackageResourceScopes'
                     Path = 'ResourceScopes'
-                    Tag = @('All', 'Config', 'Governance', 'EntitlementManagement')
+                    Tag = @('All', 'Governance', 'EntitlementManagement')
                     DelegatedPermission = 'EntitlementManagement.Read.All'
                     ApplicationPermission = 'EntitlementManagement.Read.All'
                 }
@@ -368,14 +416,14 @@ function Get-AADExportDefaultSchema  {
             GraphUri = 'identityGovernance/accessReviews/definitions'
             Path = 'IdentityGovernance/AccessReviews'
             ApiVersion = 'beta'
-            Tag = @('All','Config', 'AccessReviews', 'Governance')
+            Tag = @('All', 'AccessReviews', 'Governance')
             DelegatedPermission = 'AccessReview.Read.All'
             ApplicationPermission = 'AccessReview.Read.All'
             Children = @(
                 @{
                     GraphUri = 'identityGovernance/accessReviews/definitions/{id}/instances'
                     Path = ''
-                    Tag = @('All','Config', 'AccessReviews', 'Governance')
+                    Tag = @('All', 'AccessReviews', 'Governance')
                     DelegatedPermission = 'AccessReview.Read.All'
                     ApplicationPermission = 'AccessReview.Read.All'
                     Children = @(
@@ -383,7 +431,7 @@ function Get-AADExportDefaultSchema  {
                             GraphUri = 'identityGovernance/accessReviews/definitions/{id}/instances/{id}/contactedReviewers'
                             Path = 'Reviewers'
                             ApiVersion = 'beta'
-                            Tag = @('All','Config', 'AccessReviews', 'Governance')
+                            Tag = @('All', 'AccessReviews', 'Governance')
                             DelegatedPermission = 'AccessReview.Read.All'
                             ApplicationPermission = 'AccessReview.Read.All'
                         }

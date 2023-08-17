@@ -149,7 +149,7 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
   * Connectors and Connect Groups
   * Agents and Agent Groups
   * Published Resources
-* Licences
+* Licenses
 * Custom domain names
 * Company branding
   * Profile Card Properties
@@ -160,12 +160,11 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
   * Conditional Access Policies
   * Named Locations
   * Authentication Methods Policies
-  * Continous Access Evaluation Policy
   * Identity Security Defaults Enforcement Policy
   * Permission Grant Policies
 * Tenant Policies and Settings
   * Feature Rollout Policies
-  * Certificate Based Auth Configuration
+  * Cross-tenant Access
   * Activity Based Timeout Policies
 * Hybrid Authentication
   * Identity Providers

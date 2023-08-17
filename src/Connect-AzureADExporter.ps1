@@ -21,7 +21,7 @@ function Connect-AzureADExporter {
                 param ( $CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters )
                 (Get-MgEnvironment).Name
             } )]
-            [string]$Environment
+            [string]$Environment = 'Global'
     )    
     Connect-MgGraph -TenantId $TenantId -Environment $Environment -Scopes 'Directory.Read.All', 
         'Policy.Read.All', 
@@ -36,7 +36,8 @@ function Connect-AzureADExporter {
         'Agreement.Read.All',
         'Policy.Read.PermissionGrant',
         'PrivilegedAccess.Read.AzureResources',
-        'PrivilegedAccess.Read.AzureAD'
+        'PrivilegedAccess.Read.AzureAD',
+        'Application.Read.All'
     Get-MgContext
     $global:TenantID = (Get-MgContext).TenantId
 }
