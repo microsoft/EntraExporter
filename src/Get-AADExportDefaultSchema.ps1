@@ -365,7 +365,7 @@ function Get-AADExportDefaultSchema  {
             )
         },
         @{
-            GraphUri = 'businessFlowTemplates'
+            GraphUri = 'identityGovernance/accessReviews/definitions'
             Path = 'IdentityGovernance/AccessReviews'
             ApiVersion = 'beta'
             Tag = @('All','Config', 'AccessReviews', 'Governance')
@@ -373,14 +373,14 @@ function Get-AADExportDefaultSchema  {
             ApplicationPermission = 'AccessReview.Read.All'
             Children = @(
                 @{
-                    Command = 'Get-AADExportAccessReviews'
+                    GraphUri = 'identityGovernance/accessReviews/definitions/{id}/instances'
                     Path = ''
                     Tag = @('All','Config', 'AccessReviews', 'Governance')
                     DelegatedPermission = 'AccessReview.Read.All'
                     ApplicationPermission = 'AccessReview.Read.All'
                     Children = @(
                         @{
-                            GraphUri = 'accessReviews/{id}/reviewers'
+                            GraphUri = 'identityGovernance/accessReviews/definitions/{id}/instances/{id}/contactedReviewers'
                             Path = 'Reviewers'
                             ApiVersion = 'beta'
                             Tag = @('All','Config', 'AccessReviews', 'Governance')

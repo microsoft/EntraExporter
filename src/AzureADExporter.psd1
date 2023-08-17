@@ -69,7 +69,6 @@
         'Connect-AzureADExporter.ps1'
         'Export-AzureAD.ps1'
         'Get-AADExportGroups.ps1'
-        'Get-AADExportAccessReviews.ps1'
         'Get-AADExportAccessPackageAssignmentPolicies.ps1'
         'Get-AADExportAccessPackageAssignments.ps1'
         'Get-AADExportAccessPackageResourceScopes.ps1'
