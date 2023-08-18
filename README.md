@@ -47,7 +47,7 @@ The following objects and settings are not exported by default:
 
 * B2C, B2B, Static Groups and group memberships, Applications, ServicePrincipals, Users, Privileged Identity Management (built in roles, default roles settings, non permanent role assignements)
 
-To export all the objects and settings supported (no filter applied):
+Use the -All parameter to perform a full export:
 
 ```powershell
     Export-Entra -Path 'C:\EntraBackup\' -All
@@ -58,10 +58,13 @@ The ``-Type`` parameter can be used to select specific objects and settings to e
 ```powershell
     # export default all users as well as default objects and settings
     Export-Entra -Path 'C:\EntraBackup\' -Type "Config","Users"
+
     # export applications only
     Export-Entra -Path 'C:\EntraBackup\' -Type "Applications"
-     # export B2C specific properties only
+
+    # export B2C specific properties only
     Export-Entra -Path 'C:\EntraBackup\' -Type "B2C"
+
     # export B2B properties along with AD properties
     Export-Entra -Path 'C:\EntraBackup\' -Type "B2B","Config"
 ```
@@ -85,7 +88,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
 > [!NOTE]
 > This module exports all settings that are available through the Microsoft Graph API. Entra settings and objects that are not yet available in the Graph API are not included.
 
-## Exported settings include
+## Exported configuration includes
 
 * Users
 * Groups
