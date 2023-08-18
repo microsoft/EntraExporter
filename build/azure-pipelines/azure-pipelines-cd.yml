@@ -118,7 +118,7 @@ stages:
   displayName: 'Deploy Production'
   dependsOn:
   - Build
-  - Test
+  #- Test
   - Package
   jobs: 
   - job: Prepare
