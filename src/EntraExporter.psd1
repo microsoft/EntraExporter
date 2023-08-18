@@ -4,7 +4,7 @@
     RootModule = 'EntraExporter.psm1'
     
     # Version number of this module.
-    ModuleVersion = '2.0.0'
+    ModuleVersion = '2.0.1'
     
     # Supported PSEditions
     CompatiblePSEditions = 'Core','Desktop'
