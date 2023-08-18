@@ -33,6 +33,9 @@ To export object and settings use the following command:
 
 This will export the most common set of objects and settings.
 
+> [!NOTE]
+> We recommend using PowerShell 7+ to create a consistent output. While PowerShell 5.1 can be used the output generated is not optimal.
+
 The following objects and settings are not exported by default:
 
 * B2C
