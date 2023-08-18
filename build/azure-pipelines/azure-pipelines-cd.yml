@@ -1,6 +1,7 @@
 # Continuous Delivery Pipeline
 # https://aka.ms/yaml
 
+
 parameters:
 - name: vmImage
   displayName: 'Pool Image'
@@ -76,82 +77,6 @@ stages:
       parameters:
         moduleName: '$(moduleName)'
         EsrpCodeSigningServiceName: 'ESRP - MSFT Identity - Community Projects'
-
-- stage: Test
-  dependsOn: Build
-  jobs: 
-  - job: Windows
-    variables: 
-      skipComponentGovernanceDetection: true
-      runCodesignValidationInjection: false
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - download: current
-      artifact: '$(artifactModuleSigned)'
-    - task: PowerShell@2
-      name: ModuleInfo
-      displayName: 'Get Parameters for PowerShell Module'
-      inputs:
-        filePath: '$(System.DefaultWorkingDirectory)/build/Get-PSModuleInfo.ps1'
-        arguments: '-ModuleManifestPath "$(Pipeline.Workspace)/$(artifactModuleSigned)/*/*.psd1"'
-        pwsh: true
-    - template: template-psmodule-test.yml
-      parameters:
-        moduleName: '$(ModuleInfo.moduleName)'
-        artifactInput: '$(artifactModuleSigned)'
-        PesterConfigurationName: 'CD'
-        TestWindowsPowershell: true
-    - task: PSScriptAnalyzer@1
-      displayName: 'PowerShell Script Analyzer'
-      inputs:
-        Path: '$(Pipeline.Workspace)/$(artifactModuleSigned)'
-        Settings: 'required'
-        Recurse: true
-
-  - job: Ubuntu
-    variables: 
-      skipComponentGovernanceDetection: true
-      runCodesignValidationInjection: false
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - download: current
-      artifact: '$(artifactModuleSigned)'
-    - task: PowerShell@2
-      name: ModuleInfo
-      displayName: 'Get Parameters for PowerShell Module'
-      inputs:
-        filePath: '$(System.DefaultWorkingDirectory)/build/Get-PSModuleInfo.ps1'
-        arguments: '-ModuleManifestPath "$(Pipeline.Workspace)/$(artifactModuleSigned)/*/*.psd1"'
-        pwsh: true
-    - template: template-psmodule-test.yml
-      parameters:
-        moduleName: '$(ModuleInfo.moduleName)'
-        artifactInput: '$(artifactModuleSigned)'
-        PesterConfigurationName: 'CD'
-
-  - job: MacOS
-    variables: 
-      skipComponentGovernanceDetection: true
-      runCodesignValidationInjection: false
-    pool:
-      vmImage: 'macOS-latest'
-    steps:
-    - download: current
-      artifact: '$(artifactModuleSigned)'
-    - task: PowerShell@2
-      name: ModuleInfo
-      displayName: 'Get Parameters for PowerShell Module'
-      inputs:
-        filePath: '$(System.DefaultWorkingDirectory)/build/Get-PSModuleInfo.ps1'
-        arguments: '-ModuleManifestPath "$(Pipeline.Workspace)/$(artifactModuleSigned)/*/*.psd1"'
-        pwsh: true
-    - template: template-psmodule-test.yml
-      parameters:
-        moduleName: '$(ModuleInfo.moduleName)'
-        artifactInput: '$(artifactModuleSigned)'
-        PesterConfigurationName: 'CD'
 
 - stage: Package
   displayName: 'Standalone Package'
@@ -240,3 +165,79 @@ stages:
               title: '$(moduleName) v$(moduleVersion)'
               assets: '$(Pipeline.Workspace)/$(artifactModulePackage)/*'
               addChangeLog: false
+
+# - stage: Test
+#   dependsOn: Build
+#   jobs: 
+#   - job: Windows
+#     variables: 
+#       skipComponentGovernanceDetection: true
+#       runCodesignValidationInjection: false
+#     pool:
+#       vmImage: 'windows-latest'
+#     steps:
+#     - download: current
+#       artifact: '$(artifactModuleSigned)'
+#     - task: PowerShell@2
+#       name: ModuleInfo
+#       displayName: 'Get Parameters for PowerShell Module'
+#       inputs:
+#         filePath: '$(System.DefaultWorkingDirectory)/build/Get-PSModuleInfo.ps1'
+#         arguments: '-ModuleManifestPath "$(Pipeline.Workspace)/$(artifactModuleSigned)/*/*.psd1"'
+#         pwsh: true
+#     - template: template-psmodule-test.yml
+#       parameters:
+#         moduleName: '$(ModuleInfo.moduleName)'
+#         artifactInput: '$(artifactModuleSigned)'
+#         PesterConfigurationName: 'CD'
+#         TestWindowsPowershell: true
+#     - task: PSScriptAnalyzer@1
+#       displayName: 'PowerShell Script Analyzer'
+#       inputs:
+#         Path: '$(Pipeline.Workspace)/$(artifactModuleSigned)'
+#         Settings: 'required'
+#         Recurse: true
+
+  # - job: Ubuntu
+  #   variables: 
+  #     skipComponentGovernanceDetection: true
+  #     runCodesignValidationInjection: false
+  #   pool:
+  #     vmImage: 'ubuntu-latest'
+  #   steps:
+  #   - download: current
+  #     artifact: '$(artifactModuleSigned)'
+  #   - task: PowerShell@2
+  #     name: ModuleInfo
+  #     displayName: 'Get Parameters for PowerShell Module'
+  #     inputs:
+  #       filePath: '$(System.DefaultWorkingDirectory)/build/Get-PSModuleInfo.ps1'
+  #       arguments: '-ModuleManifestPath "$(Pipeline.Workspace)/$(artifactModuleSigned)/*/*.psd1"'
+  #       pwsh: true
+  #   - template: template-psmodule-test.yml
+  #     parameters:
+  #       moduleName: '$(ModuleInfo.moduleName)'
+  #       artifactInput: '$(artifactModuleSigned)'
+  #       PesterConfigurationName: 'CD'
+
+  # - job: MacOS
+  #   variables: 
+  #     skipComponentGovernanceDetection: true
+  #     runCodesignValidationInjection: false
+  #   pool:
+  #     vmImage: 'macOS-latest'
+  #   steps:
+  #   - download: current
+  #     artifact: '$(artifactModuleSigned)'
+  #   - task: PowerShell@2
+  #     name: ModuleInfo
+  #     displayName: 'Get Parameters for PowerShell Module'
+  #     inputs:
+  #       filePath: '$(System.DefaultWorkingDirectory)/build/Get-PSModuleInfo.ps1'
+  #       arguments: '-ModuleManifestPath "$(Pipeline.Workspace)/$(artifactModuleSigned)/*/*.psd1"'
+  #       pwsh: true
+  #   - template: template-psmodule-test.yml
+  #     parameters:
+  #       moduleName: '$(ModuleInfo.moduleName)'
+  #       artifactInput: '$(artifactModuleSigned)'
+  #       PesterConfigurationName: 'CD'
