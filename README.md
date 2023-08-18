@@ -17,13 +17,20 @@ This will provide tenant administrators with a historical view of all the settin
 
 ## Using the module
 
-### Connecting to your tenant
+### Connecting and exporting your config
 
 ```powershell
     Connect-EntraExporter
+    Export-Entra -Path 'C:\EntraBackup\'
 ```
 
-### Exporting objects and settings
+While Connect-EntraExporter is available for convenience you can alternatively use Connect-MgGraph with the following scopes to authenticate.
+
+```powershell
+Connect-MgGraph -Scopes 'Directory.Read.All', 'Policy.Read.All', 'IdentityProvider.Read.All', 'Organization.Read.All', 'User.Read.All', 'EntitlementManagement.Read.All', 'UserAuthenticationMethod.Read.All', 'IdentityUserFlow.Read.All', 'APIConnectors.Read.All', 'AccessReview.Read.All', 'Agreement.Read.All', 'Policy.Read.PermissionGrant', 'PrivilegedAccess.Read.AzureResources', 'PrivilegedAccess.Read.AzureAD', 'Application.Read.All'
+```
+
+### Export options
 
 To export object and settings use the following command:
 
@@ -31,20 +38,14 @@ To export object and settings use the following command:
     Export-Entra -Path 'C:\EntraBackup\'
 ```
 
-This will export the most common set of objects and settings.
+This default method exports the most common set of objects and settings.
 
 > [!NOTE]
 > We recommend using PowerShell 7+ to create a consistent output. While PowerShell 5.1 can be used the output generated is not optimal.
 
 The following objects and settings are not exported by default:
 
-* B2C
-* B2B
-* Static Groups and group memberships
-* Applications
-* ServicePrincipals
-* Users
-* Privileged Identity Management (built in roles, default roles settings, non permanent role assignements)
+* B2C, B2B, Static Groups and group memberships, Applications, ServicePrincipals, Users, Privileged Identity Management (built in roles, default roles settings, non permanent role assignements)
 
 To export all the objects and settings supported (no filter applied):
 
@@ -65,31 +66,7 @@ The ``-Type`` parameter can be used to select specific objects and settings to e
     Export-Entra -Path 'C:\EntraBackup\' -Type "B2B","Config"
 ```
 
-The currently valid types are:
-
-* All (all elements)
-* Config (default configuration)
-* AccessReviews
-* ConditionalAccess
-* Users
-* Groups
-* Applications
-* ServicePrincipals
-* B2C
-* B2B
-* PIM
-* PIMAzure
-* PIMAAD
-* AppProxy
-* Organization
-* Domains
-* EntitlementManagement
-* Policies
-* AdministrativeUnits
-* SKUs
-* Identity
-* Roles
-* Governance
+The currently valid types are: All (all elements), Config (default configuration), AccessReviews, ConditionalAccess, Users, Groups, Applications, ServicePrincipals, B2C, B2B, PIM, PIMAzure, PIMAAD, AppProxy, Organization, Domains, EntitlementManagement, Policies, AdministrativeUnits, SKUs, Identity, Roles, Governance
 
 This list can also be retrieved via:
 
@@ -99,22 +76,10 @@ This list can also be retrieved via:
 
 Additional filters can be applied:
 
-* To only export user and groups that are not synced from on-premises
+* To exclude on-prem synced users from the export
 
 ```powershell
-Export-Entra -Path 'C:\EntraBackup\' -CloudUsersAndGroupsOnly
-```
-
-* All groups (by default only dynamic groups are exported)
-
-```powershell
-Export-Entra -Path 'C:\EntraBackup\' -AllGroups
-```
-
-* All will export all types and remove filters from groups and PIM:
-
-```powershell
-Export-Entra -Path 'C:\EntraBackup\' -All
+Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
 ```
 
 > [!NOTE]
@@ -246,20 +211,6 @@ New-ItemProperty `
 ```
 
 Credit: @shaunluttin via https://bigfont.ca/enable-long-paths-in-windows-with-powershell/ and https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell.
-
-## Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
-
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 ## Trademarks
 

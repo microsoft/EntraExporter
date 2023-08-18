@@ -2,8 +2,7 @@
  .Synopsis
   Exports Entra's configuration and settings for a tenant
  .Description
-  This cmdlet reads the configuration information from the target Entra tenant and produces the output files 
-  in a target directory
+  This cmdlet reads the configuration information from the target Entra tenant and produces the output files in a target directory
 
  .PARAMETER OutputDirectory
     Specifies the directory path where the output files will be generated.
@@ -17,11 +16,17 @@
 .EXAMPLE
    .\Export-Entra -Path 'c:\temp\contoso'
 
-   Runs a default export and includes the key tenant configuration settings. Does not include large data collections such as Users, Groups, Applications, Service Principals, etc.
-.EXAMPLE
+   Runs a default export and includes the key tenant configuration settings. Does not include large data collections such as users, static groups, applications, service principals, etc.
+
+   .EXAMPLE
    .\Export-Entra -Path 'c:\temp\contoso' -All
    
    Runs a full export of all objects and configuration settings.
+
+.EXAMPLE
+   .\Export-Entra -Path 'c:\temp\contoso' -All -CloudUsersAndGroupsOnly
+
+   Runs a full export but excludes on-prem synced users and groups.
 
 .EXAMPLE
    .\Export-Entra -Path 'c:\temp\contoso' -Type ConditionalAccess, AppProxy
@@ -40,23 +45,30 @@ Function Export-Entra {
     (
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [String]$Path,        
+
         [Parameter(Mandatory = $false)]
         [ValidateSet('All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B','PIM','PIMAzure','PIMAAD', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles','Governance')]
         [String[]]$Type = 'Config',
+
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema,
+
         [Parameter(Mandatory = $false)]
         [string[]]$Parents,
+
+        # Performs a full export if true
+        [Parameter(Mandatory = $false)]
         [switch]
         $All,
+
+        # Excludes onPrem synced users and groups from export
+        [Parameter(Mandatory = $false)]
         [switch]
-        $CloudUsersAndGroupsOnly,
-        [switch]
-        $AllGroups
+        $CloudUsersAndGroupsOnly
     )
 
     if ($null -eq (Get-MgContext)) {
-        Write-Error "No active connection. Run Connect-EntraExporter to sign in and then retry."
+        Write-Error "No active connection. Run Connect-EntraExporter or Connect-MgGraph to sign in and then retry."
         exit
     }
     if($All) {$Type = @('All')}
@@ -66,18 +78,18 @@ Function Export-Entra {
     if (!$ExportSchema) {
         $ExportSchema = Get-EEDefaultSchema
     }
-    
 
     # aditional filters
     foreach ($entry in $ExportSchema) {
         $graphUri = Get-ObjectProperty $entry "GraphUri"
         # filter out synced users or groups
         if ($CloudUsersAndGroupsOnly -and ($graphUri -in "users","groups")) {
-            $entry.Filter = "onPremisesSyncEnabled ne true"
-        }
-        # get all groups
-        if (($All -or $AllGroups) -and ($graphUri -eq "groups")) {
-            $entry.Filter = $null
+            if([string]::IsNullOrEmpty($entry.Filter)){
+                $entry.Filter = "onPremisesSyncEnabled ne true"
+            }
+            else {
+                $entry.Filter = $entry.Filter + " and (onPremisesSyncEnabled ne true)"
+            }
         }
         # get all PIM elements
         if ($All -and ($graphUri -in "privilegedAccess/aadroles/resources","privilegedAccess/azureResources/resources")) {

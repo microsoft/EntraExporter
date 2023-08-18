@@ -4,7 +4,7 @@
     RootModule = 'EntraExporter.psm1'
     
     # Version number of this module.
-    ModuleVersion = '2.0.1'
+    ModuleVersion = '2.0.2'
     
     # Supported PSEditions
     CompatiblePSEditions = 'Core','Desktop'
@@ -22,7 +22,7 @@
     Copyright = 'Microsoft Corporation. All rights reserved.'
     
     # Description of the functionality provided by this module
-    Description = 'This module exports all the Entra objects and identity related settings in your tenant.'
+    Description = 'This module exports an Entra tenant''s identity related configuration settings and objects and writes them to json files.'
     
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '5.1'

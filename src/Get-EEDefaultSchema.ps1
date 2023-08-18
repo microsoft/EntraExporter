@@ -684,11 +684,11 @@ function Get-EEDefaultSchema  {
         },
         @{
             GraphUri = 'groups'
-            Filter = "NOT(groupTypes/any(c:c eq 'DynamicMembership'))" 
+            Filter = "not(groupTypes/any(c:c eq 'DynamicMembership'))" 
             Path = 'Groups'
             QueryParameters = @{ '$count' = 'true'; expand = 'extensions' }
             ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Groups')
+            Tag = @('All', 'Groups')
             DelegatedPermission = 'Directory.Read.All'
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
