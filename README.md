@@ -6,6 +6,9 @@ This module can be run as a nightly scheduled task or a DevOps component (Azure 
 
 This will provide tenant administrators with a historical view of all the settings in the tenant including the change history over the years.
 
+> [!IMPORTANT]
+> The AzureADExporter module in the PowerShell Gallery is now deprecated. Please install the new EntraExporter module.
+
 ## Installing the module
 
 ```powershell
