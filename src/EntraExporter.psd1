@@ -4,7 +4,7 @@
     RootModule = 'EntraExporter.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.1'
+    ModuleVersion = '2.0'
     
     # Supported PSEditions
     CompatiblePSEditions = 'Core','Desktop'
@@ -44,7 +44,7 @@
     
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules = @(
-        @{ ModuleName = 'Microsoft.Graph.Authentication'; Guid = '883916f2-9184-46ee-b1f8-b6a2fb784cee'; ModuleVersion = '1.1.0' }
+        @{ ModuleName = 'Microsoft.Graph.Authentication'; Guid = '883916f2-9184-46ee-b1f8-b6a2fb784cee'; ModuleVersion = '2.2.0' }
     )
     
     # Assemblies that must be loaded prior to importing this module
