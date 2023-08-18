@@ -1,7 +1,7 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule = 'AzureADExporter.psm1'
+    RootModule = 'EntraExporter.psm1'
     
     # Version number of this module.
     ModuleVersion = '1.0'
@@ -22,7 +22,7 @@
     Copyright = 'Microsoft Corporation. All rights reserved.'
     
     # Description of the functionality provided by this module
-    Description = 'This module exports all the Azure AD objects and Identity related settings in your tenant.'
+    Description = 'This module exports all the Entra objects and identity related settings in your tenant.'
     
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '5.1'
@@ -66,20 +66,20 @@
         'internal\ConvertTo-OrderedDictionary.ps1'
         'internal\ConvertFrom-QueryString.ps1'
         'internal\ConvertTo-QueryString.ps1'        
-        'Connect-AzureADExporter.ps1'
-        'Export-AzureAD.ps1'
-        'Get-AADExportGroups.ps1'
-        'Get-AADExportAccessPackageAssignmentPolicies.ps1'
-        'Get-AADExportAccessPackageAssignments.ps1'
-        'Get-AADExportAccessPackageResourceScopes.ps1'
-        'Get-AADExportDefaultSchema.ps1'
-        'Get-AADExportRequiredScopes.ps1'
+        'Connect-EntraExporter.ps1'
+        'Export-Entra.ps1'
+        'Get-EEDefaultSchema.ps1'
+        'Get-EERequiredScopes.ps1'
+        'Get-EEGroups.ps1'
+        'Get-EEAccessPackageAssignmentPolicies.ps1'
+        'Get-EEAccessPackageAssignments.ps1'
+        'Get-EEAccessPackageResourceScopes.ps1'
     )
     
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
-        'Connect-AzureADExporter'
-        'Export-AzureAD'
+        'Connect-EntraExporter'
+        'Export-Entra'
     )
     
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -106,13 +106,13 @@
         PSData = @{
     
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = 'Microsoft', 'Identity', 'Azure', 'AzureActiveDirectory', 'AzureAD', 'AAD', 'PSEdition_Desktop', 'Windows', 'Export', 'Backup', 'DR'
+            Tags = 'Microsoft', 'Identity', 'Azure', 'Entra', 'AzureAD', 'AAD', 'PSEdition_Desktop', 'Windows', 'Export', 'Backup', 'DR'
     
             # A URL to the license for this module.
-            LicenseUri = 'https://raw.githubusercontent.com/microsoft/azureadexporter/main/LICENSE'
+            LicenseUri = 'https://raw.githubusercontent.com/microsoft/entraexporter/main/LICENSE'
     
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/microsoft/azureadexporter'
+            ProjectUri = 'https://github.com/microsoft/entraexporter'
     
             # A URL to an icon representing this module.
             # IconUri = ''

@@ -1,8 +1,8 @@
 <# 
  .Synopsis
-  Exports the Azure AD Configuration and settings for a tenant
+  Exports Entra's configuration and settings for a tenant
  .Description
-  This cmdlet reads the configuration information from the target Azure AD Tenant and produces the output files 
+  This cmdlet reads the configuration information from the target Entra tenant and produces the output files 
   in a target directory
 
  .PARAMETER OutputDirectory
@@ -15,26 +15,26 @@
     If specified performs a full export of all objects and configuration in the tenant.
 
 .EXAMPLE
-   .\Export-AzureAD -Path 'c:\temp\contoso'
+   .\Export-Entra -Path 'c:\temp\contoso'
 
    Runs a default export and includes the key tenant configuration settings. Does not include large data collections such as Users, Groups, Applications, Service Principals, etc.
 .EXAMPLE
-   .\Export-AzureAD -Path 'c:\temp\contoso' -All
+   .\Export-Entra -Path 'c:\temp\contoso' -All
    
    Runs a full export of all objects and configuration settings.
 
 .EXAMPLE
-   .\Export-AzureAD -Path 'c:\temp\contoso' -Type ConditionalAccess, AppProxy
+   .\Export-Entra -Path 'c:\temp\contoso' -Type ConditionalAccess, AppProxy
 
    Runs an export that includes just the Conditional Access and Application Proxy settings.
 
 .EXAMPLE
-   .\Export-AzureAD -Path 'c:\temp\contoso' -Type B2C
+   .\Export-Entra -Path 'c:\temp\contoso' -Type B2C
 
    Runs an export of all B2C settings.
 #>
 
-Function Export-AzureAD {
+Function Export-Entra {
     [CmdletBinding()]
     param
     (
@@ -56,7 +56,7 @@ Function Export-AzureAD {
     )
 
     if ($null -eq (Get-MgContext)) {
-        Write-Error "No active connection. Run Connect-AzureADExporter to sign in and then retry."
+        Write-Error "No active connection. Run Connect-EntraExporter to sign in and then retry."
         exit
     }
     if($All) {$Type = @('All')}
@@ -64,7 +64,7 @@ Function Export-AzureAD {
     $global:Type = $Type #Used in places like Groups where Config flag will limit the resultset to just dynamic groups.
 
     if (!$ExportSchema) {
-        $ExportSchema = Get-AADExportDefaultSchema
+        $ExportSchema = Get-EEDefaultSchema
     }
     
 
@@ -128,20 +128,20 @@ Function Export-AzureAD {
 
             if ($outputFileName -match "\.json$") {
                 if($resultItems){
-                    ConvertTo-OrderedDictionary $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+                    $resultItems | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
                 }
             } else {
                 foreach($resultItem in $resultItems) {
-                    if (!$resultItem.ContainsKey('id')) {
+                    if (!$resultItem.PSObject.Properties['id']) {
                         continue
                     }
                     $itemOutputFileName = Join-Path -Path $outputFileName -ChildPath $resultItem.id
                     $parentOutputFileName = Join-Path $itemOutputFileName -ChildPath $resultItem.id
-                    ConvertTo-OrderedDictionary $resultItem | ConvertTo-Json -depth 100 | Out-File (New-Item -Path "$($parentOutputFileName).json" -Force)
+                    $resultItem | ConvertTo-Json -depth 100 | Out-File (New-Item -Path "$($parentOutputFileName).json" -Force)
                     if ($item.ContainsKey('Children')) {
                         $itemParents = $Parents
                         $itemParents += $resultItem.Id
-                        Export-AzureAD -Path $itemOutputFileName -Type $Type -ExportSchema $item.Children -Parents $itemParents
+                        Export-Entra -Path $itemOutputFileName -Type $Type -ExportSchema $item.Children -Parents $itemParents
                     }
                 }
             }

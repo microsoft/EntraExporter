@@ -6,10 +6,10 @@
   Gets the default export schema definition. Defining the order in which elements are exported.
 
  .Example
-  Get-AADExportDefaultSchema
+  Get-EEDefaultSchema
 #>
 
-function Get-AADExportDefaultSchema  {
+function Get-EEDefaultSchema  {
     $global:TenantID = (Get-MgContext).TenantId
     return  @(
         # Organization
@@ -368,6 +368,7 @@ function Get-AADExportDefaultSchema  {
         @{
             GraphUri = 'identity/conditionalAccess/policies'
             Path =  'Identity/Conditional/AccessPolicies'
+            ApiVersion = 'beta'
             Tag = @('All', 'Config', 'ConditionalAccess')
             DelegatedPermission = 'Policy.Read.All'
             ApplicationPermission = 'Policy.Read.All'
@@ -390,21 +391,21 @@ function Get-AADExportDefaultSchema  {
             ApplicationPermission = 'EntitlementManagement.Read.All'
             Children = @(
                 @{
-                    Command = 'Get-AADExportAccessPackageAssignmentPolicies'
+                    Command = 'Get-EEAccessPackageAssignmentPolicies'
                     Path = 'AssignmentPolicies'
                     Tag = @('All', 'Governance', 'EntitlementManagement')
                     DelegatedPermission = 'EntitlementManagement.Read.All'
                     ApplicationPermission = 'EntitlementManagement.Read.All'
                 },
                 @{
-                    Command = 'Get-AADExportAccessPackageAssignments'
+                    Command = 'Get-EEAccessPackageAssignments'
                     Path = 'Assignments'
                     Tag = @('All', 'Governance', 'EntitlementManagement')
                     DelegatedPermission = 'EntitlementManagement.Read.All'
                     ApplicationPermission = 'EntitlementManagement.Read.All'
                 },
                 @{
-                    Command = 'Get-AADExportAccessPackageResourceScopes'
+                    Command = 'Get-EEAccessPackageResourceScopes'
                     Path = 'ResourceScopes'
                     Tag = @('All', 'Governance', 'EntitlementManagement')
                     DelegatedPermission = 'EntitlementManagement.Read.All'

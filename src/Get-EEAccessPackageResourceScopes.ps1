@@ -7,10 +7,10 @@
   https://docs.microsoft.com/en-us/graph/api/accesspackage-list-accesspackageresourcerolescopes?view=graph-rest-beta&tabs=http 
 
  .Example
-  Get-AADExportAccessPackageResourceScopes
+  Get-EEAccessPackageResourceScopes
 #>
 
-Function Get-AADExportAccessPackageResourceScopes {
+Function Get-EEAccessPackageResourceScopes {
   [CmdletBinding()]
   param
   (

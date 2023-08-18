@@ -1,18 +1,18 @@
 $global:TenantID = $null
 <#
 .SYNOPSIS
-    Connect the Azure AD Exporter module to Azure AD tenant.
+    Connect the Entra Exporter module to the Entra tenant.
 .DESCRIPTION
-    This command will connect Microsoft.Graph to your Azure AD tenant.
+    This command will connect Microsoft.Graph to your Entra tenant.
     You can also directly call Connect-MgGraph if you require other options to connect
 .EXAMPLE
-    PS C:\>Connect-AzureADExporter
+    PS C:\>Connect-EntraExporter
     Connect to home tenant of authenticated user.
 .EXAMPLE
-    PS C:\>Connect-AzureADExporter -TenantId 3043-343434-343434
+    PS C:\>Connect-EntraExporter -TenantId 3043-343434-343434
     Connect to a specific Tenant
 #>
-function Connect-AzureADExporter {
+function Connect-EntraExporter {
     param(
         [Parameter(Mandatory = $false)]
             [string] $TenantId = 'common',

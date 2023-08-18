@@ -7,10 +7,10 @@
   https://docs.microsoft.com/en-us/graph/api/accesspackageassignmentpolicy-list?view=graph-rest-beta&tabs=http 
 
  .Example
-  AADExportAccessPackagesAssignmentPolicies
+  EEAccessPackagesAssignmentPolicies
 #>
 
-Function Get-AADExportAccessPackageAssignmentPolicies  {
+Function Get-EEAccessPackageAssignmentPolicies  {
   [CmdletBinding()]
   param
   (

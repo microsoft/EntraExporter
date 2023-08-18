@@ -1,6 +1,6 @@
-# Azure AD Exporter
+# Entra Exporter
 
-The Azure AD Exporter is a PowerShell module that allows you to export your Azure AD and Azure AD B2C configuration settings to local .json files.
+The Entra Exporter is a PowerShell module that allows you to export your Entra and Azure AD B2C configuration settings to local .json files.
 
 This module can be run as a nightly scheduled task or a DevOps component (Azure DevOps, GitHub, Jenkins) and the exported files can be version controlled in Git or SharePoint.
 
@@ -9,7 +9,7 @@ This will provide tenant administrators with a historical view of all the settin
 ## Installing the module
 
 ```powershell
-    Install-Module AzureADExporter
+    Install-Module EntraExporter
 ```
 
 ## Using the module
@@ -17,7 +17,7 @@ This will provide tenant administrators with a historical view of all the settin
 ### Connecting to your tenant
 
 ```powershell
-    Connect-AzureADExporter
+    Connect-EntraExporter
 ```
 
 ### Exporting objects and settings
@@ -25,7 +25,7 @@ This will provide tenant administrators with a historical view of all the settin
 To export object and settings use the following command:
 
 ```powershell
-    Export-AzureAD -Path 'C:\AzureADBackup\'
+    Export-Entra -Path 'C:\EntraBackup\'
 ```
 
 This will export the most common set of objects and settings.
@@ -43,20 +43,20 @@ The following objects and settings are not exported by default:
 To export all the objects and settings supported (no filter applied):
 
 ```powershell
-    Export-AzureAD -Path 'C:\AzureADBackup\' -All
+    Export-Entra -Path 'C:\EntraBackup\' -All
 ```
 
 The ``-Type`` parameter can be used to select specific objects and settings to export. The default type is "Config":
 
 ```powershell
     # export default all users as well as default objects and settings
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Config","Users"
+    Export-Entra -Path 'C:\EntraBackup\' -Type "Config","Users"
     # export applications only
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "Applications"
+    Export-Entra -Path 'C:\EntraBackup\' -Type "Applications"
      # export B2C specific properties only
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2C"
+    Export-Entra -Path 'C:\EntraBackup\' -Type "B2C"
     # export B2B properties along with AD properties
-    Export-AzureAD -Path 'C:\AzureADBackup\' -Type "B2B","Config"
+    Export-Entra -Path 'C:\EntraBackup\' -Type "B2B","Config"
 ```
 
 The currently valid types are:
@@ -88,7 +88,7 @@ The currently valid types are:
 This list can also be retrieved via:
 
 ```powershell
-(Get-Command Export-AzureAD | Select-Object -Expand Parameters)['Type'].Attributes.ValidValues
+(Get-Command Export-Entra | Select-Object -Expand Parameters)['Type'].Attributes.ValidValues
 ```
 
 Additional filters can be applied:
@@ -96,23 +96,23 @@ Additional filters can be applied:
 * To only export user and groups that are not synced from on-premises
 
 ```powershell
-Export-AzureAD -Path 'C:\AzureADBackup\' -CloudUsersAndGroupsOnly
+Export-Entra -Path 'C:\EntraBackup\' -CloudUsersAndGroupsOnly
 ```
 
 * All groups (by default only dynamic groups are exported)
 
 ```powershell
-Export-AzureAD -Path 'C:\AzureADBackup\' -AllGroups
+Export-Entra -Path 'C:\EntraBackup\' -AllGroups
 ```
 
 * All will export all types and remove filters from groups and PIM:
 
 ```powershell
-Export-AzureAD -Path 'C:\AzureADBackup\' -All
+Export-Entra -Path 'C:\EntraBackup\' -All
 ```
 
 > [!NOTE]
-> This module exports all settings that are available through the Microsoft Graph API. Azure AD settings and objects that are not yet available in the Graph API are not included.
+> This module exports all settings that are available through the Microsoft Graph API. Entra settings and objects that are not yet available in the Graph API are not included.
 
 ## Exported settings include
 
@@ -142,7 +142,7 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
     * Connected Organizations
   * Access Reviews
   * Privileged Identity Management
-    * Azure AD Roles
+    * Entra Roles
     * Azure Resources
   * Terms of Use
 * Application Proxy
@@ -179,14 +179,14 @@ Export-AzureAD -Path 'C:\AzureADBackup\' -All
 
 ## Integrate to Azure DevOps Pipeline
 
-Exporting Azure AD settings to json files makes them useful to integrate with DevOps pipelines.
+Exporting Entra settings to json files makes them useful to integrate with DevOps pipelines.
 
 > **Note**:
 > Delegated authentication will require a dedicated agent where the authentication has been pre-configured.
 
-Bellow is an sample of exporting in two steps
+Below is an sample of exporting in two steps
 
-1. Export Azure AD to local json files
+1. Export Entra to local json files
 2. Update a git repository with the files
 
 To export the configuration (replace variables with ``<>`` with the values suited to your situation):
@@ -203,13 +203,13 @@ Remove-Item $tenantPath -Force -Recurse
 
 Write-Host 'Installing modules...'
 Install-Module Microsoft.Graph.Authentication -Scope CurrentUser -Force
-Install-Module AzureADExporter -Scope CurrentUser -Force
+Install-Module EntraExporter -Scope CurrentUser -Force
 
-Write-Host 'Connecting to AzureAD...'
-Connect-AzureADExporter -TenantId $tenantId
+Write-Host 'Connecting...'
+Connect-EntraExporter -TenantId $tenantId
 
 Write-Host 'Starting backup...'
-Export-AzureAD $tenantPath -All
+Export-Entra $tenantPath -All
 ```
 
 To update the git repository with the generated files:
@@ -228,7 +228,7 @@ git push origin
 
 ### Error 'Could not find a part of the path' when exported JSON file paths are longer than 260 characters
 
-A workaround to this is to enable long paths via the Windows registry or a GPO setting. Run the following from an elevated PowerShell session and then close PowerShell before trying your export again: 
+A workaround to this is to enable long paths via the Windows registry or a GPO setting. Run the following from an elevated PowerShell session and then close PowerShell before trying your export again:
 
 ```powershell
 New-ItemProperty `

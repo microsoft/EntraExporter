@@ -7,10 +7,10 @@
   https://docs.microsoft.com/en-us/graph/api/group-list
 
  .Example
-  Get-AADExportGroups
+  Get-EEGroups
 #>
 
-Function Get-AADExportGroups {
+Function Get-EEGroups {
   if((Compare-Object $Type @('Config') -ExcludeDifferent)){
     Invoke-Graph 'groups' -Filter "groupTypes/any(c:c eq 'DynamicMembership')" -QueryParameters @{ expand = 'appRoleAssignments' }
   }

@@ -62,7 +62,7 @@ function Invoke-Graph{
         function Complete-Result ($results, $DisablePaging) {
             if (!$DisablePaging -and $results) {
                 while (Get-ObjectProperty $results '@odata.nextLink') {
-                    $results = Invoke-MgGraphRequest -Method GET -Uri $results.'@odata.nextLink' -Headers @{ ConsistencyLevel = $ConsistencyLevel }
+                    $results = Invoke-MgGraphRequest -Method GET -Uri $results.'@odata.nextLink' -Headers @{ ConsistencyLevel = $ConsistencyLevel } -OutputType PSObject
                     Format-Result $results $DisablePaging
                 }
             }
@@ -113,7 +113,7 @@ function Invoke-Graph{
                 }
                 else {
                         ## Get results
-                        [hashtable] $results = Invoke-MgGraphRequest -Method GET -Uri $uriQueryEndpointFinal.Uri.AbsoluteUri -Headers @{ ConsistencyLevel = $ConsistencyLevel }
+                        $results = Invoke-MgGraphRequest -Method GET -Uri $uriQueryEndpointFinal.Uri.AbsoluteUri -Headers @{ ConsistencyLevel = $ConsistencyLevel } -OutputType PSObject
                         Format-Result $results $DisablePaging
                         Complete-Result $results $DisablePaging
                 }
@@ -129,8 +129,8 @@ function Invoke-Graph{
                 $jsonRequests = New-Object psobject -Property @{ requests = $listRequests[$iRequest..$indexEnd] } | ConvertTo-Json -Depth 5
                 Write-Debug $jsonRequests
                 
-                [hashtable] $resultsBatch = Invoke-MgGraphRequest -Method POST -Uri $uriQueryEndpoint.Uri.AbsoluteUri -Body $jsonRequests
-                [hashtable[]] $resultsBatch = $resultsBatch.responses | Sort-Object -Property id
+                $resultsBatch = Invoke-MgGraphRequest -Method POST -Uri $uriQueryEndpoint.Uri.AbsoluteUri -Body $jsonRequests -OutputType PSObject
+                $resultsBatch = $resultsBatch.responses | Sort-Object -Property id
 
                 foreach ($results in ($resultsBatch.body)) {
                     Format-Result $results $DisablePaging

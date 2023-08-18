@@ -6,10 +6,10 @@
   Gets the require scopes for schema
 
  .Example
-  Get-AADExportRequiredScopes
+  Get-EERequiredScopes
 #>
 
-function Get-AADExportRequiredScopes {
+function Get-EERequiredScopes {
     [CmdletBinding()]
     param
     (
@@ -21,7 +21,7 @@ function Get-AADExportRequiredScopes {
     )
 
     if (!$ExportSchema) {
-        $ExportSchema = Get-AADExportDefaultSchema
+        $ExportSchema = Get-EEDefaultSchema
     }
 
     $scopeProperty = "DelegatedPermission"
@@ -51,7 +51,7 @@ function Get-AADExportRequiredScopes {
             }
         }
         if ($entry.ContainsKey('Children')) {
-            $childScopes = Get-AADExportRequiredScopes -PermissionType $PermissionType -ExportSchema $entry.Children
+            $childScopes = Get-EERequiredScopes -PermissionType $PermissionType -ExportSchema $entry.Children
             foreach ($entryScope in $childScopes) {
                 if ($entryScope -notin $scopes) {
                     $scopes += $entryScope
