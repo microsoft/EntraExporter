@@ -4,7 +4,7 @@
     RootModule = 'EntraExporter.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.0'
+    ModuleVersion = '1.1'
     
     # Supported PSEditions
     CompatiblePSEditions = 'Core','Desktop'
@@ -70,7 +70,6 @@
         'Export-Entra.ps1'
         'Get-EEDefaultSchema.ps1'
         'Get-EERequiredScopes.ps1'
-        'Get-EEGroups.ps1'
         'Get-EEAccessPackageAssignmentPolicies.ps1'
         'Get-EEAccessPackageAssignments.ps1'
         'Get-EEAccessPackageResourceScopes.ps1'

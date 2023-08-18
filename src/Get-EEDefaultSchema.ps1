@@ -673,14 +673,6 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'groups/{id}/members' 
-                    Select = 'id, userPrincipalName, displayName'
-                    Path = 'Members'
-                    Tag = @('All', 'Groups')
-                    DelegatedPermission = 'Directory.Read.All'
-                    ApplicationPermission = 'Directory.Read.All'
-                }
-                @{
                     GraphUri =  'groups/{id}/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
@@ -688,8 +680,36 @@ function Get-EEDefaultSchema  {
                     DelegatedPermission = 'Directory.Read.All'
                     ApplicationPermission = 'Directory.Read.All'
                 }
-            )                
+            )
         },
+        @{
+            GraphUri = 'groups'
+            Filter = "NOT(groupTypes/any(c:c eq 'DynamicMembership'))" 
+            Path = 'Groups'
+            QueryParameters = @{ '$count' = 'true'; expand = 'extensions' }
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Groups')
+            DelegatedPermission = 'Directory.Read.All'
+            ApplicationPermission = 'Directory.Read.All'
+            Children = @(
+                @{
+                    GraphUri =  'groups/{id}/owners'
+                    Select = 'id, userPrincipalName, displayName'
+                    Path = 'Owners'
+                    Tag = @('All', 'Config', 'Groups')
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
+                },
+                @{
+                    GraphUri = 'groups/{id}/members' 
+                    Select = 'id, userPrincipalName, displayName'
+                    Path = 'Members'
+                    Tag = @('All', 'Groups')
+                    DelegatedPermission = 'Directory.Read.All'
+                    ApplicationPermission = 'Directory.Read.All'
+                }
+            )
+        },        
         @{
             GraphUri = 'groupSettings'
             Path = 'GroupSettings'
@@ -824,61 +844,6 @@ function Get-EEDefaultSchema  {
             Tag = @('All', 'Users')
             DelegatedPermission = 'Directory.Read.All'
             ApplicationPermission = 'Directory.Read.All'
-            Children = @(
-                @{
-                    GraphUri = 'users/{id}/authentication/fido2Methods'
-                    Path = 'Authentication/FIDO2Methods'
-                    Tag = @('All', 'Users')
-                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
-                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
-                },
-                @{
-                    GraphUri = 'users/{id}/authentication/microsoftAuthenticatorMethods'
-                    Path = 'Authentication/MicrosoftAuthenticatorMethods'
-                    Tag = @('All', 'Users')
-                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
-                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
-                },
-                @{
-                    GraphUri = 'users/{id}/authentication/windowsHelloForBusinessMethods'
-                    Path = 'Authentication/WindowsHelloForBusinessMethods'
-                    Tag = @('All', 'Users')
-                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
-                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
-                },
-                @{
-                    GraphUri = 'users/{id}/authentication/temporaryAccessPassMethods'
-                    Path = 'Authentication/TemporaryAccessPassMethods'
-                    ApiVersion = 'beta'
-                    Tag = @('All', 'Users')
-                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
-                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
-                },
-                @{
-                    GraphUri = 'users/{id}/authentication/phoneMethods'
-                    Path = 'Authentication/PhoneMethods'
-                    ApiVersion = 'beta'
-                    Tag = @('All', 'Users')
-                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
-                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
-                },
-                @{
-                    GraphUri = 'users/{id}/authentication/emailMethods'
-                    Path = 'Authentication/EmailMethods'
-                    ApiVersion = 'beta'
-                    Tag = @('All', 'Users')
-                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
-                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
-                },
-                @{
-                    GraphUri = 'users/{id}/authentication/passwordMethods'
-                    Path = 'Authentication/PasswordMethods'
-                    ApiVersion = 'beta'
-                    Tag = @('All', 'Users')
-                    DelegatedPermission = 'UserAuthenticationMethod.Read.All'
-                    ApplicationPermission = 'UserAuthenticationMethod.Read.All'
-                }
-            )
         }
     )
 }
