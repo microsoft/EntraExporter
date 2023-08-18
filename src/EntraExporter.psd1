@@ -10,7 +10,7 @@
     CompatiblePSEditions = 'Core','Desktop'
     
     # ID used to uniquely identify this module
-    GUID = '90d1b990-5858-40f7-bbec-bfad5bda9359'
+    GUID = '9633a6d3-660a-4c3e-8b6e-6fd64567c9bb'
     
     # Author of this module
     Author = 'Microsoft Identity'
