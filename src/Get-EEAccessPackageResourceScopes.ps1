@@ -17,5 +17,5 @@ Function Get-EEAccessPackageResourceScopes {
       [Parameter(Mandatory = $true)]
       [string[]]$Parents
   )
-    Invoke-Graph "identityGovernance/entitlementManagement/accessPackages/$($Parents[0])" -QueryParameters @{expand='accessPackageResourceRoleScopes(expand=accessPackageResourceRole,accessPackageResourceScope)'} -ApiVersion 'beta'
+    Invoke-Graph "identityGovernance/entitlementManagement/accessPackages/$($Parents[0])" -GraphBaseUri "$((Get-MgEnvironment -Name (Get-MgContext).Environment).GraphEndpoint)" -QueryParameters @{expand='accessPackageResourceRoleScopes(expand=accessPackageResourceRole,accessPackageResourceScope)'} -ApiVersion 'beta'
 }
