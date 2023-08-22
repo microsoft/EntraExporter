@@ -121,7 +121,7 @@ Function Export-Entra {
             else {
                 if ($hasParents){ $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1] }
                 try {
-                    $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion
+                    $resultItems = Invoke-Graph $graphUri -GraphBaseUri "$((Get-MgEnvironment -Name (Get-MgContext).Environment).GraphEndpoint)" -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion
                 }
                 catch {
                     $e = ""
