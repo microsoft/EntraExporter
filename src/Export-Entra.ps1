@@ -1,4 +1,4 @@
-<# 
+<#
  .Synopsis
   Exports Entra's configuration and settings for a tenant
  .Description
@@ -20,7 +20,7 @@
 
    .EXAMPLE
    .\Export-Entra -Path 'c:\temp\contoso' -All
-   
+
    Runs a full export of all objects and configuration settings.
 
 .EXAMPLE
@@ -44,7 +44,7 @@ Function Export-Entra {
     param
     (
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-        [String]$Path,        
+        [String]$Path,
 
         [Parameter(Mandatory = $false)]
         [ValidateSet('All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B','PIM','PIMAzure','PIMAAD', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles','Governance')]
@@ -72,7 +72,6 @@ Function Export-Entra {
         exit
     }
     if($All) {$Type = @('All')}
-    $global:TenantID = (Get-MgContext).TenantId
     $global:Type = $Type #Used in places like Groups where Config flag will limit the resultset to just dynamic groups.
 
     if (!$ExportSchema) {
@@ -105,7 +104,7 @@ Function Export-Entra {
 
             $spacer = ''
             if($hasParents) { $spacer = ''.PadRight($Parents.Count + 3, ' ') + $Parents[$Parents.Count-1] }
-            
+
             Write-Host "$spacer $($item.Path)"
 
             $command = Get-ObjectProperty $item 'Command'
@@ -121,14 +120,14 @@ Function Export-Entra {
             else {
                 if ($hasParents){ $graphUri = $graphUri -replace '{id}', $Parents[$Parents.Count-1] }
                 try {
-                    $resultItems = Invoke-Graph $graphUri -GraphBaseUri "$((Get-MgEnvironment -Name (Get-MgContext).Environment).GraphEndpoint)" -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion
+                    $resultItems = Invoke-Graph $graphUri -Filter (Get-ObjectProperty $item 'Filter') -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -ApiVersion $apiVersion
                 }
                 catch {
                     $e = ""
                     if($_.ErrorDetails -and $_.ErrorDetails.Message) {
                         $e = $_.ErrorDetails.Message
                     }
-                    
+
                     if($e.Contains($ignoreError) -or $e.Contains('Encountered an internal server error')){
                         Write-Debug $_
                     }

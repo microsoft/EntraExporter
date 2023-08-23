@@ -38,10 +38,16 @@ function Invoke-Graph{
         [int] $BatchSize = 20,
         # Base URL for Microsoft Graph API.
         [Parameter(Mandatory = $false)]
-        [uri] $GraphBaseUri = 'https://graph.microsoft.com/'
+        [uri] $GraphBaseUri
     )
-    
+
     begin {
+        if(!$GraphBaseUri){
+            if(!(Test-Path variable:global:GraphBaseUri)){
+                $global:GraphBaseUri = $((Get-MgEnvironment -Name (Get-MgContext).Environment).GraphEndpoint)
+            }
+            $GraphBaseUri = $global:GraphBaseUri
+        }
         $listRequests = New-Object 'System.Collections.Generic.List[psobject]'
 
         function Format-Result ($results, $RawOutput) {
@@ -128,7 +134,7 @@ function Invoke-Graph{
                 $indexEnd = [System.Math]::Min($iRequest + $BatchSize - 1, $listRequests.Count - 1)
                 $jsonRequests = New-Object psobject -Property @{ requests = $listRequests[$iRequest..$indexEnd] } | ConvertTo-Json -Depth 5
                 Write-Debug $jsonRequests
-                
+
                 $resultsBatch = Invoke-MgGraphRequest -Method POST -Uri $uriQueryEndpoint.Uri.AbsoluteUri -Body $jsonRequests -OutputType PSObject
                 $resultsBatch = $resultsBatch.responses | Sort-Object -Property id
 

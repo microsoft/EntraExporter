@@ -1,10 +1,10 @@
-<# 
+<#
  .Synopsis
-  Gets the list of accessPackageAssignmentPolicies 
+  Gets the list of accessPackageAssignmentPolicies
 
  .Description
   GET /identityGovernance/entitlementManagement/accessPackageAssignmentPolicies
-  https://docs.microsoft.com/en-us/graph/api/accesspackageassignmentpolicy-list?view=graph-rest-beta&tabs=http 
+  https://docs.microsoft.com/en-us/graph/api/accesspackageassignmentpolicy-list?view=graph-rest-beta&tabs=http
 
  .Example
   EEAccessPackagesAssignmentPolicies
@@ -17,5 +17,5 @@ Function Get-EEAccessPackageAssignmentPolicies  {
       [Parameter(Mandatory = $true)]
       [string[]]$Parents
   )
-  Invoke-Graph 'identityGovernance/entitlementManagement/accessPackageAssignmentPolicies' -GraphBaseUri "$((Get-MgEnvironment -Name (Get-MgContext).Environment).GraphEndpoint)" -Filter "(accessPackage/id eq '$($Parents[0])')"  -ApiVersion 'beta'
+  Invoke-Graph 'identityGovernance/entitlementManagement/accessPackageAssignmentPolicies' -Filter "(accessPackage/id eq '$($Parents[0])')"  -ApiVersion 'beta'
 }
