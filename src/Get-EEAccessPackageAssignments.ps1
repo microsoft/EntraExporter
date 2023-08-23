@@ -17,5 +17,5 @@ Function Get-EEAccessPackageAssignments {
       [Parameter(Mandatory = $true)]
       [string[]]$Parents
   )
-    Invoke-Graph 'identityGovernance/entitlementManagement/accessPackageAssignments' -Filter "(accessPackage/id eq '$($Parents[0])')"  -ApiVersion 'beta'
+    Invoke-Graph 'identityGovernance/entitlementManagement/accessPackageAssignments' -GraphBaseUri "$((Get-MgEnvironment -Name (Get-MgContext).Environment).GraphEndpoint)" -Filter "(accessPackage/id eq '$($Parents[0])')"  -ApiVersion 'beta'
 }
