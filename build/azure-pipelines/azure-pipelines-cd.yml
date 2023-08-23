@@ -11,7 +11,16 @@ parameters:
   - ubuntu-latest
   - macOS-latest
 
-trigger: none
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+    - preview
+  paths:
+    include:
+    - src/*
+
 pr: none
 
 variables:
