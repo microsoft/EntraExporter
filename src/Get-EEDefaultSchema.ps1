@@ -21,13 +21,6 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
         },
         @{
-            GraphUri = 'organization/{0}/settings' -f $TenantID
-            Path = 'Organization/Settings.json'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Organization')
-            DelegatedPermission = 'User.Read.All'
-        },
-        @{
             GraphUri = 'organization/{0}/branding/localizations' -f $TenantID
             Path = 'Organization/Branding/Localizations.json'
             Tag = @('All', 'Config', 'Organization')
