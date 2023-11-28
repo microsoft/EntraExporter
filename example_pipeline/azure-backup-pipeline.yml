@@ -1,0 +1,117 @@
+trigger: none
+schedules:
+  - cron: '0 1 * * *'
+    displayName: "1am"
+    branches:
+      include:
+      - main
+    always: true
+
+jobs:
+  - job: backup_azure
+    displayName: Backup Azure configuration
+    pool:
+      vmImage: windows-latest
+    continueOnError: false
+    steps:
+    - checkout: self
+      persistCredentials: true
+
+    # Set git global settings
+    - task: Bash@3
+      displayName: Configure Git
+      inputs:
+        targetType: 'inline'
+        script: |
+          git config --global user.name $(USER_NAME)
+          git config --global user.email $(USER_EMAIL)
+          git config --global core.longpaths true
+        workingDirectory: '$(Build.SourcesDirectory)'
+        failOnStderr: true
+
+    - task: PowerShell@2
+      displayName: Prepare environment & install prerequisites
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host 'Clean git folder'
+          Remove-Item "$(Build.SourcesDirectory)\prod-backup" -Force -Recurse -ErrorAction silentlycontinue
+
+          Write-Host 'Install EntraExporter module'
+          Install-Module -Name EntraExporter -AllowClobber -Force -AcceptLicense
+        failOnStderr: true
+        pwsh: false
+
+    - task: PowerShell@2
+      displayName: Create the backup
+      inputs:
+        targetType: 'inline'
+        script: |
+          $applicationId = "$(CLIENT_ID)"
+          $securedPassword = "$(CLIENT_SECRET)"
+          $tenantID = "$(TENANT_NAME)"
+
+          $securedPasswordPassword = ConvertTo-SecureString -String $SecuredPassword -AsPlainText -Force
+          $clientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ApplicationId, $SecuredPasswordPassword
+          Connect-MgGraph -TenantId $tenantID -ClientSecretCredential $ClientSecretCredential -NoWelcome
+
+          Write-Host 'Creating backup'
+          Export-Entra "$(Build.SourcesDirectory)\prod-backup" -All -CloudUsersAndGroupsOnly #-Type "Config"
+        failOnStderr: true
+        pwsh: false
+
+    # Commit changes and push to repo
+    - task: Bash@3
+      displayName: Commit changes
+      inputs:
+        targetType: 'inline'
+        script: |
+          DATEF=`date +%Y.%m.%d`
+          git add --all
+          git commit -m "Azure config backup $DATEF"
+          git push origin HEAD:main
+        workingDirectory: '$(Build.SourcesDirectory)'
+        failOnStderr: false
+
+  - job: tag
+    displayName: Tag repo
+    dependsOn: backup_azure
+    pool:
+      vmImage: windows-latest
+    continueOnError: false
+    steps:
+    - checkout: self
+      persistCredentials: true
+
+    # Set git global settings
+    - task: Bash@3
+      displayName: Configure Git
+      inputs:
+        targetType: 'inline'
+        script: |
+          git config --global user.name $(USER_NAME)
+          git config --global user.email $(USER_EMAIL)
+          git config --global core.longpaths true
+        workingDirectory: '$(Build.SourcesDirectory)'
+        failOnStderr: true
+
+    - task: Bash@3
+      displayName: Pull origin
+      inputs:
+        targetType: 'inline'
+        script: |
+          git pull origin main
+        workingDirectory: '$(Build.SourcesDirectory)'
+        failOnStderr: false
+
+    # Commit changes and push to repo
+    - task: Bash@3
+      displayName: Git tag
+      inputs:
+        targetType: 'inline'
+        script: |
+          DATEF=`date +%Y.%m.%d_%H.%M`
+          git tag -a "v$DATEF" -m "Azure configuration snapshot $DATEF"
+          git push origin "v$DATEF"
+        workingDirectory: '$(Build.SourcesDirectory)'
+        failOnStderr: false
