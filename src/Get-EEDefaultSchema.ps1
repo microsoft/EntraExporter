@@ -1,4 +1,4 @@
-<# 
+<#
  .Synopsis
   Gets the default export schema definition
 
@@ -14,7 +14,7 @@ function Get-EEDefaultSchema  {
     return  @(
         # Organization
         @{
-            GraphUri = 'organization' 
+            GraphUri = 'organization'
             Path = 'Organization/Organization.json'
             Tag = @('All', 'Config', 'Organization')
             DelegatedPermission = 'Directory.Read.All'
@@ -463,8 +463,8 @@ function Get-EEDefaultSchema  {
                     DelegatedPermission = 'EntitlementManagement.Read.All'
                     ApplicationPermission = 'EntitlementManagement.Read.All'
                 }
-            )    
-        },            
+            )
+        },
         @{
             GraphUri = 'identityGovernance/entitlementManagement/settings'
             Path = 'IdentityGovernance/EntitlementManagement/Settings'
@@ -657,7 +657,7 @@ function Get-EEDefaultSchema  {
         # expanding app roles assignements breaks 'ne' filtering (needs eventual consistency and count)
         @{
             GraphUri = 'groups'
-            Filter = "groupTypes/any(c:c eq 'DynamicMembership')" 
+            Filter = "groupTypes/any(c:c eq 'DynamicMembership')"
             Path = 'Groups'
             QueryParameters = @{ '$count' = 'true'; expand = 'extensions' }
             ApiVersion = 'beta'
@@ -677,7 +677,7 @@ function Get-EEDefaultSchema  {
         },
         @{
             GraphUri = 'groups'
-            Filter = "not(groupTypes/any(c:c eq 'DynamicMembership'))" 
+            Filter = "not(groupTypes/any(c:c eq 'DynamicMembership'))"
             Path = 'Groups'
             QueryParameters = @{ '$count' = 'true'; expand = 'extensions' }
             ApiVersion = 'beta'
@@ -694,7 +694,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'groups/{id}/members' 
+                    GraphUri = 'groups/{id}/members'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Members'
                     Tag = @('All', 'Groups')
@@ -702,7 +702,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 }
             )
-        },        
+        },
         @{
             GraphUri = 'groupSettings'
             Path = 'GroupSettings'
@@ -825,7 +825,7 @@ function Get-EEDefaultSchema  {
                 }
             )
         },
-        
+
         # Users
         # Todo look at app roles assignments
         @{
@@ -835,6 +835,17 @@ function Get-EEDefaultSchema  {
             QueryParameters = @{ '$count' = 'true'; expand = "extensions" }
             ApiVersion = 'beta'
             Tag = @('All', 'Users')
+            DelegatedPermission = 'Directory.Read.All'
+            ApplicationPermission = 'Directory.Read.All'
+        },
+        # Devices
+        # Todo look at app roles assignments
+        @{
+            GraphUri = 'devices'
+            Path = 'Devices'
+            Filter = $null
+            ApiVersion = 'beta'
+            Tag = @('All', 'Devices')
             DelegatedPermission = 'Directory.Read.All'
             ApplicationPermission = 'Directory.Read.All'
         }

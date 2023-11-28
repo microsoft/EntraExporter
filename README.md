@@ -94,6 +94,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
 * Groups
   * Dynamic and Assigned groups (incl. Members and Owners)
   * Group Settings
+* Devices
 * External Identities
   * Authorization Policy
   * API Connectors
