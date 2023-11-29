@@ -844,7 +844,6 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
         },
         # Devices
-        # Todo look at app roles assignments
         @{
             GraphUri = 'devices'
             Path = 'Devices'

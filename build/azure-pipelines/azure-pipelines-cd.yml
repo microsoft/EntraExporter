@@ -11,15 +11,15 @@ parameters:
   - ubuntu-latest
   - macOS-latest
 
-trigger:
-  batch: true
-  branches:
-    include:
-    - main
-    - preview
-  paths:
-    include:
-    - src/*
+# trigger:
+#   batch: true
+#   branches:
+#     include:
+#     - main
+#     - preview
+#   paths:
+#     include:
+#     - src/*
 
 pr: none
 
