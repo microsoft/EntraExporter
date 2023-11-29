@@ -125,6 +125,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
   * Agents and Agent Groups
   * Published Resources
 * Licenses
+* Connect sync settings
 * Custom domain names
 * Company branding
   * Profile Card Properties
