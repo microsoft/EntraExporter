@@ -33,7 +33,12 @@ function Get-EEDefaultSchema  {
             DelegatedPermission = 'Organization.Read.All'
             ApplicationPermission = 'Organization.Read.All'
         },
-
+        @{
+            GraphUri = 'directory/onPremisesSynchronization/{0}' -f $TenantID
+            Path = 'Directory/OnPremisesSynchronization.json'
+            Tag = @('All', 'Config', 'Directory')
+            DelegatedPermission = 'OnPremDirectorySynchronization.Read.All'
+        },
         @{
             GraphUri = 'domains'
             Path = 'Domains'
