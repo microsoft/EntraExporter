@@ -202,6 +202,10 @@ git commit -m "ADO Update"
 git push origin
 ```
 
+BTW Here is a really good step by step guide from Ondrej Sebela that includes illustrations as well.
+
+[How to easily backup your Azure environment using EntraExporter and Azure DevOps Pipeline](https://doitpsway.com/how-to-easily-backup-your-azure-environment-using-entraexporter-and-azure-devops-pipeline)
+
 ## FAQs
 
 ### Error 'Could not find a part of the path' when exported JSON file paths are longer than 260 characters
