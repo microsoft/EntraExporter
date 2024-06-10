@@ -28,6 +28,8 @@ function Connect-EntraExporter {
             } )]
             [string]$Environment = 'Global'
     )
+
+
     Connect-MgGraph -TenantId $TenantId -Environment $Environment -Scopes 'Directory.Read.All',
         'Policy.Read.All',
         'IdentityProvider.Read.All',
@@ -43,7 +45,13 @@ function Connect-EntraExporter {
         'PrivilegedAccess.Read.AzureResources',
         'PrivilegedAccess.Read.AzureAD',
         'Application.Read.All',
-        'OnPremDirectorySynchronization.Read.All'
+        'OnPremDirectorySynchronization.Read.All',
+        'Teamwork.Read.All', 
+        'TeamworkAppSettings.ReadWrite.All', 
+        'SharepointTenantSettings.Read.All',
+        'Reports.Read.All',
+        'RoleManagement.Read.All',
+        'AuditLog.Read.All'
     Get-MgContext
     $global:TenantID = (Get-MgContext).TenantId
 }

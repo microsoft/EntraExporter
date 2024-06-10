@@ -47,7 +47,7 @@ Function Export-Entra {
         [String]$Path,
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B','PIM','PIMAzure','PIMAAD', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices')]
+        [ValidateSet('All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals','B2C','B2B','PIM','PIMAzure','PIMAAD', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint','RoleManagement','DirectoryRoles','ExchangeRoles','IntuneRoles','CloudPCRoles','EntitlementManagementRoles','Reports','UsersRegisteredByFeatureReport')]
         [String[]]$Type = 'Config',
 
         [Parameter(Mandatory = $false)]
