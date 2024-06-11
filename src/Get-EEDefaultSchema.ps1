@@ -856,6 +856,7 @@ function Get-EEDefaultSchema  {
         # Teams
         @{
             GraphUri = 'teamwork'
+            Path = 'Admin/Teams/settings.json'
             Filter = $null
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'Teams')
