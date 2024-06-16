@@ -1,6 +1,6 @@
 # Entra Exporter
 
-[![PSGallery Version](https://img.shields.io/powershellgallery/v/EntraExporter.svg?style=flat&logo=powershell&label=PSGallery%20Version)](https://www.powershellgallery.com/packages/EntraExporter) [![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/EntraExporter.svg?style=flat&logo=powershell&label=PSGallery%20Downloads)](https://www.powershellgallery.com/packages/EntraExporter) [![PSGallery Platform](https://img.shields.io/powershellgallery/p/EntraExporter.svg?style=flat&logo=powershell&label=PSGallery%20Platform)](https://www.powershellgallery.com/packages/EntraExporter)
+[![PSGallery Version](https://img.shields.io/powershellgallery/v/EntraExporter.svg?style=flat&label=PSGallery%20Version)](https://www.powershellgallery.com/packages/EntraExporter) [![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/EntraExporter.svg?style=flat&label=PSGallery%20Downloads)](https://www.powershellgallery.com/packages/EntraExporter) [![PSGallery Platform](https://img.shields.io/powershellgallery/p/EntraExporter.svg?style=flat&label=PSGallery%20Platform)](https://www.powershellgallery.com/packages/EntraExporter)
 
 The Entra Exporter is a PowerShell module that allows you to export your Entra and Azure AD B2C configuration settings to local .json files.
 
