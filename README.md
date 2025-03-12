@@ -14,7 +14,7 @@ This will provide tenant administrators with a historical view of all the settin
 ## Installing the module
 
 ```powershell
-    Install-Module EntraExporter
+Install-Module EntraExporter
 ```
 
 ## Using the module
@@ -22,8 +22,8 @@ This will provide tenant administrators with a historical view of all the settin
 ### Connecting and exporting your config
 
 ```powershell
-    Connect-EntraExporter
-    Export-Entra -Path 'C:\EntraBackup\'
+Connect-EntraExporter
+Export-Entra -Path 'C:\EntraBackup\'
 ```
 
 While Connect-EntraExporter is available for convenience you can alternatively use Connect-MgGraph with the following scopes to authenticate.
@@ -37,7 +37,7 @@ Connect-MgGraph -Scopes 'Directory.Read.All', 'Policy.Read.All', 'IdentityProvid
 To export object and settings use the following command:
 
 ```powershell
-    Export-Entra -Path 'C:\EntraBackup\'
+Export-Entra -Path 'C:\EntraBackup\'
 ```
 
 This default method exports the most common set of objects and settings.
@@ -47,28 +47,28 @@ This default method exports the most common set of objects and settings.
 
 The following objects and settings are not exported by default:
 
-* B2C, B2B, Static Groups and group memberships, Applications, ServicePrincipals, Users, Privileged Identity Management (built in roles, default roles settings, non permanent role assignements)
+* B2C, B2B, Static Groups and group memberships, Applications, ServicePrincipals, Users, Privileged Identity Management (built in roles, default roles settings, non permanent role assignments)
 
 Use the -All parameter to perform a full export:
 
 ```powershell
-    Export-Entra -Path 'C:\EntraBackup\' -All
+Export-Entra -Path 'C:\EntraBackup\' -All
 ```
 
 The ``-Type`` parameter can be used to select specific objects and settings to export. The default type is "Config":
 
 ```powershell
-    # export default all users as well as default objects and settings
-    Export-Entra -Path 'C:\EntraBackup\' -Type "Config","Users"
+# export default all users as well as default objects and settings
+Export-Entra -Path 'C:\EntraBackup\' -Type "Config","Users"
 
-    # export applications only
-    Export-Entra -Path 'C:\EntraBackup\' -Type "Applications"
+# export applications only
+Export-Entra -Path 'C:\EntraBackup\' -Type "Applications"
 
-    # export B2C specific properties only
-    Export-Entra -Path 'C:\EntraBackup\' -Type "B2C"
+# export B2C specific properties only
+Export-Entra -Path 'C:\EntraBackup\' -Type "B2C"
 
-    # export B2B properties along with AD properties
-    Export-Entra -Path 'C:\EntraBackup\' -Type "B2B","Config"
+# export B2B properties along with AD properties
+Export-Entra -Path 'C:\EntraBackup\' -Type "B2B","Config"
 ```
 
 The currently valid types are: All (all elements), Config (default configuration), AccessReviews, ConditionalAccess, Users, Groups, Applications, ServicePrincipals, B2C, B2B, PIM, PIMAzure, PIMAAD, AppProxy, Organization, Domains, EntitlementManagement, Policies, AdministrativeUnits, SKUs, Identity, Roles, Governance
@@ -162,7 +162,7 @@ Exporting Entra settings to json files makes them useful to integrate with DevOp
 > **Note**:
 > Delegated authentication will require a dedicated agent where the authentication has been pre-configured.
 
-Below is an sample of exporting in two steps
+Below is a sample of exporting in two steps:
 
 1. Export Entra to local json files
 2. Update a git repository with the files
@@ -202,7 +202,7 @@ git commit -m "ADO Update"
 git push origin
 ```
 
-BTW Here is a really good step by step guide from Ondrej Sebela that includes illustrations as well.
+BTW Here is a really good step by step guide from Ondrej Sebela that includes illustrations as well:
 
 [How to easily backup your Azure environment using EntraExporter and Azure DevOps Pipeline](https://doitpsway.com/how-to-easily-backup-your-azure-environment-using-entraexporter-and-azure-devops-pipeline)
 
@@ -225,8 +225,4 @@ Credit: @shaunluttin via https://bigfont.ca/enable-long-paths-in-windows-with-po
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general). Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.
