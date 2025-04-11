@@ -87,6 +87,7 @@ function Export-Entra {
         Write-Error 'No active connection. Run Connect-EntraExporter or Connect-MgGraph to sign in and then retry.'
         break
     }
+
     if ($All) { $Type = @('All') }
     $global:Type = $Type #Used in places like Groups where Config flag will limit the resultset to just dynamic groups.
 
@@ -94,10 +95,11 @@ function Export-Entra {
         $ExportSchema = Get-EEDefaultSchema
     }
 
-    # aditional filters
+    # Additional Filters
     foreach ($entry in $ExportSchema) {
         $graphUri = Get-ObjectProperty $entry 'GraphUri'
-        # filter out synced users or groups
+
+        # Filter out synced users or groups.
         if ($CloudUsersAndGroupsOnly -and ($graphUri -in 'users', 'groups')) {
             if ([string]::IsNullOrEmpty($entry.Filter)) {
                 $entry.Filter = 'onPremisesSyncEnabled ne true'
@@ -105,7 +107,8 @@ function Export-Entra {
                 $entry.Filter = $entry.Filter + ' and (onPremisesSyncEnabled ne true)'
             }
         }
-        # get all PIM elements
+
+        # Get all PIM elements.
         if ($All -and ($graphUri -in 'privilegedAccess/aadroles/resources', 'privilegedAccess/azureResources/resources')) {
             $entry.Filter = $null
         }
@@ -114,7 +117,7 @@ function Export-Entra {
     foreach ($item in $ExportSchema) {
         $typeMatch = Compare-Object $item.Tag $Type -ExcludeDifferent -IncludeEqual
         $hasParents = $Parents -and $Parents.Count -gt 0
-        if ( ($typeMatch)) {
+        if (($typeMatch)) {
             $outputFileName = Join-Path -Path $Path -ChildPath $item.Path
 
             $spacer = ''
