@@ -85,7 +85,7 @@ function Export-Entra {
 
     if ($null -eq (Get-MgContext)) {
         Write-Error 'No active connection. Run Connect-EntraExporter or Connect-MgGraph to sign in and then retry.'
-        exit
+        break
     }
     if ($All) { $Type = @('All') }
     $global:Type = $Type #Used in places like Groups where Config flag will limit the resultset to just dynamic groups.
