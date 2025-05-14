@@ -355,6 +355,22 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Policy.Read.All'
         },
         @{
+            GraphUri = 'policies/defaultAppManagementPolicy'
+            Path = 'Policies/DefaultAppManagementPolicy'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/appManagementPolicies'
+            Path = 'Policies/AppManagementPolicies'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
             GraphUri = 'identity/customAuthenticationExtensions'
             Path = 'Identity/CustomAuthenticationExtensions'
             ApiVersion = 'beta'
@@ -752,6 +768,13 @@ function Get-EEDefaultSchema  {
                     Tag = @('All', 'Applications')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
+                },
+                @{
+                    GraphUri = "applications/{id}/appManagementPolicies"
+                    Path = 'appManagementPolicies'
+                    Tag = @('All', 'Applications')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 }
             )
         },
@@ -827,6 +850,13 @@ function Get-EEDefaultSchema  {
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
+                },
+                @{
+                    GraphUri = "servicePrincipals/{id}/appManagementPolicies"
+                    Path = 'appManagementPolicies'
+                    Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 }
             )
         },
@@ -852,128 +882,6 @@ function Get-EEDefaultSchema  {
             Tag = @('All', 'Devices')
             DelegatedPermission = 'Directory.Read.All'
             ApplicationPermission = 'Directory.Read.All'
-        },
-        # Teams
-        @{
-            GraphUri = 'teamwork'
-            Path = 'Admin/Teams/settings.json'
-            Filter = $null
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Teams')
-            DelegatedPermission = 'Teamwork.Read.All'
-            ApplicationPermission = 'Teamwork.Read.All'
-        },
-        # Sharepoint
-        @{
-            GraphUri = 'admin/sharepoint/settings'
-            Path = 'Admin/Sharepoint/settings.json'
-            Filter = $null
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Sharepoint')
-            DelegatedPermission = 'SharePointTenantSettings.Read.All'
-            ApplicationPermission = 'SharePointTenantSettings.Read.All'
-        },
-        # RoleManagement - Directory Role Definitions
-        @{
-            GraphUri = 'roleManagement/directory/roleDefinitions'
-            Path = 'RoleManagement/directory/roleDefinitions'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'DirectoryRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
-        },
-        # RoleManagement - Directory Role Assignments
-        @{
-            GraphUri = 'roleManagement/directory/roleAssignments'
-            Path = 'RoleManagement/directory/roleAssignments'
-            QueryParameters = @{ expand = 'principal' }
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'DirectoryRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
-        }   
-        # RoleManagement - Exchange Role Definitions
-        @{
-            GraphUri = 'roleManagement/exchange/roleDefinitions'
-            Path = 'RoleManagement/exchange/roleDefinitions'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'ExchangeRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
-        },
-        # RoleManagement - Exchange Role Assignments
-        @{
-            GraphUri = 'roleManagement/exchange/roleAssignments'
-            Path = 'RoleManagement/exchange/roleAssignments'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'ExchangeRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
-        },
-        # RoleManagement - Intune Role Definitions
-        @{
-            GraphUri = 'roleManagement/deviceManagement/roleDefinitions'
-            Path = 'RoleManagement/deviceManagement/roleDefinitions'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'IntuneRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
-        },
-        # RoleManagement - Intune Role Assignments
-        @{
-            GraphUri = 'roleManagement/deviceManagement/roleAssignments'
-            Path = 'RoleManagement/deviceManagement/roleAssignments'
-            QueryParameters = @{ expand = 'principals' }
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'IntuneRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
-        } 
-        # RoleManagement - CloudPC Role Definitions
-        @{
-            GraphUri = 'roleManagement/cloudPC/roleDefinitions'
-            Path = 'RoleManagement/cloudPC/roleDefinitions'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'CloudPCRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
-        },
-        # RoleManagement - CloudPC Role Assignments
-        @{
-            GraphUri = 'roleManagement/cloudPC/roleAssignments'
-            Path = 'RoleManagement/cloudPC/roleAssignments'
-            QueryParameters = @{ expand = 'principals' }
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'CloudPCRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
-        } 
-        # RoleManagement - Entitlement Management Role Definitions
-        @{
-            GraphUri = 'roleManagement/entitlementManagement/roleDefinitions'
-            Path = 'RoleManagement/entitlementManagement/roleDefinitions'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'EntitlementManagementRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
-        },
-        # RoleManagement - Entitlement Management Role Assignments
-        @{
-            GraphUri = 'roleManagement/entitlementManagement/roleAssignments'
-            Path = 'RoleManagement/entitlementManagement/roleAssignments'
-            QueryParameters = @{ expand = 'principal' }
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'RoleManagement', 'EntitlementManagementRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
-        },
-        # Reports - Users Registered By Feature
-        @{
-            GraphUri = 'reports/authenticationMethods/microsoft.graph.usersRegisteredByFeature()'
-            Path = 'Reports/authenticationMethods/usersRegisteredByFeature/report.json'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Reports', 'UsersRegisteredByFeatureReport')
-            DelegatedPermission = 'AuditLog.Read.All'            
-        } 
+        }
     )
 }
