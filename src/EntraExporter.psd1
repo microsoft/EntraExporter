@@ -66,6 +66,7 @@
         'internal\ConvertTo-OrderedDictionary.ps1'
         'internal\ConvertFrom-QueryString.ps1'
         'internal\ConvertTo-QueryString.ps1'
+        'internal\Set-RedactedString.ps1'
         'Connect-EntraExporter.ps1'
         'Export-Entra.ps1'
         'Get-EEDefaultSchema.ps1'
