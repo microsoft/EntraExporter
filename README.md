@@ -112,6 +112,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
   * Permission Grant Policies
   * Token Issuance Policies
   * Token Lifetime Policies
+  * Application Management Policies
 * Identity Governance
   * Entitlement Management
     * Access Packages
@@ -144,6 +145,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
   * Feature Rollout Policies
   * Cross-tenant Access
   * Activity Based Timeout Policies
+  * Application Management Policies
 * Hybrid Authentication
   * Identity Providers
   * Home Realm Discovery Policies

@@ -253,6 +253,22 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Policy.Read.All'
         },
         @{
+            GraphUri = 'policies/defaultAppManagementPolicy'
+            Path = 'Policies/DefaultAppManagementPolicy'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
+            GraphUri = 'policies/appManagementPolicies'
+            Path = 'Policies/AppManagementPolicies'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/email'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/Email.json'
             Tag = @('All', 'Config', 'Policies')
@@ -752,6 +768,13 @@ function Get-EEDefaultSchema  {
                     Tag = @('All', 'Applications')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
+                },
+                @{
+                    GraphUri = "applications/{id}/appManagementPolicies"
+                    Path = 'appManagementPolicies'
+                    Tag = @('All', 'Applications')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 }
             )
         },
@@ -824,6 +847,13 @@ function Get-EEDefaultSchema  {
                 @{
                     GraphUri = 'servicePrincipals/{id}/tokenLifetimePolicies'
                     Path = 'tokenLifetimePolicies'
+                    Tag = @('All', 'ServicePrincipals')
+                    DelegatedPermission = 'Policy.Read.All'
+                    ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
+                },
+                @{
+                    GraphUri = 'servicePrincipals/{id}/appManagementPolicies'
+                    Path = 'appManagementPolicies'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
