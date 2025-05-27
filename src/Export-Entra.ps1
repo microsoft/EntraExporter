@@ -145,9 +145,9 @@ function Export-Entra {
                     }
 
                     if ($e.Contains($ignoreError) -or $e.Contains('Encountered an internal server error')) {
-                        Write-Debug (Set-RedactedErrorMessage -ErrorMessage $_)
+                        Write-Debug (Set-RedactedString -InputString $_)
                     } else {
-                        Write-Error (Set-RedactedErrorMessage -ErrorMessage $_)
+                        Write-Error (Set-RedactedString -InputString $_)
                     }
                 }
             }
