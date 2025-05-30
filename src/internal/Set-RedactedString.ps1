@@ -38,6 +38,6 @@ function Set-RedactedString {
     }
 
     end {
-        Remove-Variable -Name InputString, Pattern -ErrorAction SilentlyContinue
+        # No explicit variable cleanup is necessary; PowerShell handles scope cleanup automatically.
     }
 }
