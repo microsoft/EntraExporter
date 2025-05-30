@@ -34,10 +34,10 @@ function Set-RedactedString {
 
         # Replace the token with [REDACTED], keeping the 'Bearer ' prefix
         $RedactedString = [regex]::Replace($InputString, $pattern, '${1}[REDACTED]')
+        $RedactedString
     }
 
     end {
-        $RedactedString
-        Remove-Variable -Name InputString, BearerTokenPattern, Pattern -ErrorAction SilentlyContinue
+        Remove-Variable -Name InputString, Pattern -ErrorAction SilentlyContinue
     }
 }
