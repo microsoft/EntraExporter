@@ -91,11 +91,11 @@
         # api batch requests are limited to 20 requests
         $chunkSize = 20
         # buffer to hold chunks of requests
-        $requestChunk = [System.Collections.ArrayList]::new()
+        $requestChunk = [System.Collections.Generic.List[Object]]::new()
         # paginated or remotely failed requests that should be processed too, to get all the results
-        $extraRequestChunk = [System.Collections.ArrayList]::new()
+        $extraRequestChunk = [System.Collections.Generic.List[Object]]::new()
         # throttled requests that have to be repeated after given time
-        $throttledRequestChunk = [System.Collections.ArrayList]::new()
+        $throttledRequestChunk = [System.Collections.Generic.List[Object]]::new()
 
         function _processChunk {
             <#
@@ -110,7 +110,7 @@
             [CmdletBinding()]
             param (
                 [Parameter(Mandatory = $true)]
-                [System.Collections.ArrayList] $requestChunk
+                [System.Collections.Generic.List[Object]] $requestChunk
             )
 
             $duplicityId = $requestChunk | Select-Object -ExpandProperty Name | Group-Object | ? { $_.Count -gt 1 }
@@ -204,7 +204,7 @@
                         # replace original URL with the nextLink
                         $nextLinkRequest.Url = $nextLink
                         # add the request for later processing
-                        $null = $extraRequestChunk.Add($nextLinkRequest)
+                        $extraRequestChunk.Add($nextLinkRequest)
                     }
 
                     $skipToken = $null
@@ -226,7 +226,7 @@
                             $nextPageRequest.content | Add-Member -MemberType NoteProperty -Name Options -Value @{'$skipToken' = $skipToken }
                         }
                         # add the request for later processing
-                        $null = $extraRequestChunk.Add($nextPageRequest)
+                        $extraRequestChunk.Add($nextPageRequest)
                     }
                 } elseif ($response.httpStatusCode -eq 429) {
                     # throttled (will be repeated after given time)
@@ -239,11 +239,11 @@
                     if ($jobRetryAfter -eq 0) {
                         # request can be repeated without any delay
                         #TIP for performance reasons adding to $extraRequestChunk batch (to avoid invocation of unnecessary batch job)
-                        $null = $extraRequestChunk.Add($throttledBatchRequest)
+                        $extraRequestChunk.Add($throttledBatchRequest)
                     } else {
                         # request can be repeated after delay
                         # add the request for later processing
-                        $null = $throttledRequestChunk.Add($throttledBatchRequest)
+                        $throttledRequestChunk.Add($throttledBatchRequest)
                     }
 
                     # get highest retry-after wait time
@@ -316,7 +316,7 @@
         }
 
         foreach ($request in $batchRequest) {
-            $null = $requestChunk.Add($request)
+            $requestChunk.Add($request)
 
             # check if the buffer has reached the required chunk size
             if ($requestChunk.count -eq $chunkSize) {
