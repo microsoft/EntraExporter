@@ -29,7 +29,33 @@ Export-Entra -Path 'C:\EntraBackup\'
 While Connect-EntraExporter is available for convenience you can alternatively use Connect-MgGraph with the following scopes to authenticate.
 
 ```powershell
-Connect-MgGraph -Scopes 'Directory.Read.All', 'Policy.Read.All', 'IdentityProvider.Read.All', 'Organization.Read.All', 'User.Read.All', 'EntitlementManagement.Read.All', 'UserAuthenticationMethod.Read.All', 'IdentityUserFlow.Read.All', 'APIConnectors.Read.All', 'AccessReview.Read.All', 'Agreement.Read.All', 'Policy.Read.PermissionGrant', 'PrivilegedAccess.Read.AzureResources', 'PrivilegedAccess.Read.AzureAD', 'Application.Read.All'
+# if "PIMResources" export is selected, you need to be granted RBAC role "Management Group Reader" at "Tenant Root Group" level (to be able to read Management Groups)
+# if 
+# required if "All", "IAM", "AccessPolicies" or "PIMResources" exports are selected
+Connect-AzAccount
+
+Connect-MgGraph -Scopes 'Directory.Read.All',
+        'Policy.Read.All',
+        'IdentityProvider.Read.All',
+        'Organization.Read.All',
+        'User.Read.All',
+        'EntitlementManagement.Read.All',
+        'UserAuthenticationMethod.Read.All',
+        'IdentityUserFlow.Read.All',
+        'APIConnectors.Read.All',
+        'AccessReview.Read.All',
+        'Agreement.Read.All',
+        'Policy.Read.PermissionGrant',
+        'RoleEligibilitySchedule.Read.Directory',
+        'PrivilegedEligibilitySchedule.Read.AzureADGroup',
+        'Application.Read.All',
+        'OnPremDirectorySynchronization.Read.All',
+        'Teamwork.Read.All', 
+        'TeamworkAppSettings.ReadWrite.All', 
+        'SharepointTenantSettings.Read.All',
+        'Reports.Read.All',
+        'RoleManagement.Read.All',
+        'AuditLog.Read.All'
 ```
 
 ### Export options
@@ -71,7 +97,7 @@ Export-Entra -Path 'C:\EntraBackup\' -Type "B2C"
 Export-Entra -Path 'C:\EntraBackup\' -Type "B2B","Config"
 ```
 
-The currently valid types are: All (all elements), Config (default configuration), AccessReviews, ConditionalAccess, Users, Groups, Applications, ServicePrincipals, B2C, B2B, PIM, PIMAzure, PIMAAD, AppProxy, Organization, Domains, EntitlementManagement, Policies, AdministrativeUnits, SKUs, Identity, Roles, Governance
+The currently valid types are: 'All' (all elements), 'Config' (default configuration), 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals', 'B2C', 'B2B', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint', 'RoleManagement', 'DirectoryRoles', 'ExchangeRoles', 'IntuneRoles', 'CloudPCRoles', 'EntitlementManagementRoles', 'Reports', 'UsersRegisteredByFeatureReport', 'IAM', 'AccessPolicies', 'PIM', 'PIMDirectoryRoles', 'PIMResources', 'PIMGroups'
 
 This list can also be retrieved via:
 
@@ -93,6 +119,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
 ## Exported configuration includes
 
 * Users
+* Devices
 * Groups
   * Dynamic and Assigned groups (incl. Members and Owners)
   * Group Settings
@@ -121,6 +148,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
   * Access Reviews
   * Privileged Identity Management
     * Entra Roles
+    * Entra Groups
     * Azure Resources
   * Terms of Use
 * Application Proxy
@@ -138,6 +166,7 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
 * Security
   * Conditional Access Policies
   * Named Locations
+  * Authentication Contexts
   * Authentication Methods Policies
   * Identity Security Defaults Enforcement Policy
   * Permission Grant Policies
@@ -149,6 +178,9 @@ Export-Entra -Path 'C:\EntraBackup\' -All -CloudUsersAndGroupsOnly
 * Hybrid Authentication
   * Identity Providers
   * Home Realm Discovery Policies
+* Azure Resources
+  * IAM (RBAC)
+  * Access Policies
 
 * B2C Settings
   * B2C User Flows
