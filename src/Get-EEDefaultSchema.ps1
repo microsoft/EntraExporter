@@ -988,6 +988,7 @@ function Get-EEDefaultSchema  {
             DelegatedPermission   = 'Directory.Read.All'
             ApplicationPermission = 'Directory.Read.All'
             # requires connection via Connect-AzAccount
+            # requires 'Reader' role on 'Tenant Root Group' level (or the levels you want to export) to be able to read subscriptions and their resources!
         }
     )
 }

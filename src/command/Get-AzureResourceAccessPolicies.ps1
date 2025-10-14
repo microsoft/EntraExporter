@@ -20,6 +20,9 @@
         Get-AzureResourceAccessPolicy
 
         Get all Access Policies (not RBAC/IAM) for all Azure resources.
+
+        .NOTES
+        Requires Reader role on Tenant Root Group to be able to read all subscriptions and their resources!
         #>
 
         [CmdletBinding()]
@@ -55,6 +58,6 @@
 
         $outputFileName = Join-Path -Path $outputPath -ChildPath "$id.json"
 
-        $result | select * -ExcludeProperty Id | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $result | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
     }
 }

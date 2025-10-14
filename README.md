@@ -29,9 +29,8 @@ Export-Entra -Path 'C:\EntraBackup\'
 While Connect-EntraExporter is available for convenience you can alternatively use Connect-MgGraph with the following scopes to authenticate.
 
 ```powershell
-# if "PIMResources" export is selected, you need to be granted RBAC role "Management Group Reader" at "Tenant Root Group" level (to be able to read Management Groups)
-# if 
-# required if "All", "IAM", "AccessPolicies" or "PIMResources" exports are selected
+# if "PIMResources" export is selected, you need to be granted RBAC role "Management Group Reader" at the "Tenant Root Group" level (to be able to read Management Groups)
+# if  "IAM" export is selected, you need to be granted RBAC role "Reader" at the "Tenant Root Group" level (to be able to read all subscriptions and their resources)
 Connect-AzAccount
 
 Connect-MgGraph -Scopes 'Directory.Read.All',
