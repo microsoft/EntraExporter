@@ -239,12 +239,7 @@
                 & $command @commandParams
             }
             else {
-                # New-GraphBatchRequest uses <placeholder> instead of {id}
-                $graphUri = $graphUri -replace '{id}', '<placeholder>'
-
                 $uri = New-FinalUri -RelativeUri $graphUri -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -Filter (Get-ObjectProperty $item 'Filter')
-                # New-GraphBatchRequest needs to have uri where < and > aren't URL encoded
-                $uri = $uri -replace "%3C", "<" -replace "%3E", ">"
 
                 $parentIds | % {
                     if ($item.Path -match "\.json$") {
@@ -387,6 +382,7 @@
         }
         else {
             $uri = New-FinalUri -RelativeUri $graphUri -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -Filter (Get-ObjectProperty $item 'Filter')
+            
             # batch request id cannot contain '\' character
             $id = $outputFileName -replace '\\', '/'
 

@@ -76,7 +76,7 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'directoryRoles/{id}/members'
+                    GraphUri = 'directoryRoles/<placeholder>/members'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Members'
                     Tag = @('All', 'Config', 'Roles')
@@ -84,7 +84,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 }
                 @{
-                    GraphUri = 'directoryroles/{id}/scopedMembers'
+                    GraphUri = 'directoryroles/<placeholder>/scopedMembers'
                     Path = 'ScopedMembers'
                     Tag = @('All', 'Config', 'Roles')
                     DelegatedPermission = 'Directory.Read.All'
@@ -109,14 +109,14 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'IdentityUserFlow.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'identity/b2cUserFlows/{id}/identityProviders'
+                    GraphUri = 'identity/b2cUserFlows/<placeholder>/identityProviders'
                     Path = 'IdentityProviders'
                     Tag = @('B2C')
                     DelegatedPermission = 'IdentityUserFlow.Read.All'
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
-                    GraphUri = 'identity/b2cUserFlows/{id}/userAttributeAssignments'
+                    GraphUri = 'identity/b2cUserFlows/<placeholder>/userAttributeAssignments'
                     QueryParameters = @{ '$expand' = 'userAttribute' }
                     Path = 'UserAttributeAssignments'
                     Tag = @('B2C')
@@ -124,7 +124,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
-                    GraphUri = 'identity/b2cUserFlows/{id}/apiConnectorConfiguration'
+                    GraphUri = 'identity/b2cUserFlows/<placeholder>/apiConnectorConfiguration'
                     QueryParameters = @{ '$expand' = 'postFederationSignup,postAttributeCollection' }
                     Path = 'ApiConnectorConfiguration'
                     Tag = @('B2C')
@@ -132,7 +132,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
-                    GraphUri = 'identity/b2cUserFlows/{id}/languages'
+                    GraphUri = 'identity/b2cUserFlows/<placeholder>/languages'
                     Path = 'Languages'
                     Tag = @('B2C')
                     DelegatedPermission = 'IdentityUserFlow.Read.All'
@@ -160,7 +160,7 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'IdentityUserFlow.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'identity/b2xUserFlows/{id}/identityProviders'
+                    GraphUri = 'identity/b2xUserFlows/<placeholder>/identityProviders'
                     Path = 'IdentityProviders'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'B2B')
@@ -168,7 +168,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
-                    GraphUri = 'identity/b2xUserFlows/{id}/userAttributeAssignments'
+                    GraphUri = 'identity/b2xUserFlows/<placeholder>/userAttributeAssignments'
                     QueryParameters = @{ '$expand' = 'userAttribute' }
                     Path = 'AttributeAssignments'
                     ApiVersion = 'beta'
@@ -177,7 +177,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
-                    GraphUri = 'identity/b2xUserFlows/{id}/apiConnectorConfiguration'
+                    GraphUri = 'identity/b2xUserFlows/<placeholder>/apiConnectorConfiguration'
                     QueryParameters = @{ '$expand' = 'postFederationSignup,postAttributeCollection' }
                     Path = 'APIConnectors'
                     ApiVersion = 'beta'
@@ -186,7 +186,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'IdentityUserFlow.Read.All'
                 },
                 @{
-                    GraphUri = 'identity/b2xUserFlows/{id}/languages'
+                    GraphUri = 'identity/b2xUserFlows/<placeholder>/languages'
                     Path = 'Languages'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'B2B')
@@ -446,14 +446,14 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'AccessReview.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'identityGovernance/accessReviews/definitions/{id}/instances'
+                    GraphUri = 'identityGovernance/accessReviews/definitions/<placeholder>/instances'
                     Path = ''
                     Tag = @('All', 'AccessReviews', 'Governance')
                     DelegatedPermission = 'AccessReview.Read.All'
                     ApplicationPermission = 'AccessReview.Read.All'
                     Children = @(
                         @{
-                            GraphUri = 'identityGovernance/accessReviews/definitions/{id}/instances/{id}/contactedReviewers'
+                            GraphUri = 'identityGovernance/accessReviews/definitions/<placeholder>/instances/<placeholder>/contactedReviewers'
                             Path = 'Reviewers'
                             ApiVersion = 'beta'
                             Tag = @('All', 'AccessReviews', 'Governance')
@@ -479,7 +479,7 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'EntitlementManagement.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'identityGovernance/entitlementManagement/connectedOrganizations/{id}/externalSponsors'
+                    GraphUri = 'identityGovernance/entitlementManagement/connectedOrganizations/<placeholder>/externalSponsors'
                     Path = 'ExternalSponsors'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'Governance')
@@ -487,7 +487,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'EntitlementManagement.Read.All'
                 },
                 @{
-                    GraphUri = 'identityGovernance/entitlementManagement/connectedOrganizations/{id}/internalSponsors'
+                    GraphUri = 'identityGovernance/entitlementManagement/connectedOrganizations/<placeholder>/internalSponsors'
                     Path = 'InternalSponsors'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'Governance')
@@ -513,7 +513,7 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'administrativeUnits/{id}/members'
+                    GraphUri = 'administrativeUnits/<placeholder>/members'
                     Select = 'Id'
                     Path = 'Members'
                     ApiVersion = 'beta'
@@ -522,7 +522,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'administrativeUnits/{id}/scopedRoleMembers'
+                    GraphUri = 'administrativeUnits/<placeholder>/scopedRoleMembers'
                     Path = 'ScopedRoleMembers'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'AdministrativeUnits')
@@ -530,7 +530,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'administrativeUnits/{id}/extensions'
+                    GraphUri = 'administrativeUnits/<placeholder>/extensions'
                     Path = 'Extensions'
                     ApiVersion = 'beta'
                     Tag = @('All', 'Config', 'AdministrativeUnits')
@@ -617,7 +617,7 @@ function Get-EEDefaultSchema  {
             DelegatedPermission = 'Directory.ReadWrite.All'
             Children = @(
                 @{
-                    GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/applications'
+                    GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectorGroups/<placeholder>/applications'
                     Path = 'Applications'
                     ApiVersion = 'beta'
                     IgnoreError = 'ApplicationsForGroup_NotFound'
@@ -625,7 +625,7 @@ function Get-EEDefaultSchema  {
                     DelegatedPermission = 'Directory.ReadWrite.All'
                 },
                 @{
-                    GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectorGroups/{id}/members'
+                    GraphUri = 'onPremisesPublishingProfiles/applicationProxy/connectorGroups/<placeholder>/members'
                     Path = 'Members'
                     ApiVersion = 'beta'
                     IgnoreError = 'ConnectorGroup_NotFound'
@@ -649,7 +649,7 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
-                    GraphUri =  'groups/{id}/owners'
+                    GraphUri =  'groups/<placeholder>/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'Config', 'Groups')
@@ -669,7 +669,7 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
-                    GraphUri =  'groups/{id}/owners'
+                    GraphUri =  'groups/<placeholder>/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'Config', 'Groups')
@@ -677,7 +677,7 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'groups/{id}/members'
+                    GraphUri = 'groups/<placeholder>/members'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Members'
                     Tag = @('All', 'Groups')
@@ -703,14 +703,14 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'applications/{id}/extensionProperties'
+                    GraphUri = 'applications/<placeholder>/extensionProperties'
                     Path = 'ExtensionProperties'
                     Tag = @('All', 'Applications')
                     DelegatedPermission = 'Directory.Read.All'
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'applications/{id}/owners'
+                    GraphUri = 'applications/<placeholder>/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'Applications')
@@ -718,21 +718,21 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'applications/{id}/tokenIssuancePolicies'
+                    GraphUri = 'applications/<placeholder>/tokenIssuancePolicies'
                     Path = 'TokenIssuancePolicies'
                     Tag = @('All', 'Applications')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
-                    GraphUri = 'applications/{id}/tokenLifetimePolicies'
+                    GraphUri = 'applications/<placeholder>/tokenLifetimePolicies'
                     Path = 'TokenLifetimePolicies'
                     Tag = @('All', 'Applications')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
-                    GraphUri = "applications/{id}/appManagementPolicies"
+                    GraphUri = "applications/<placeholder>/appManagementPolicies"
                     Path = 'AppManagementPolicies'
                     Tag = @('All', 'Applications')
                     DelegatedPermission = 'Policy.Read.All'
@@ -750,35 +750,35 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Directory.Read.All'
             Children = @(
                 @{
-                    GraphUri = 'servicePrincipals/{id}/appRoleAssignments'
+                    GraphUri = 'servicePrincipals/<placeholder>/appRoleAssignments'
                     Path = 'AppRoleAssignments'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Directory.Read.All'
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/appRoleAssignedTo'
+                    GraphUri = 'servicePrincipals/<placeholder>/appRoleAssignedTo'
                     Path = 'AppRoleAssignedTo'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Directory.Read.All'
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/oauth2PermissionGrants'
+                    GraphUri = 'servicePrincipals/<placeholder>/oauth2PermissionGrants'
                     Path = 'Oauth2PermissionGrants'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Directory.Read.All'
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/delegatedPermissionClassifications'
+                    GraphUri = 'servicePrincipals/<placeholder>/delegatedPermissionClassifications'
                     Path = 'DelegatedPermissionClassifications'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Directory.Read.All'
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/owners'
+                    GraphUri = 'servicePrincipals/<placeholder>/owners'
                     Select = 'id, userPrincipalName, displayName'
                     Path = 'Owners'
                     Tag = @('All', 'ServicePrincipals')
@@ -786,35 +786,35 @@ function Get-EEDefaultSchema  {
                     ApplicationPermission = 'Directory.Read.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/claimsMappingPolicies'
+                    GraphUri = 'servicePrincipals/<placeholder>/claimsMappingPolicies'
                     Path = 'ClaimsMappingPolicies'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/homeRealmDiscoveryPolicies'
+                    GraphUri = 'servicePrincipals/<placeholder>/homeRealmDiscoveryPolicies'
                     Path = 'HomeRealmDiscoveryPolicies'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/tokenIssuancePolicies'
+                    GraphUri = 'servicePrincipals/<placeholder>/tokenIssuancePolicies'
                     Path = 'TokenIssuancePolicies'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/tokenLifetimePolicies'
+                    GraphUri = 'servicePrincipals/<placeholder>/tokenLifetimePolicies'
                     Path = 'TokenLifetimePolicies'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
                 },
                 @{
-                    GraphUri = 'servicePrincipals/{id}/appManagementPolicies'
+                    GraphUri = 'servicePrincipals/<placeholder>/appManagementPolicies'
                     Path = 'AppManagementPolicies'
                     Tag = @('All', 'ServicePrincipals')
                     DelegatedPermission = 'Policy.Read.All'

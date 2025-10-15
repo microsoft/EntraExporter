@@ -3,7 +3,7 @@
   Creates batch requests for accessPackage resource scopes
 
  .Description
-  Creates batch requests for GET /identityGovernance/entitlementManagement/accessPackages/{id}?$expand=accessPackageResourceRoleScopes
+  Creates batch requests for GET /identityGovernance/entitlementManagement/accessPackages/<placeholder>?$expand=accessPackageResourceRoleScopes
   https://docs.microsoft.com/en-us/graph/api/accesspackage-list-accesspackageresourcerolescopes?view=graph-rest-beta&tabs=http
 
  .Example

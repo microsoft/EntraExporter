@@ -8,9 +8,6 @@ function New-FinalUri{
         # Graph endpoint such as "users".
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [string[]] $RelativeUri,
-        # Specifies unique Id(s) for the URI endpoint. For example, users endpoint accepts Id or UPN.
-        # [Parameter(Mandatory = $false)]
-        # [string[]] $UniqueId,
         # Filters properties (columns).
         [Parameter(Mandatory = $false)]
         [string[]] $Select,
@@ -19,28 +16,10 @@ function New-FinalUri{
         [string] $Filter,
         # Parameters such as "$top".
         [Parameter(Mandatory = $false)]
-        [hashtable] $QueryParameters,
-        # Specifies consistency level.
-        # [Parameter(Mandatory = $false)]
-        # [string] $ConsistencyLevel = 'eventual',
-        # Base URL for Microsoft Graph API.
-        [Parameter(Mandatory = $false)]
-        [uri] $GraphBaseUri
+        [hashtable] $QueryParameters
     )
 
-    begin {
-        if(!$GraphBaseUri){
-            if(!(Test-Path variable:global:GraphBaseUri)){
-                $global:GraphBaseUri = $((Get-MgEnvironment -Name (Get-MgContext).Environment).GraphEndpoint)
-            }
-            $GraphBaseUri = $global:GraphBaseUri
-        }
-    }
-
     process {
-        ## Initialize
-        # if (!$UniqueId) { [string[]] $UniqueId = '' }
-
         ## Process Each RelativeUri
         foreach ($uri in $RelativeUri) {
             Write-Verbose "Processing URI: $uri"
@@ -61,27 +40,8 @@ function New-FinalUri{
             if ($Filter) { $finalQueryParameters['$filter'] = $Filter }
             $uriQueryEndpoint.Query = ConvertTo-QueryString $finalQueryParameters
 
-            ## Invoke graph requests individually or save for single batch request
-            # foreach ($id in $UniqueId) {
-            #     $uriQueryEndpointFinal = New-Object System.UriBuilder -ArgumentList $uriQueryEndpoint.Uri
-            #     $uriQueryEndpointFinal.Path = ([IO.Path]::Combine($uriQueryEndpointFinal.Path, $id))
-
-            #     ## Create batch request entry
-            #     $request = New-Object PSObject -Property @{
-            #         id      = $listRequests.Count #(New-Guid).ToString()
-            #         method  = 'GET'
-            #         url     = $uriQueryEndpointFinal.Uri.AbsoluteUri -replace ('{0}{1}/' -f $GraphBaseUri.AbsoluteUri, $ApiVersion)
-            #         headers = @{ ConsistencyLevel = $ConsistencyLevel }
-            #     }
-            #     $listRequests.Add($request)
-            # }
-
-            $uriQueryEndpoint.Uri.AbsoluteUri -replace "http://"
-            # $uriQueryEndpointFinal = New-Object System.UriBuilder -ArgumentList $uriQueryEndpoint.Uri
-            # $uriQueryEndpointFinal | fl *
-            # $uriQueryEndpointFinal.Path = ([IO.Path]::Combine($uriQueryEndpointFinal.Path, $id))
-            # $uriQueryEndpointFinal | fl *
-            # $uriQueryEndpointFinal.Uri.AbsoluteUri -replace ('{0}/' -f $GraphBaseUri.AbsoluteUri)
+            # New-GraphBatchRequest needs relative uri where < and > aren't URL encoded
+            $uriQueryEndpoint.Uri.AbsoluteUri -replace "http://", "" -replace "%3C", "<" -replace "%3E", ">"
         }
     }
 }
