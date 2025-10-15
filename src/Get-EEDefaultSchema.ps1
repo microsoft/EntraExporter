@@ -545,8 +545,10 @@ function Get-EEDefaultSchema  {
             Path                  = 'PIM/DirectoryRoles'
             Command                = 'Get-AzurePIMDirectoryRoles'
             Tag                   = @('All', 'PIM', 'PIMDirectoryRoles')
-            DelegatedPermission   = 'RoleEligibilitySchedule.Read.Directory'
-            ApplicationPermission = 'RoleEligibilitySchedule.Read.Directory'
+            DelegatedPermission   = 'RoleEligibilitySchedule.Read.Directory', 'RoleManagementPolicy.Read.Directory'
+            ApplicationPermission = 'RoleEligibilitySchedule.Read.Directory', 'RoleManagementPolicy.Read.Directory'
+            # https://learn.microsoft.com/en-us/graph/api/policyroot-list-rolemanagementpolicies?view=graph-rest-beta&tabs=http#for-pim-for-microsoft-entra-roles
+            # requires (in delegated scenarios with work or school accounts) that the signed-in user must be assigned a following Microsoft Entra role: Global Reader, Security Operator, Security Reader, Security Administrator, or Privileged Role Administrator.
         },
 
         # PIM Groups
@@ -554,8 +556,8 @@ function Get-EEDefaultSchema  {
             Path                  = 'PIM/Groups'
             Command                = 'Get-AzurePIMGroups'
             Tag                   = @('All', 'PIM','PIMGroups')
-            DelegatedPermission   = 'PrivilegedEligibilitySchedule.Read.AzureADGroup'
-            ApplicationPermission = 'PrivilegedEligibilitySchedule.Read.AzureADGroup'
+            DelegatedPermission   = 'PrivilegedEligibilitySchedule.Read.AzureADGroup', 'RoleManagementPolicy.Read.AzureADGroup'
+            ApplicationPermission = 'PrivilegedEligibilitySchedule.Read.AzureADGroup', 'RoleManagementPolicy.Read.AzureADGroup'
         },
 
         # PIM Resources
