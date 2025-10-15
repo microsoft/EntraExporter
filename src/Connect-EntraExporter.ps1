@@ -29,7 +29,16 @@ function Connect-EntraExporter {
             [string]$Environment = 'Global'
     )
 
-    Connect-AzAccount -Tenant $TenantId -Environment $Environment
+    # transform Graph environment name to the Azure one
+    switch ($Environment) {
+        {$_ -in 'USGovDoD', 'USGov'} { $AzureEnvironment = 'AzureUSGovernment' }
+        'Global'    { $AzureEnvironment = 'AzureCloud' }
+        'China'     { $AzureEnvironment = 'AzureChinaCloud' }
+        'Germany'   { throw "'Germany' is deprecated environment." }
+        default     { throw "Unknown environment '$Environment'." }
+    }
+
+    Connect-AzAccount -Tenant $TenantId -Environment $AzureEnvironment
 
     Connect-MgGraph -TenantId $TenantId -Environment $Environment -Scopes 'Directory.Read.All',
         'Policy.Read.All',
