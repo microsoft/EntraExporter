@@ -1,8 +1,13 @@
 ﻿function Get-AzureResourceAccessPolicies {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [string] $rootFolder
     )
+
+    if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
+        throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+    }
 
     function Get-AzureResourceAccessPolicy {
         <#

@@ -1,8 +1,13 @@
 ﻿function Get-AzurePIMResources {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [string] $rootFolder
     )
+
+    if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
+        throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+    }
 
     #region functions
     function Expand-ObjectProperty {
@@ -82,6 +87,7 @@
             }
         }
     }
+
     function Get-PIMResourceRoleAssignmentSetting {
         <#
         .SYNOPSIS
@@ -202,6 +208,7 @@
             $_ | select *, @{n = 'Policy'; e = { $assignmentSetting } }
         }
     }
+    
     function Get-PIMSubscriptionEligibleAssignment {
         <#
         .SYNOPSIS

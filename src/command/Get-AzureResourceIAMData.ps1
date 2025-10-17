@@ -5,6 +5,10 @@
         [string] $rootFolder
     )
 
+    if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
+        throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+    }
+
     $assignmentsFolder = Join-Path -Path $rootFolder -ChildPath "RoleAssignments"
     $definitionsFolder = Join-Path -Path $rootFolder -ChildPath "RoleDefinitions"
 
