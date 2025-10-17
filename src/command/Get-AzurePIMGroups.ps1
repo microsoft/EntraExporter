@@ -88,6 +88,7 @@
                 $groupId = $_.groupId
                 $type = $_.accessId
 
+                # https://learn.microsoft.com/en-us/graph/api/policyroot-list-rolemanagementpolicyassignments?view=graph-rest-beta&tabs=http#for-pim-for-groups
                 $assignmentSettingBatch.Add((New-GraphBatchRequest -url "policies/roleManagementPolicyAssignments?`$filter=scopeId eq '$groupId' and scopeType eq 'Group' and roleDefinitionId eq '$type'&`$expand=policy(`$expand=rules)"))
             }
 
