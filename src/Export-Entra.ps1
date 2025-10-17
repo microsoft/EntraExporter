@@ -10,7 +10,15 @@
     Specifies the directory path where the output files will be generated.
 
     .PARAMETER Type
-    Specifies the type of objects to export. Default to Config which exports the key configuration settings of the tenant.
+    Specifies the type of objects to export. 
+    Default to Config which exports the key configuration settings of the tenant.
+
+    The available types are:
+        'All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals',
+        'B2C', 'B2B', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement',
+        'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint',
+        'RoleManagement', 'DirectoryRoles', 'ExchangeRoles', 'IntuneRoles', 'CloudPCRoles', 'EntitlementManagementRoles',
+        'Reports', and 'UsersRegisteredByFeatureReport', 'IAM', 'AccessPolicies', 'PIM', 'PIMDirectoryRoles', 'PIMResources', 'PIMGroups'.
 
     .PARAMETER All
     If specified performs a full export of all objects and configuration in the tenant.
@@ -39,9 +47,38 @@
     Runs an export that includes just the Conditional Access and Application Proxy settings.
 
     .EXAMPLE
-    Export-Entra -Path 'C:\EntraBackup\' -Type B2C
+    $exportTypes = @('Users', 'Groups', 'Devices', 'B2C')
 
-    Runs an export of all B2C settings.
+    # authenticate using user credentials
+    Connect-EntraExporter -Type $exportTypes
+
+    # export data
+    Export-Entra -Path 'C:\EntraBackup\' -Type $exportTypes
+
+    Authenticate interactively (user auth) and run an export of selected settings.
+
+    .EXAMPLE
+    $exportTypes = @('Users', 'Groups', 'Devices', 'B2C')
+    $requiredGraphScopes = Get-EERequiredScopes -Type $exportTypes -PermissionType Application
+
+    # determine if we need to authenticate to Graph
+    if ($requiredGraphScopes) {
+        "Following application type scopes are required: $($requiredGraphScopes -join ', ') !"
+
+        # authenticate using managed identity
+        Connect-MgGraph -Identity
+    }
+
+    # determine if we need to authenticate to Az
+    if (Get-EEAzAuthRequirement -Type $exportTypes) {
+        # authenticate using managed identity
+        Connect-AzAccount -Identity
+    }
+
+    # export data
+    Export-Entra -Path 'C:\EntraBackup\' -Type $exportTypes
+
+    Authenticate using managed identity and run an export of selected settings.
     #>
     [CmdletBinding(DefaultParameterSetName = 'SelectTypes')]
     param (
@@ -51,17 +88,8 @@
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'SelectTypes')]
         [String]$Path,
 
-        <# Specify the type of objects to export. Defaults to Config, which exports the key configuration settings of
-        the tenant. The available types are:
-            'All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals',
-            'B2C', 'B2B', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement',
-            'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint',
-            'RoleManagement', 'DirectoryRoles', 'ExchangeRoles', 'IntuneRoles', 'CloudPCRoles', 'EntitlementManagementRoles',
-            'Reports', and 'UsersRegisteredByFeatureReport', 'IAM', 'AccessPolicies', 'PIM', 'PIMDirectoryRoles', 'PIMResources', 'PIMGroups'.
-        #>
         [Parameter(ParameterSetName = 'SelectTypes')]
-        [ValidateSet('All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals', 'B2C', 'B2B', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint', 'RoleManagement', 'DirectoryRoles', 'ExchangeRoles', 'IntuneRoles', 'CloudPCRoles', 'EntitlementManagementRoles', 'Reports', 'UsersRegisteredByFeatureReport', 'IAM', 'AccessPolicies', 'PIM', 'PIMDirectoryRoles', 'PIMResources', 'PIMGroups')]
-        [String[]]$Type = 'Config',
+        [ObjectType[]]$Type = 'Config',
 
         # Perform a full export of all available configuration item types.
         [Parameter(ParameterSetName = 'AllTypes')]
