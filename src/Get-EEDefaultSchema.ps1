@@ -505,37 +505,37 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'EntitlementManagement.Read.All'
         },
         @{
-            GraphUri = 'AdministrativeUnits'
-            Path = 'AdministrativeUnits'
-            ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'AdministrativeUnits')
-            DelegatedPermission = 'Directory.Read.All'
-            ApplicationPermission = 'Directory.Read.All'
-            Children = @(
+            GraphUri              = 'AdministrativeUnits'
+            Path                  = 'AdministrativeUnits'
+            ApiVersion            = 'beta'
+            Tag                   = @('All', 'Config', 'AdministrativeUnits')
+            DelegatedPermission   = 'AdministrativeUnit.Read.All'
+            ApplicationPermission = 'AdministrativeUnit.Read.All'
+            Children              = @(
                 @{
-                    GraphUri = 'administrativeUnits/<placeholder>/members'
-                    Select = 'Id'
-                    Path = 'Members'
-                    ApiVersion = 'beta'
-                    Tag = @('All', 'Config', 'AdministrativeUnits')
-                    DelegatedPermission = 'Directory.Read.All'
-                    ApplicationPermission = 'Directory.Read.All'
+                    GraphUri              = 'administrativeUnits/<placeholder>/members'
+                    Select                = 'Id'
+                    Path                  = 'Members'
+                    ApiVersion            = 'beta'
+                    Tag                   = @('All', 'Config', 'AdministrativeUnits')
+                    DelegatedPermission   = 'AdministrativeUnit.Read.All'
+                    ApplicationPermission = 'AdministrativeUnit.Read.All'
                 },
                 @{
-                    GraphUri = 'administrativeUnits/<placeholder>/scopedRoleMembers'
-                    Path = 'ScopedRoleMembers'
-                    ApiVersion = 'beta'
-                    Tag = @('All', 'Config', 'AdministrativeUnits')
-                    DelegatedPermission = 'Directory.Read.All'
-                    ApplicationPermission = 'Directory.Read.All'
+                    GraphUri              = 'administrativeUnits/<placeholder>/scopedRoleMembers'
+                    Path                  = 'ScopedRoleMembers'
+                    ApiVersion            = 'beta'
+                    Tag                   = @('All', 'Config', 'AdministrativeUnits')
+                    DelegatedPermission   = 'RoleManagement.Read.Directory'
+                    ApplicationPermission = 'RoleManagement.Read.Directory'
                 },
                 @{
-                    GraphUri = 'administrativeUnits/<placeholder>/extensions'
-                    Path = 'Extensions'
-                    ApiVersion = 'beta'
-                    Tag = @('All', 'Config', 'AdministrativeUnits')
-                    DelegatedPermission = 'Directory.Read.All'
-                    ApplicationPermission = 'Directory.Read.All'
+                    GraphUri              = 'administrativeUnits/<placeholder>/extensions'
+                    Path                  = 'Extensions'
+                    ApiVersion            = 'beta'
+                    Tag                   = @('All', 'Config', 'AdministrativeUnits')
+                    DelegatedPermission   = 'AdministrativeUnit.Read.All'
+                    ApplicationPermission = 'AdministrativeUnit.Read.All'
                 }
             )
         },
