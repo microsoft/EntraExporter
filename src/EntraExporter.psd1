@@ -94,7 +94,6 @@
     FunctionsToExport    = @(
         'Connect-EntraExporter'
         'Export-Entra'
-        'Set-RedactedString'
         'Get-EERequiredScopes'
         'Get-EEAzAuthRequirement'
     )
