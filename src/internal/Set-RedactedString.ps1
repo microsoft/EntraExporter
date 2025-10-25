@@ -37,7 +37,4 @@ function Set-RedactedString {
         $RedactedString
     }
 
-    end {
-        # No explicit variable cleanup is necessary; PowerShell handles scope cleanup automatically.
-    }
 }
