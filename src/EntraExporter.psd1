@@ -4,8 +4,8 @@
     RootModule = 'EntraExporter.psm1'
 
     # Version number of this module.
-    ModuleVersion = '2.0.8'
-
+    ModuleVersion = '3.0.0'
+    
     # Supported PSEditions
     CompatiblePSEditions = 'Core','Desktop'
 
@@ -44,14 +44,14 @@
 
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules = @(
-        @{ ModuleName = 'Microsoft.Graph.Authentication'; Guid = '883916f2-9184-46ee-b1f8-b6a2fb784cee'; ModuleVersion = '2.2.0' }
+        @{ ModuleName = 'Az.Accounts'; Guid = '17a2feff-488b-47f9-8729-e2cec094624c'; ModuleVersion = '3.0.2' }, @{ ModuleName = 'Microsoft.Graph.Authentication'; Guid = '883916f2-9184-46ee-b1f8-b6a2fb784cee'; ModuleVersion = '2.8.0' }
     )
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-    # ScriptsToProcess = @()
+    ScriptsToProcess = @("EntraExporterEnums.ps1")
 
     # Type files (.ps1xml) to be loaded when importing this module
     # TypesToProcess = @()
@@ -61,24 +61,40 @@
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules = @(
-        'internal\Invoke-Graph.ps1'
+        'internal\New-FinalUri.ps1'
         'internal\Get-ObjectProperty.ps1'
         'internal\ConvertTo-OrderedDictionary.ps1'
         'internal\ConvertFrom-QueryString.ps1'
         'internal\ConvertTo-QueryString.ps1'
+        'internal\New-GraphBatchRequest.ps1'
+        'internal\Invoke-GraphBatchRequest.ps1'
+        'internal\New-AzureBatchRequest.ps1'
+        'internal\Invoke-AzureBatchRequest.ps1'
+        'internal\Search-AzGraph2.ps1'
+        'internal\Get-MgGraphAllPages.ps1'
+        'internal\Get-AzureDirectoryObject.ps1'
+        'command\Get-AccessPackageAssignmentPolicies.ps1'
+        'command\Get-AccessPackageAssignments.ps1'
+        'command\Get-AccessPackageResourceScopes.ps1'
+        'command\Get-AzureResourceIAMData.ps1'
+        'command\Get-AzureResourceAccessPolicies.ps1'
+        'command\Get-AzurePIMDirectoryRoles.ps1'
+        'command\Get-AzurePIMResources.ps1'
+        'command\Get-AzurePIMGroups.ps1'
         'Connect-EntraExporter.ps1'
         'Export-Entra.ps1'
         'Get-EEDefaultSchema.ps1'
         'Get-EERequiredScopes.ps1'
-        'Get-EEAccessPackageAssignmentPolicies.ps1'
-        'Get-EEAccessPackageAssignments.ps1'
-        'Get-EEAccessPackageResourceScopes.ps1'
+        'Get-EEFlattenedSchema.ps1'
+        'Get-EEAzAuthRequirement.ps1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
         'Connect-EntraExporter'
         'Export-Entra'
+        'Get-EERequiredScopes'
+        'Get-EEAzAuthRequirement'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -117,8 +133,32 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+            ReleaseNotes = '
+            3.0.0
+                CHANGED
+                - Replaced sequential API calls with batch requests where possible to significantly improve performance
+                - PIM export rewritten to use new APIs
+                - Updated Microsoft.Graph.Authentication dependency to 2.25.0
+                    - compatible with Az.Accounts 4.0.0
+                - Removed property "@odata.context" from the output
+                - Required scopes (thanks to new export options)
+                - RBAC role "Management Group Reader" assigned at "Tenant Root Group" level is required when "PIM" or "PIMResources" type is used (to be able to read Management Groups)
+                - IAM export requires enabled length path support for exporting paths > 260 characters
+                - Moved "command" functions (used in schema to export specific types of data) to "command" folder
 
+                ADDED
+                - Added Az.Accounts 4.0.0 dependency
+                    - required to query KQL for Azure resources
+                - New export options (IAM, Access Policies, "PIMResources", "PIMGroups")
+                - Export of the Conditional Access policies "Authentication Context"
+
+                REMOVED
+                - Removed export options "PIMAzure", "PIMAAD"
+                    - replaced by "PIMDirectoryRoles", "PIMResources", "PIMGroups"
+                - Removed internal function Invoke-Graph (all calls are made via batching now)
+                - Removed module Strict Mode restrictions
+            '
+    
         } # End of PSData hashtable
 
     } # End of PrivateData hashtable

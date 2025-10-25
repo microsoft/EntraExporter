@@ -16,6 +16,10 @@ function Get-EERequiredScopes {
         [Parameter(Mandatory = $true)] 
         [ValidateSet('Delegated','Application')]
         [string]$PermissionType,
+
+        [Parameter(Mandatory = $false)]
+        [ObjectType[]]$Type,
+
         [Parameter(Mandatory = $false)]
         [object]$ExportSchema
     )
@@ -29,11 +33,26 @@ function Get-EERequiredScopes {
         $scopeProperty = "ApplicationPermission"
     }
 
-    $scopes = @()
-    foreach($entry in $ExportSchema) {
-        $entryScopes = Get-ObjectProperty $entry $scopeProperty
-        $command = Get-ObjectProperty $entry 'Command'
-        $graphUri = Get-ObjectProperty $entry 'GraphUri'
+    $RequestedExportSchema = Get-EEFlattenedSchema -ExportSchema $ExportSchema
+
+    if ($Type) {
+        Write-Verbose "Filtering ExportSchema to only requested types: $($Type -join ', ')"
+        # filter schema to only the requested types
+        $RequestedExportSchema = $ExportSchema | ? { Compare-Object $_.Tag $Type -ExcludeDifferent -IncludeEqual }
+    }
+
+    $scopes = [System.Collections.Generic.List[Object]]::new()
+
+    foreach ($entry in $RequestedExportSchema) {
+        $entryScopes = $entry.$scopeProperty
+        $command = $entry.Command
+        $graphUri = $entry.GraphUri
+
+        if ($Type -and ($entry.Tag -notin $Type) -and ($entry.Tag -ne 'All')) {
+            Write-Verbose "Skipping entry with tag '$($entry.Tag)' because it is not in the requested types"
+            continue
+        }
+
         $entryType = "graphuri"
         $tocall = $graphUri
         if ($command) {
@@ -42,20 +61,12 @@ function Get-EERequiredScopes {
         }
 
         if (!$entryScopes) {
-            write-warning "call to $entryType '$tocall' doesn't provide $PermissionType permissions"
+            Write-Warning "Call to $entryType '$tocall' doesn't provide $PermissionType permissions"
         }
         
         foreach ($entryScope in $entryScopes) {
             if ($entryScope -notin $scopes) {
-                $scopes += $entryScope
-            }
-        }
-        if ($entry.ContainsKey('Children')) {
-            $childScopes = Get-EERequiredScopes -PermissionType $PermissionType -ExportSchema $entry.Children
-            foreach ($entryScope in $childScopes) {
-                if ($entryScope -notin $scopes) {
-                    $scopes += $entryScope
-                }
+                $scopes.Add($entryScope)
             }
         }
     }
