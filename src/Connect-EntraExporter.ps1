@@ -1,57 +1,85 @@
 $global:TenantID = $null
 <#
 .SYNOPSIS
-    Connect the Entra Exporter module to the Entra tenant.
+    Authenticate against Graph Api and/or Azure using delegated permissions (as user).
 .DESCRIPTION
-    This command will connect Microsoft.Graph to your Entra tenant.
-    You can also directly call Connect-MgGraph if you require other options to connect
+    Authenticate against Graph Api and/or Azure using delegated permissions (as user).
 
-    Use the following scopes when authenticating with Connect-MgGraph.
-
-    Connect-MgGraph -Scopes 'Directory.Read.All', 'Policy.Read.All', 'IdentityProvider.Read.All', 'Organization.Read.All', 'User.Read.All', 'EntitlementManagement.Read.All', 'UserAuthenticationMethod.Read.All', 'IdentityUserFlow.Read.All', 'APIConnectors.Read.All', 'AccessReview.Read.All', 'Agreement.Read.All', 'Policy.Read.PermissionGrant', 'PrivilegedAccess.Read.AzureResources', 'PrivilegedAccess.Read.AzureAD', 'Application.Read.All'
-
+    To authenticate using a certificate or client secret, use Connect-MgGraph or Connect-AzAccount directly.
 .EXAMPLE
     PS C:\>Connect-EntraExporter
     Connect to home tenant of authenticated user.
 .EXAMPLE
-    PS C:\>Connect-EntraExporter -TenantId 3043-343434-343434
-    Connect to a specific Tenant
+    PS C:\>Connect-EntraExporter -TenantId 3043-343434-343434 -Type Users, Groups, Devices
+    Connect to a specific Tenant. Correct delegated Graph scopes will be automatically requested based on the types specified. 
 #>
 function Connect-EntraExporter {
     param(
         [Parameter(Mandatory = $false)]
-            [string] $TenantId = 'common',
+        [string]$TenantId = 'common',
+
         [Parameter(Mandatory=$false)]
             [ArgumentCompleter( {
                 param ( $CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters )
                 (Get-MgEnvironment).Name
             } )]
-            [string]$Environment = 'Global'
+        [string]$Environment = 'Global',
+
+        [Parameter(ParameterSetName = 'SelectTypes')]
+        [ObjectType[]]$Type = 'Config',
+
+        # Perform a full export of all available configuration item types.
+        [Parameter(ParameterSetName = 'AllTypes')]
+        [switch]$All,
+
+        # Specifies the schema to use for the export. If not specified, the default schema will be used.
+        [object]$ExportSchema
     )
 
+    if ($All) { $Type = @('All') }
 
-    Connect-MgGraph -TenantId $TenantId -Environment $Environment -Scopes 'Directory.Read.All',
-        'Policy.Read.All',
-        'IdentityProvider.Read.All',
-        'Organization.Read.All',
-        'User.Read.All',
-        'EntitlementManagement.Read.All',
-        'UserAuthenticationMethod.Read.All',
-        'IdentityUserFlow.Read.All',
-        'APIConnectors.Read.All',
-        'AccessReview.Read.All',
-        'Agreement.Read.All',
-        'Policy.Read.PermissionGrant',
-        'PrivilegedAccess.Read.AzureResources',
-        'PrivilegedAccess.Read.AzureAD',
-        'Application.Read.All',
-        'OnPremDirectorySynchronization.Read.All',
-        'Teamwork.Read.All', 
-        'TeamworkAppSettings.ReadWrite.All', 
-        'SharepointTenantSettings.Read.All',
-        'Reports.Read.All',
-        'RoleManagement.Read.All',
-        'AuditLog.Read.All'
-    Get-MgContext
-    $global:TenantID = (Get-MgContext).TenantId
+    if (!$ExportSchema) {
+        $ExportSchema = Get-EEDefaultSchema
+    }
+
+    # filter schema to only the requested types
+    $RequestedExportSchema = $ExportSchema | ? { Compare-Object $_.Tag $Type -ExcludeDifferent -IncludeEqual }
+
+    #region determine if we need to authenticate to Graph and/or Az
+    $FlattenedRequestedExportSchema = Get-EEFlattenedSchema -ExportSchema $RequestedExportSchema
+
+    # determine if we need to authenticate to Graph
+    $RequiresGraphAuthentication = $false
+    if ($FlattenedRequestedExportSchema.GraphUri) {
+        $RequiresGraphAuthentication = $true
+    }
+
+    # determine if we need to authenticate to Az
+    $RequiresAzAuthentication = Get-EEAzAuthRequirement -ExportSchema $RequestedExportSchema -Type $Type
+    #endregion determine if we need to authenticate to Graph and/or Az
+
+    # connect to Az as needed
+    #TIP in general it is better to authenticate first to Az module and then to Mg module because of dll assembly conflicts
+    if ($RequiresAzAuthentication) {
+        # transform Graph environment name to the Azure one
+        switch ($Environment) {
+            {$_ -in 'USGovDoD', 'USGov'} { $AzureEnvironment = 'AzureUSGovernment' }
+            'Global'    { $AzureEnvironment = 'AzureCloud' }
+            'China'     { $AzureEnvironment = 'AzureChinaCloud' }
+            'Germany'   { throw "'Germany' is deprecated environment." }
+            default     { throw "Unknown environment '$Environment'." }
+        }
+
+        Connect-AzAccount -Tenant $TenantId -Environment $AzureEnvironment
+    }
+
+    # connect to Graph as needed
+    if ($RequiresGraphAuthentication) {
+        $graphScope = Get-EERequiredScopes -PermissionType 'Delegated' -ExportSchema $RequestedExportSchema
+
+        Write-Verbose "Connecting to Graph with scopes: $($graphScope -join ', ')"
+        Connect-MgGraph -TenantId $TenantId -Environment $Environment -Scopes $graphScope
+
+        $global:TenantID = (Get-MgContext).TenantId
+    }
 }
