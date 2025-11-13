@@ -229,7 +229,7 @@
                 throw "Batch requests must have unique ids. Id(s): '$(($duplicityId.Name | select -Unique) -join ', ')' is there more than once"
             }
 
-            Write-Debug ($requestChunk | ConvertTo-Json)
+            Write-Debug ($requestChunk | ConvertTo-Json -Depth 10)
 
             Write-Verbose "Processing batch of $($requestChunk.count) request(s):`n$(($requestChunk | sort Url | % {" - $($_.Id) - $($_.Url)"} ) -join "`n")"
 
