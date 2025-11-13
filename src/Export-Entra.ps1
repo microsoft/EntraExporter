@@ -106,7 +106,9 @@
         [object]$ExportSchema
     )
 
-    if ($null -eq (Get-MgContext)) {
+    $mgContext = Get-MgContext
+
+    if (!$mgContext) {
         throw 'No active connection. Run Connect-EntraExporter or Connect-MgGraph to sign in and then retry.'
     }
 
