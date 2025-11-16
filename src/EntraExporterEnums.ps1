@@ -1,41 +1,43 @@
 # list of object types for export
 # must match tags used in Get-EEDefaultSchema.ps1
-enum ObjectType {
-    All
-    Config
+enum ObjectType
+{
+    AccessPolicies
     AccessReviews
-    ConditionalAccess
-    Users
-    Groups
+    AdministrativeUnits
+    All
     Applications
-    ServicePrincipals
-    B2C
-    B2B
     AppProxy
-    Organization
+    B2B
+    B2C
+    CloudPCRoles
+    ConditionalAccess
+    Config
+    Devices
+    Directory
+    DirectoryRoles
     Domains
     EntitlementManagement
-    Policies
-    AdministrativeUnits
-    SKUs
-    Identity
-    Roles
-    Governance
-    Devices
-    Teams
-    Sharepoint
-    RoleManagement
-    DirectoryRoles
-    ExchangeRoles
-    IntuneRoles
-    CloudPCRoles
     EntitlementManagementRoles
-    Reports
-    UsersRegisteredByFeatureReport
+    ExchangeRoles
+    Governance
+    Groups
     IAM
-    AccessPolicies
+    Identity
+    IntuneRoles
+    Organization
     PIM
     PIMDirectoryRoles
-    PIMResources
     PIMGroups
+    PIMResources
+    Policies
+    Reports
+    RoleManagement
+    Roles
+    ServicePrincipals
+    Sharepoint
+    SKUs
+    Teams
+    Users
+    UsersRegisteredByFeatureReport
 }

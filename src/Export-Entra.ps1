@@ -14,11 +14,9 @@
     Default to Config which exports the key configuration settings of the tenant.
 
     The available types are:
-        'All', 'Config', 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals',
-        'B2C', 'B2B', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement',
-        'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint',
-        'RoleManagement', 'DirectoryRoles', 'ExchangeRoles', 'IntuneRoles', 'CloudPCRoles', 'EntitlementManagementRoles',
-        'Reports', and 'UsersRegisteredByFeatureReport', 'IAM', 'AccessPolicies', 'PIM', 'PIMDirectoryRoles', 'PIMResources', 'PIMGroups'.
+        'AccessPolicies','AccessReviews','AdministrativeUnits','All','Applications','AppProxy','B2B','B2C','CloudPCRoles','ConditionalAccess','Config','Devices','Directory','DirectoryRoles','Domains','EntitlementManagement','EntitlementManagementRoles','ExchangeRoles','Governance','Groups','IAM','Identity','IntuneRoles','Organization','PIM','PIMDirectoryRoles','PIMGroups','PIMResources','Policies','Reports','RoleManagement','Roles','ServicePrincipals','Sharepoint','SKUs','Teams','Users','UsersRegisteredByFeatureReport'.
+
+    To see what each type exports, check src\Get-EEDefaultSchema.ps1 and check the 
 
     .PARAMETER All
     If specified performs a full export of all objects and configuration in the tenant.
@@ -106,7 +104,9 @@
         [object]$ExportSchema
     )
 
-    if ($null -eq (Get-MgContext)) {
+    $mgContext = Get-MgContext
+
+    if (!$mgContext) {
         throw 'No active connection. Run Connect-EntraExporter or Connect-MgGraph to sign in and then retry.'
     }
 
