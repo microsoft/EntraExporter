@@ -146,7 +146,8 @@
         [Parameter(ParameterSetName = "Id")]
         [ValidateScript( {
             if ($_ -like "*\*") {
-                throw "Id ($_) can't contain '\' character!"
+                Write-Warning "Id ($_) can't contain '\' character!"
+                return
             } else {
                 $true
             }
@@ -159,29 +160,35 @@
 
     #region validity checks
     if ($id -and @($url).count -gt 1) {
-        throw "'id' parameter cannot be used with multiple urls"
+        Write-Warning "'id' parameter cannot be used with multiple urls"
+        return
     }
 
     if ($placeholder -and $url -notlike "*<placeholder>*") {
-        throw "You have specified 'placeholder' parameter, but 'url' parameter doesn't contain string '<placeholder>' for replace."
+        Write-Warning "You have specified 'placeholder' parameter, but 'url' parameter doesn't contain string '<placeholder>' for replace."
+        return
     }
 
     if (!$placeholder -and $url -like "*<placeholder>*") {
-        throw "You have specified 'url' with '<placeholder>' in it, but not the 'placeholder' parameter itself."
+        Write-Warning "You have specified 'url' with '<placeholder>' in it, but not the 'placeholder' parameter itself."
+        return
     }
 
     if ($placeholderAsId -and !$placeholder) {
-        throw "'placeholderAsId' parameter cannot be used without specifying 'placeholder' parameter"
+        Write-Warning "'placeholderAsId' parameter cannot be used without specifying 'placeholder' parameter"
+        return
     }
 
     if ($placeholderAsId -and $placeholder -and @($url).count -gt 1) {
-        throw "'placeholderAsId' parameter cannot be used with multiple urls"
+        Write-Warning "'placeholderAsId' parameter cannot be used with multiple urls"
+        return
     }
 
     if ($placeholderAsId) {
         $placeholder | % {
             if ($_ -like "*\*") {
-                throw "'placeholderAsId' parameter cannot be used when 'placeholder' contains '\' character (value: '$_')!"
+                Write-Warning "'placeholderAsId' parameter cannot be used when 'placeholder' contains '\' character (value: '$_')!"
+                return
             }
         }
     }
@@ -207,7 +214,8 @@
         $_ = $_ -replace "(?<!^https:)/{2,}", "/"
 
         if ($_ -like "http*" -or $_ -like "*/beta/*" -or $_ -like "*/v1.0/*" -or $_ -like "*/graph.microsoft.com/*") {
-            throw "url '$_' has to be in the relative form (without the whole 'https://graph.microsoft.com/<apiversion>' part)!"
+            Write-Warning "url '$_' has to be in the relative form (without the whole 'https://graph.microsoft.com/<apiversion>' part)!"
+            return
         }
 
         $property = [ordered]@{

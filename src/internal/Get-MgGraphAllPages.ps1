@@ -82,7 +82,8 @@
             try {
                 $page = Invoke-MgGraphRequest -Uri $currentNextLink -Method GET
             } catch {
-                throw $_
+                Write-Warning "Failed to get next page from $currentNextLink. $_"
+                return
             }
 
             # Extract the NextLink

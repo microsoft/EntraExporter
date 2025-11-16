@@ -149,29 +149,35 @@
 
     #region validity checks
     if ($name -and @($url).count -gt 1) {
-        throw "'name' parameter cannot be used with multiple urls"
+        Write-Warning "'name' parameter cannot be used with multiple urls"
+        return
     }
 
     if ($placeholder -and $url -notlike "*<placeholder>*") {
-        throw "You have specified 'placeholder' parameter, but 'url' parameter doesn't contain string '<placeholder>' for replace."
+        Write-Warning "You have specified 'placeholder' parameter, but 'url' parameter doesn't contain string '<placeholder>' for replace."
+        return
     }
 
     if (!$placeholder -and $url -like "*<placeholder>*") {
-        throw "You have specified 'url' with '<placeholder>' in it, but not the 'placeholder' parameter itself."
+        Write-Warning "You have specified 'url' with '<placeholder>' in it, but not the 'placeholder' parameter itself."
+        return
     }
 
     if ($placeholderAsId -and !$placeholder) {
-        throw "'placeholderAsId' parameter cannot be used without specifying 'placeholder' parameter"
+        Write-Warning "'placeholderAsId' parameter cannot be used without specifying 'placeholder' parameter"
+        return
     }
 
     if ($placeholderAsId -and $placeholder -and @($url).count -gt 1) {
-        throw "'placeholderAsId' parameter cannot be used with multiple urls"
+        Write-Warning "'placeholderAsId' parameter cannot be used with multiple urls"
+        return
     }
 
     # api version check
     $url | % {
         if ($_ -notlike "*api-version=*") {
-            throw "URL '$_' is missing what api to use (api-version=2025-01-01 or similar). For example: 'https://management.azure.com/subscriptions/.../roleEligibilitySchedules?api-version=2020-10-01'. If you are unsure what api you can use, use the one from the example above and in case the request fails with 400 error, check the error message for the correct api version. Or use official Az cmdlet with -debug parameter and check the 'Absolute uri' output."
+            Write-Warning "URL '$_' is missing what api to use (api-version=2025-01-01 or similar). For example: 'https://management.azure.com/subscriptions/.../roleEligibilitySchedules?api-version=2020-10-01'. If you are unsure what api you can use, use the one from the example above and in case the request fails with 400 error, check the error message for the correct api version. Or use official Az cmdlet with -debug parameter and check the 'Absolute uri' output."
+            return
         }
     }
     #endregion validity checks
@@ -194,11 +200,13 @@
 
         #region url validity checks
         if ($_ -notlike "https://management.azure.com/*" -and $_ -notlike "/*") {
-            throw "url '$_' has to be in the relative (without the 'https://management.azure.com' prefix and starting with the '/') or absolute form!"
+            Write-Warning "url '$_' has to be in the relative (without the 'https://management.azure.com' prefix and starting with the '/') or absolute form!"
+            return
         }
 
         if ($_ -notmatch "/subscriptions/|\?" -and $_ -notmatch "/providers/|\?" -and $_ -notmatch "/resources/|\?" -and $_ -notmatch "/locations/|\?" -and $_ -notmatch "/tenants/|\?" -and $_ -notmatch "/bulkdelete/|\?") {
-            throw "url '$_' is not valid. Is should starts with:`n/subscriptions, /providers, /resources, /locations, /tenants or /bulkdelete!"
+            Write-Warning "url '$_' is not valid. Is should starts with:`n/subscriptions, /providers, /resources, /locations, /tenants or /bulkdelete!"
+            return
         }
         #endregion url validity checks
 

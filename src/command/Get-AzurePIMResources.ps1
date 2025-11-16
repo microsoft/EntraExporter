@@ -6,7 +6,8 @@
     )
 
     if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
-        throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+        Write-Warning "Skipping Get-AzurePIMResources. Not connected to Azure."
+        return
     }
 
     #region functions
@@ -76,7 +77,7 @@
                             }
                         }
                     } else {
-                        throw "Undefined property type '$propertyType'"
+                        Write-Warning "Undefined property type '$propertyType'"
                     }
 
                     $object | Select-Object -Property * -ExcludeProperty $propertyName
@@ -127,7 +128,8 @@
         $scope = $scope.TrimStart('/')
 
         if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
-            throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+            Write-Warning "Skipping Get-AzurePIMResources. Not connected to Azure."
+            return
         }
 
         $base = "https://management.azure.com"
@@ -183,7 +185,8 @@
         )
 
         if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
-            throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+            Write-Warning "Skipping Get-AzurePIMResources. Not connected to Azure."
+            return
         }
 
         if ($name) {
@@ -238,7 +241,8 @@
         )
 
         if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
-            throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+            Write-Warning "Skipping Get-AzurePIMResources. Not connected to Azure."
+            return
         }
 
         if ($id) {
@@ -275,7 +279,8 @@
         $outputFileName = Join-Path -Path (Join-Path -Path $rootFolder -ChildPath "ManagementGroups") -ChildPath "$itemId.json"
 
         if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            throw "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            return
         }
 
         $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
@@ -289,7 +294,8 @@
         $outputFileName = Join-Path -Path (Join-Path -Path $rootFolder -ChildPath "Subscriptions") -ChildPath "$itemId.json"
 
         if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            throw "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            return
         }
 
         $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)

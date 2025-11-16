@@ -259,7 +259,7 @@
                     }
 
                     default {
-                        throw "Unknown command '$command'"
+                        Write-Warning "Unknown command '$command'"
                     }
                 }
 
@@ -401,7 +401,7 @@
                 }
 
                 default {
-                    throw "Unknown command '$command'"
+                    Write-Warning "Unknown command '$command'"
                 }
             }
 
@@ -512,7 +512,7 @@
 
         if (!$item.RequestId) {
             $item
-            throw "Item without RequestId. Shouldn't happen!"
+            Write-Warning "Item without RequestId. Shouldn't happen!"
         }
 
         $outputFileName = $item.RequestId -replace "/", "\"
@@ -524,10 +524,11 @@
         }
 
         if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            throw "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            return
         }
 
-        $item | select * -ExcludeProperty RequestId | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $item | Select-Object * -ExcludeProperty RequestId | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
     }
     #endregion output results
 }

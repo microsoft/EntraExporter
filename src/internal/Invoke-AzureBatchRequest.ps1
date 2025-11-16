@@ -115,7 +115,8 @@
 
             $duplicityId = $requestChunk | Select-Object -ExpandProperty Name | Group-Object | ? { $_.Count -gt 1 }
             if ($duplicityId) {
-                throw "Batch requests must have unique names. Name $(($duplicityId | select -Unique) -join ', ') is there more than once"
+                Write-Warning "Batch requests must have unique names. Name $(($duplicityId | select -Unique) -join ', ') is there more than once"
+                return
             }
 
             Write-Debug ($requestChunk | ConvertTo-Json -Depth 10)
@@ -307,11 +308,13 @@
         # check url validity
         $batchRequest.URL | % {
             if ($_ -notlike "https://management.azure.com/*" -and $_ -notlike "/*") {
-                throw "url '$_' has to be relative (without the whole 'https://management.azure.com' part) or absolute!"
+                Write-Warning "url '$_' has to be relative (without the whole 'https://management.azure.com' part) or absolute!"
+                return
             }
 
             if ($_ -notmatch "/subscriptions/|\?" -and $_ -notmatch "/providers/|\?" -and $_ -notmatch "/resources/|\?" -and $_ -notmatch "/locations/|\?" -and $_ -notmatch "/tenants/|\?" -and $_ -notmatch "/bulkdelete/|\?") {
-                throw "url '$_' is not valid. Is should starts with:`n/subscriptions, /providers, /resources, /locations, /tenants or /bulkdelete!"
+                Write-Warning "url '$_' is not valid. Is should starts with:`n/subscriptions, /providers, /resources, /locations, /tenants or /bulkdelete!"
+                return
             }
         }
 

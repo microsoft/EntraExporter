@@ -226,7 +226,8 @@
 
             $duplicityId = $requestChunk.id | Group-Object | ? { $_.Count -gt 1 }
             if ($duplicityId) {
-                throw "Batch requests must have unique ids. Id(s): '$(($duplicityId.Name | select -Unique) -join ', ')' is there more than once"
+                Write-Warning "Batch requests must have unique ids. Id(s): '$(($duplicityId.Name | select -Unique) -join ', ')' is there more than once"
+                return
             }
 
             Write-Debug ($requestChunk | ConvertTo-Json -Depth 10)
@@ -450,7 +451,8 @@
         # check url validity
         $batchRequest.URL | % {
             if ($_ -like "http*" -or $_ -like "*/beta/*" -or $_ -like "*/v1.0/*" -or $_ -like "*/graph.microsoft.com/*") {
-                throw "url '$_' has to be relative (without the whole 'https://graph.microsoft.com/<apiversion>' part)!"
+                Write-Warning "url '$_' has to be relative (without the whole 'https://graph.microsoft.com/<apiversion>' part)!"
+                return
             }
         }
 

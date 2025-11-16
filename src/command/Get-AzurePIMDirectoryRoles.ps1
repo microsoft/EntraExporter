@@ -83,7 +83,8 @@
             $roleID = $response.Id
             Write-Verbose "roleID = $roleID"
             if (!$roleID) {
-                throw "Role $roleName not found. Search is CASE SENSITIVE!"
+                Write-Warning "Role $roleName not found. Search is CASE SENSITIVE!"
+                return
             }
         }
 
@@ -229,7 +230,8 @@
         $outputFileName = Join-Path -Path $rootFolder -ChildPath "$itemId.json"
 
         if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            throw "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            return
         }
 
         $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)

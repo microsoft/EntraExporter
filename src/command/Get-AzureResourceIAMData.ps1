@@ -6,7 +6,8 @@
     )
 
     if (!(Get-Command 'Get-AzAccessToken' -ErrorAction silentlycontinue) -or !($azAccessToken = Get-AzAccessToken -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) -or $azAccessToken.ExpiresOn -lt [datetime]::now) {
-        throw "$($MyInvocation.MyCommand): Authentication needed. Please call Connect-AzAccount."
+        Write-Warning "Skipping Get-AzureResourceIAMData. Not connected to Azure."
+        return
     }
 
     $assignmentsFolder = Join-Path -Path $rootFolder -ChildPath "RoleAssignments"
@@ -28,7 +29,7 @@
         } elseif ($scope -match "^/providers/Microsoft.Management/managementGroups/.+") {
             return 'managementGroup'
         } else {
-            throw 'undefined type'
+            Write-Warning 'undefined type'
         }
     }
     #endregion helper functions
@@ -104,7 +105,8 @@ authorizationresources
                 $outputPath = Join-Path -Path (Join-Path -Path (Join-Path -Path (Join-Path -Path $assignmentsFolder -ChildPath "Subscriptions") -ChildPath $item.SubscriptionId) -ChildPath $item.ResourceGroup) -ChildPath $folder
             }
             default {
-                throw "Undefined scope type $($item.scopeType)"
+                Write-Warning "Undefined scope type $($item.scopeType)"
+                return
             }
         }
 
@@ -113,7 +115,8 @@ authorizationresources
         $outputFileName = Join-Path -Path $outputPath -ChildPath "$itemId.json"
 
         if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            throw "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            return
         }
 
         if (Test-Path $outputFileName -ErrorAction SilentlyContinue) {
@@ -157,12 +160,13 @@ ResourceContainers
         } elseif ($result.RequestName -like "/subscriptions/*") {
             $outputPath = Join-Path -Path (Join-Path -Path $definitionsFolder -ChildPath "CustomRole\Subscriptions") -ChildPath $scopeId
         } else {
-            throw "Undefined scope type in $($result.RequestName)"
+            Write-Warning "Undefined scope type in $($result.RequestName)"
+            return
         }
 
         $outputFileName = Join-Path -Path $outputPath -ChildPath "$roleId.json"
 
-        $result | select * -ExcludeProperty RequestName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $result | Select-Object * -ExcludeProperty RequestName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
     }
     #endregion export custom RBAC (IAM) roles
     #endregion IAM Role definitions export

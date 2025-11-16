@@ -130,7 +130,8 @@
         $outputFileName = Join-Path -Path $rootFolder -ChildPath "$itemId.json"
 
         if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            throw "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
+            return
         }
 
         # Hide warning for depth when converting to JSON
