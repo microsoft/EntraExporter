@@ -710,7 +710,7 @@ function ConvertTo-PsString {
     end {
         if ($NoEnumerate) {
             if (($null -eq $InputObjects -and $listOutputString.Count -eq 0) -or $listOutputString.Count -gt 1) {
-                Write-Warning ('To avoid losing strong type on outermost enumerable type when piping, use "Write-Output $Array -NoEnumerate | {0}".' -f $MyInvocation.MyCommand)
+                Write-Verbose ('To avoid losing strong type on outermost enumerable type when piping, use "Write-Output $Array -NoEnumerate | {0}".' -f $MyInvocation.MyCommand)
                 $OutputArray = New-Object System.Text.StringBuilder
                 [void]$OutputArray.Append('(Write-Output @(')
                 if ($PSVersionTable.PSVersion -ge [version]'6.0') {
@@ -871,7 +871,7 @@ function Get-X509Certificate {
                     ## Populate list with byte stream from piped input.
                     if ($listBytes.Count -eq 0) {
                         Write-Verbose 'Creating byte array from byte stream.'
-                        Write-Warning ('For better performance when piping a single byte array, use "Write-Output $byteArray -NoEnumerate | {0}".' -f $MyInvocation.MyCommand)
+                        Write-Verbose ('For better performance when piping a single byte array, use "Write-Output $byteArray -NoEnumerate | {0}".' -f $MyInvocation.MyCommand)
                     }
                     $listBytes.Add($InputObject)
                 }

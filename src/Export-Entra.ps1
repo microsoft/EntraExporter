@@ -10,13 +10,13 @@
     Specifies the directory path where the output files will be generated.
 
     .PARAMETER Type
-    Specifies the type of objects to export. 
+    Specifies the type of objects to export.
     Default to Config which exports the key configuration settings of the tenant.
 
     The available types are:
         'AccessPolicies','AccessReviews','AdministrativeUnits','All','Applications','AppProxy','B2B','B2C','CloudPCRoles','ConditionalAccess','Config','Devices','Directory','DirectoryRoles','Domains','EntitlementManagement','EntitlementManagementRoles','ExchangeRoles','Governance','Groups','IAM','Identity','IntuneRoles','Organization','PIM','PIMDirectoryRoles','PIMGroups','PIMResources','Policies','Reports','RoleManagement','Roles','ServicePrincipals','Sharepoint','SKUs','Teams','Users','UsersRegisteredByFeatureReport'.
 
-    To see what each type exports, check src\Get-EEDefaultSchema.ps1 and check the 
+    To see what each type exports, check src\Get-EEDefaultSchema.ps1 and check the
 
     .PARAMETER All
     If specified performs a full export of all objects and configuration in the tenant.
@@ -232,10 +232,10 @@
         )
 
         foreach ($item in $schemaItems) {
-            Write-Warning "Processing child '$($item.GraphUri)' ($($item.Path))"
+            Write-Host "⏩→ $($item.GraphUri)"
 
             if (!$item.$schemaScopeType) {
-                Write-Warning " - Skipping as it doesn't support '$schemaScopeType'"
+                Write-Verbose " - Skipping as it doesn't support '$schemaScopeType'"
                 continue
             }
 
@@ -324,7 +324,7 @@
 
         # execute v1.0 API batch requests
         if ($batchRequestStableApi.Value.Count -gt 0) {
-            Write-Warning "Processing $($batchRequestStableApi.Value.count) v1.0 API requests"
+            Write-Verbose "Processing $($batchRequestStableApi.Value.count) v1.0 API requests"
             $batchResults = Invoke-GraphBatchRequest -batchRequest $batchRequestStableApi.Value -separateErrors -ErrorAction SilentlyContinue -ErrorVariable requestErrors -WarningAction SilentlyContinue
 
             if ($batchResults) {
@@ -337,7 +337,7 @@
 
         # execute beta API batch requests
         if ($batchRequestBetaApi.Value.Count -gt 0) {
-            Write-Warning "Processing $($batchRequestBetaApi.Value.count) beta API requests"
+            Write-Verbose "Processing $($batchRequestBetaApi.Value.count) beta API requests"
             $batchResults = Invoke-GraphBatchRequest -batchRequest $batchRequestBetaApi.Value -graphVersion beta -separateErrors -ErrorAction SilentlyContinue -ErrorVariable requestErrors -WarningAction SilentlyContinue
 
             if ($batchResults) {
@@ -362,10 +362,10 @@
     foreach ($item in $requestedExportSchema) {
         $outputFileName = Join-Path -Path $Path -ChildPath $item.Path
 
-        Write-Warning "Processing parent '$($item.GraphUri)' ($($item.Path))"
+        Write-Host "➡️ $($item.GraphUri)"
 
         if (!$item.$schemaScopeType) {
-            Write-Warning "Skipping as it doesn't support '$schemaScopeType'"
+            Write-Verbose "Skipping as it doesn't support '$schemaScopeType'"
             continue
         }
 
@@ -410,7 +410,7 @@
         }
         else {
             $uri = New-FinalUri -RelativeUri $graphUri -Select (Get-ObjectProperty $item 'Select') -QueryParameters (Get-ObjectProperty $item 'QueryParameters') -Filter (Get-ObjectProperty $item 'Filter')
-            
+
             # batch request id cannot contain '\' character
             $id = $outputFileName -replace '\\', '/'
 
@@ -463,7 +463,7 @@
 
             # there can be multiple parent items with same Path, remove duplicates just in case
             $parentIds = $parentResult.Id | select -Unique
-            Write-Warning "Processing children results for parent '$($childGroup.ParentPath)' ($($parentIds.count))"
+            Write-Verbose "Processing children results for parent '$($childGroup.ParentPath)' ($($parentIds.count))"
 
             _processChildrenRecursive -schemaItems $childGroup.Children -basePath $childGroup.BasePath -parentIds $parentIds -results ([ref]$results) -batchRequestStableApi ([ref]$batchRequestStableApi) -batchRequestBetaApi ([ref]$batchRequestBetaApi)
         }
@@ -504,8 +504,8 @@
             # remove the random number added to avoid duplicated ids in batch requests
             $itemId = _normalizeRequestId $itemId
 
-            Write-Verbose ($item | convertto-json)
-            Write-Warning "Result without 'id' property, using '$itemId' instead (RequestId '$($item.RequestId)')!"
+            Write-Verbose ($item | convertto-json -WarningAction SilentlyContinue)
+            Write-Verbose "Result without 'id' property, using '$itemId' instead (RequestId '$($item.RequestId)')!"
         } else {
             $itemId = $item.id
         }

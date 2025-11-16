@@ -81,7 +81,7 @@
 
                     $object | Select-Object -Property * -ExcludeProperty $propertyName
                 } else {
-                    Write-Warning "There is no '$propertyName' property"
+                    Write-Verbose "There is no '$propertyName' property"
                     $object
                 }
             }
@@ -193,7 +193,7 @@
         }
 
         if (!$managementGroupNameList) {
-            Write-Warning "No management groups found! Make sure you are granted 'Management Group Reader' role at 'Tenant Root Group' level!"
+            Write-Verbose "No management groups found! Make sure you are granted 'Management Group Reader' role at 'Tenant Root Group' level!"
             return
         }
 
@@ -208,7 +208,7 @@
             $_ | select *, @{n = 'Policy'; e = { $assignmentSetting } }
         }
     }
-    
+
     function Get-PIMSubscriptionEligibleAssignment {
         <#
         .SYNOPSIS
@@ -248,7 +248,7 @@
         }
 
         if (!$subscriptionId) {
-            Write-Warning "No subscriptions found!"
+            Write-Verbose "No subscriptions found!"
             return
         }
 

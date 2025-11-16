@@ -467,7 +467,7 @@
 
                 # process requests that need to be repeated (paginated, failed on remote server,...)
                 if ($extraRequestChunk) {
-                    Write-Warning "Processing $($extraRequestChunk.count) paginated or server-side-failed request(s)"
+                    Write-Verbose "Processing $($extraRequestChunk.count) paginated or server-side-failed request(s)"
 
                     $PSBoundParameters['batchRequest'] = $extraRequestChunk
                     Invoke-GraphBatchRequest @PSBoundParameters
@@ -477,7 +477,7 @@
 
                 # process throttled requests
                 if ($throttledRequestChunk) {
-                    Write-Warning "Processing $($throttledRequestChunk.count) throttled request(s) with $script:retryAfter seconds wait time"
+                    Write-Verbose "Processing $($throttledRequestChunk.count) throttled request(s) with $script:retryAfter seconds wait time"
 
                     Start-Sleep -Seconds $script:retryAfter
 
@@ -499,14 +499,14 @@
 
             # process requests that need to be repeated (paginated, failed on remote server,...)
             if ($extraRequestChunk) {
-                Write-Warning "Processing $($extraRequestChunk.count) paginated or server-side-failed request(s)"
+                Write-Verbose "Processing $($extraRequestChunk.count) paginated or server-side-failed request(s)"
                 $PSBoundParameters['batchRequest'] = $extraRequestChunk
                 Invoke-GraphBatchRequest @PSBoundParameters
             }
 
             # process throttled requests
             if ($throttledRequestChunk) {
-                Write-Warning "Processing $($throttledRequestChunk.count) throttled request(s) with $script:retryAfter seconds wait time"
+                Write-Verbose "Processing $($throttledRequestChunk.count) throttled request(s) with $script:retryAfter seconds wait time"
 
                 Start-Sleep -Seconds $script:retryAfter
 

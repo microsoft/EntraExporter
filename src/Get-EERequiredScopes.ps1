@@ -1,4 +1,4 @@
-<# 
+<#
  .Synopsis
   Gets the required scopes for schema
 
@@ -13,7 +13,7 @@ function Get-EERequiredScopes {
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)] 
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Delegated','Application')]
         [string]$PermissionType,
 
@@ -61,9 +61,9 @@ function Get-EERequiredScopes {
         }
 
         if (!$entryScopes) {
-            Write-Warning "Call to $entryType '$tocall' doesn't provide $PermissionType permissions"
+            Write-Verbose "Call to $entryType '$tocall' doesn't provide $PermissionType permissions"
         }
-        
+
         foreach ($entryScope in $entryScopes) {
             if ($entryScope -notin $scopes) {
                 $scopes.Add($entryScope)

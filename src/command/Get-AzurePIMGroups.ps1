@@ -66,7 +66,7 @@
         } else {
             # I don't know how to get the list of PIM enabled groups so I have to find them
             # by searching for eligible role assignments for every PIM-supported-type group
-            Write-Warning "Searching for groups with PIM eligible assignment. This can take a while."
+            Write-Host "Searching for groups with PIM eligible assignment. This can take a while."
 
             $possiblePIMGroupId = (Get-PIMSupportedGroup).id
         }
@@ -77,7 +77,7 @@
         $groupWithPIMEligibleAssignment = New-GraphBatchRequest -url "identityGovernance/privilegedAccess/group/eligibilitySchedules?`$filter=groupId eq '<placeholder>'" -placeholder $possiblePIMGroupId | Invoke-GraphBatchRequest -graphVersion v1.0 -dontAddRequestId
 
         if (!$groupWithPIMEligibleAssignment) {
-            Write-Warning "None of the groups have PIM eligible assignments"
+            Write-Verbose "None of the groups have PIM eligible assignments"
             return
         }
 
@@ -133,6 +133,7 @@
             throw "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
         }
 
-        $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        # Hide warning for depth when converting to JSON
+        $item | ConvertTo-Json -depth 10 -WarningAction SilentlyContinue | Out-File (New-Item -Path $outputFileName -Force)
     }
 }
