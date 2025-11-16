@@ -962,6 +962,17 @@ function Get-EEDefaultSchema  {
             DelegatedPermission = 'RoleManagement.Read.All'
             ApplicationPermission = 'RoleManagement.Read.All'
         },
+        # RoleManagement - Permanently Assigned Entitlement Management Role Definitions
+        @{
+            GraphUri = 'roleManagement/directory/roleAssignmentScheduleInstances'
+            Path = 'RoleManagement/Directory/RoleAssignmentScheduleInstances'
+            QueryParameters = @{ expand = 'principal' }
+            Filter = "assignmentType eq 'Assigned'"
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'RoleManagement', 'EntitlementManagementRoles')
+            DelegatedPermission = 'RoleManagement.Read.All'
+            ApplicationPermission = 'RoleManagement.Read.All'
+        },
         # Reports - Users Registered By Feature
         @{
             GraphUri = 'reports/authenticationMethods/microsoft.graph.usersRegisteredByFeature()'
