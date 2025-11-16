@@ -11,7 +11,7 @@ $global:TenantID = $null
     Connect to home tenant of authenticated user.
 .EXAMPLE
     PS C:\>Connect-EntraExporter -TenantId 3043-343434-343434 -Type Users, Groups, Devices
-    Connect to a specific Tenant. Correct delegated Graph scopes will be automatically requested based on the types specified. 
+    Connect to a specific Tenant. Correct delegated Graph scopes will be automatically requested based on the types specified.
 #>
 function Connect-EntraExporter {
     param(
@@ -25,11 +25,11 @@ function Connect-EntraExporter {
             } )]
         [string]$Environment = 'Global',
 
-        [Parameter(ParameterSetName = 'SelectTypes')]
+        [Parameter(ParameterSetName = 'SelectTypes', Mandatory = $false)]
         [ObjectType[]]$Type = 'Config',
 
         # Perform a full export of all available configuration item types.
-        [Parameter(ParameterSetName = 'AllTypes')]
+        [Parameter(ParameterSetName = 'AllTypes', Mandatory = $true)]
         [switch]$All,
 
         # Specifies the schema to use for the export. If not specified, the default schema will be used.
@@ -43,7 +43,7 @@ function Connect-EntraExporter {
     }
 
     # filter schema to only the requested types
-    $RequestedExportSchema = $ExportSchema | ? { Compare-Object $_.Tag $Type -ExcludeDifferent -IncludeEqual }
+    $RequestedExportSchema = $ExportSchema | Where-Object { Compare-Object $_.Tag $Type -ExcludeDifferent -IncludeEqual }
 
     #region determine if we need to authenticate to Graph and/or Az
     $FlattenedRequestedExportSchema = Get-EEFlattenedSchema -ExportSchema $RequestedExportSchema
