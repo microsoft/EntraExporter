@@ -875,7 +875,7 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'DirectoryRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
+            ApplicationPermission = 'RoleManagement.Read.All'
         },
         # RoleManagement - Directory Role Assignments
         @{
@@ -885,8 +885,8 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'DirectoryRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
-        }   
+            ApplicationPermission = 'RoleManagement.Read.All'
+        }
         # RoleManagement - Exchange Role Definitions
         @{
             GraphUri = 'roleManagement/exchange/roleDefinitions'
@@ -894,7 +894,7 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'ExchangeRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
+            ApplicationPermission = 'RoleManagement.Read.All'
         },
         # RoleManagement - Exchange Role Assignments
         @{
@@ -903,7 +903,7 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'ExchangeRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
+            ApplicationPermission = 'RoleManagement.Read.All'
         },
         # RoleManagement - Intune Role Definitions
         @{
@@ -912,7 +912,7 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'IntuneRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
+            ApplicationPermission = 'RoleManagement.Read.All'
         },
         # RoleManagement - Intune Role Assignments
         @{
@@ -922,8 +922,8 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'IntuneRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
-        } 
+            ApplicationPermission = 'RoleManagement.Read.All'
+        }
         # RoleManagement - CloudPC Role Definitions
         @{
             GraphUri = 'roleManagement/cloudPC/roleDefinitions'
@@ -931,7 +931,7 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'CloudPCRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
+            ApplicationPermission = 'RoleManagement.Read.All'
         },
         # RoleManagement - CloudPC Role Assignments
         @{
@@ -940,9 +940,9 @@ function Get-EEDefaultSchema  {
             QueryParameters = @{ expand = 'principals' }
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'CloudPCRoles')
-            DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
-        } 
+            DelegatedPermission = 'DeviceManagementRBAC.Read.All'
+            ApplicationPermission = 'DeviceManagementRBAC.Read.All'
+        }
         # RoleManagement - Entitlement Management Role Definitions
         @{
             GraphUri = 'roleManagement/entitlementManagement/roleDefinitions'
@@ -950,7 +950,7 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'EntitlementManagementRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'             
+            ApplicationPermission = 'RoleManagement.Read.All'
         },
         # RoleManagement - Entitlement Management Role Assignments
         @{
@@ -960,7 +960,7 @@ function Get-EEDefaultSchema  {
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'EntitlementManagementRoles')
             DelegatedPermission = 'RoleManagement.Read.All'
-            ApplicationPermission = 'RoleManagement.Read.All'            
+            ApplicationPermission = 'RoleManagement.Read.All'
         },
         # Reports - Users Registered By Feature
         @{
@@ -968,9 +968,9 @@ function Get-EEDefaultSchema  {
             Path = 'Reports/AuthenticationMethods/UsersRegisteredByFeature/report.json'
             ApiVersion = 'beta'
             Tag = @('All', 'Reports', 'UsersRegisteredByFeatureReport')
-            DelegatedPermission = 'AuditLog.Read.All'            
+            DelegatedPermission = 'AuditLog.Read.All'
         },
-        
+
         # Permanent IAM role assignments
         @{
             Path                  = 'IAM'

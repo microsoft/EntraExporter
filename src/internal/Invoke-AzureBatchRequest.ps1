@@ -120,7 +120,7 @@
 
             Write-Debug ($requestChunk | ConvertTo-Json -Depth 10)
 
-            Write-Verbose "Processing batch of $($requestChunk.count) request(s):`n$(($requestChunk | sort Url | % {" - $($_.Name) - $($_.Url)"} ) -join "`n")"
+            Write-Verbose "Processing batch of $($requestChunk.count) request(s):`n$(($requestChunk | Sort-Object Url | % {" - $($_.Name) - $($_.Url)"} ) -join "`n")"
 
             #region process given chunk of batch requests
             $start = Get-Date
