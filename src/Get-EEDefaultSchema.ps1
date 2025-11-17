@@ -836,7 +836,16 @@ function Get-EEDefaultSchema  {
             Tag = @('All', 'Users')
             DelegatedPermission = 'Directory.Read.All'
             ApplicationPermission = 'Directory.Read.All'
-        },
+            Children = @(
+                @{
+                                GraphUri = 'users/<placeholder>/manager'
+                                Path = 'Manager'
+                                Select = 'id, userPrincipalName, displayName'
+                                Tag = @('All', 'Users')
+                                DelegatedPermission = 'User.Read.All'
+                                ApplicationPermission = 'User.Read.All'
+                  }
+            )
 
         # Devices
         @{
