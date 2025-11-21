@@ -33,7 +33,7 @@
             if ($skipAssignmentSettings) {
                 $_ | select *, @{n = 'PrincipalName'; e = { $_.principal.displayName } }, @{n = 'RoleName'; e = { $_.roleDefinition.displayName } }
             } else {
-                $rules = Get-PIMDirectoryRoleAssignmentSetting -roleId $_.roleDefinitionId -dontBeautify
+                $rules = Get-PIMDirectoryRoleAssignmentSetting $_.roleDefinition.templateId -dontBeautify
 
                 $_ | select *, @{n = 'PrincipalName'; e = { $_.principal.displayName } }, @{n = 'RoleName'; e = { $_.roleDefinition.displayName } }, @{n = 'Policy'; e = { $rules } }
             }
