@@ -739,6 +739,13 @@ function Get-EEDefaultSchema  {
                     Tag = @('All', 'Applications')
                     DelegatedPermission = 'Policy.Read.All'
                     ApplicationPermission = 'Policy.Read.All','Application.ReadWrite.All'
+                },
+                @{
+                    GraphUri = "applications/<placeholder>/federatedIdentityCredentials"
+                    Path = 'FederatedIdentityCredentials'
+                    Tag = @('All', 'Applications')
+                    DelegatedPermission = 'Application.Read.All'
+                    ApplicationPermission = 'Application.Read.All','Application.ReadWrite.All'
                 }
             )
         },
