@@ -35,6 +35,7 @@ enum ObjectType
     RoleManagement
     Roles
     ServicePrincipals
+    Settings
     Sharepoint
     SKUs
     Teams

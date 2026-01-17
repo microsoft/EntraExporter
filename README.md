@@ -96,7 +96,7 @@ Export-Entra -Path 'C:\EntraBackup\' -Type "B2C"
 Export-Entra -Path 'C:\EntraBackup\' -Type "B2B","Config"
 ```
 
-The currently valid types are: 'All' (all elements), 'Config' (default configuration), 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals', 'B2C', 'B2B', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint', 'RoleManagement', 'DirectoryRoles', 'ExchangeRoles', 'IntuneRoles', 'CloudPCRoles', 'EntitlementManagementRoles', 'Reports', 'UsersRegisteredByFeatureReport', 'IAM', 'AccessPolicies', 'PIM', 'PIMDirectoryRoles', 'PIMResources', 'PIMGroups'
+The currently valid types are: 'All' (all elements), 'Config' (default configuration), 'AccessReviews', 'ConditionalAccess', 'Users', 'Groups', 'Applications', 'ServicePrincipals', 'B2C', 'B2B', 'AppProxy', 'Organization', 'Domains', 'EntitlementManagement', 'Policies', 'AdministrativeUnits', 'SKUs', 'Identity', 'Roles', 'Governance', 'Devices', 'Teams', 'Sharepoint', 'RoleManagement', 'DirectoryRoles', 'ExchangeRoles', 'IntuneRoles', 'CloudPCRoles', 'EntitlementManagementRoles', 'Reports', 'UsersRegisteredByFeatureReport', 'IAM', 'AccessPolicies', 'PIM', 'PIMDirectoryRoles', 'PIMResources', 'PIMGroups', 'Settings'
 
 This list can also be retrieved via:
 

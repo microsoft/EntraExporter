@@ -261,6 +261,14 @@ function Get-EEDefaultSchema  {
             ApplicationPermission = 'Policy.Read.All'
         },
         @{
+            GraphUri = 'policies/deviceRegistrationPolicy'
+            Path = 'Policies/DeviceRegistrationPolicy'
+            ApiVersion = 'beta'
+            Tag = @('All', 'Config', 'Policies')
+            DelegatedPermission = 'Policy.Read.All'
+            ApplicationPermission = 'Policy.Read.All'
+        },
+        @{
             GraphUri = 'policies/appManagementPolicies'
             Path = 'Policies/AppManagementPolicies'
             ApiVersion = 'beta'
@@ -500,7 +508,7 @@ function Get-EEDefaultSchema  {
             GraphUri = 'identityGovernance/entitlementManagement/settings'
             Path = 'IdentityGovernance/EntitlementManagement/Settings'
             ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Governance')
+            Tag = @('All', 'Config', 'Governance', 'Settings')
             DelegatedPermission = 'EntitlementManagement.Read.All'
             ApplicationPermission = 'EntitlementManagement.Read.All'
         },
@@ -691,7 +699,7 @@ function Get-EEDefaultSchema  {
         @{
             GraphUri = 'groupSettings'
             Path = 'GroupSettings'
-            Tag = @('All', 'Config', 'Groups')
+            Tag = @('All', 'Config', 'Groups', 'Settings')
             DelegatedPermission = 'Directory.Read.All'
             ApplicationPermission = 'Directory.Read.All'
         },
@@ -854,7 +862,7 @@ function Get-EEDefaultSchema  {
             Path = 'Admin/Teams/settings.json'
             Filter = $null
             ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Teams')
+            Tag = @('All', 'Config', 'Teams', 'Settings')
             DelegatedPermission = 'Teamwork.Read.All'
             ApplicationPermission = 'Teamwork.Read.All'
         },
@@ -864,7 +872,7 @@ function Get-EEDefaultSchema  {
             Path = 'Admin/Sharepoint/settings.json'
             Filter = $null
             ApiVersion = 'beta'
-            Tag = @('All', 'Config', 'Sharepoint')
+            Tag = @('All', 'Config', 'Sharepoint', 'Settings')
             DelegatedPermission = 'SharePointTenantSettings.Read.All'
             ApplicationPermission = 'SharePointTenantSettings.Read.All'
         },
