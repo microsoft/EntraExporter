@@ -297,19 +297,63 @@
 
             # recursively process children if they exist
             if ($children) {
-                # for grandchildren, we need to collect the parent IDs from the results
-                $childBasePath = if ($item.Path -match "\.json$") {
-                    $basePath
-                } else {
-                    Join-Path -Path $basePath -ChildPath $item.Path
+                # Check if any child has multiple <placeholder> tokens in its GraphUri.
+                # This happens when a grandchild URL includes ancestor IDs (e.g.
+                # definitions/<placeholder>/instances/<placeholder>/contactedReviewers).
+                # In that case, we queue children per parent ID so we can resolve the
+                # ancestor placeholder now, leaving only one for the next batch level.
+                $hasNestedPlaceholders = $children | Where-Object {
+                    $_.GraphUri -and ([regex]::Matches($_.GraphUri, '<placeholder>')).Count -gt 1
                 }
 
-                # we'll process these after the current batch is executed and results are available
-                $script:childrenToProcess.Add(@{
-                    Children = $children
-                    BasePath = $childBasePath
-                    ParentPath = "$($item.Path)*"
-                })
+                if ($hasNestedPlaceholders) {
+                    foreach ($pid in $parentIds) {
+                        $resolvedChildren = @(foreach ($child in $children) {
+                            $clone = @{}
+                            foreach ($key in $child.Keys) { $clone[$key] = $child[$key] }
+                            if ($clone.GraphUri -and ([regex]::Matches($clone.GraphUri, '<placeholder>')).Count -gt 1) {
+                                $clone.GraphUri = ([regex]'<placeholder>').Replace($clone.GraphUri, $pid, 1)
+                            }
+                            if ($clone.Children) {
+                                $clone.Children = @(foreach ($gc in $clone.Children) {
+                                    $gcClone = @{}
+                                    foreach ($key in $gc.Keys) { $gcClone[$key] = $gc[$key] }
+                                    if ($gcClone.GraphUri -and ([regex]::Matches($gcClone.GraphUri, '<placeholder>')).Count -gt 1) {
+                                        $gcClone.GraphUri = ([regex]'<placeholder>').Replace($gcClone.GraphUri, $pid, 1)
+                                    }
+                                    $gcClone
+                                })
+                            }
+                            $clone
+                        })
+
+                        # Match the same Join-Path chain used when creating the batch request ID
+                        # (lines above: Join-Path $basePath $pid, then Join-Path $result $item.Path)
+                        # so that the BasePath comparison in the main loop finds the results.
+                        $perParentBasePath = Join-Path -Path $basePath -ChildPath $pid
+                        $perParentBasePath = Join-Path -Path $perParentBasePath -ChildPath $item.Path
+
+                        $script:childrenToProcess.Add(@{
+                            Children = $resolvedChildren
+                            BasePath = $perParentBasePath
+                            ParentPath = "$pid*"
+                        })
+                    }
+                } else {
+                    # for grandchildren, we need to collect the parent IDs from the results
+                    $childBasePath = if ($item.Path -match "\.json$") {
+                        $basePath
+                    } else {
+                        Join-Path -Path $basePath -ChildPath $item.Path
+                    }
+
+                    # we'll process these after the current batch is executed and results are available
+                    $script:childrenToProcess.Add(@{
+                        Children = $children
+                        BasePath = $childBasePath
+                        ParentPath = "$($item.Path)*"
+                    })
+                }
             }
         }
     }
