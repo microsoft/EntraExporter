@@ -272,57 +272,57 @@ function Get-EEDefaultSchema  {
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/email'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/Email.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/FIDO2.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/microsoftAuthenticator'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/MicrosoftAuthenticator.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/sms'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/SMS.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/temporaryAccessPass'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/TemporaryAccessPass.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/softwareOath'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/SoftwareOath.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/voice'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/Voice.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/authenticationMethodsPolicy/authenticationMethodConfigurations/x509Certificate'
             Path = 'Policies/AuthenticationMethodsPolicy/AuthenticationMethodConfigurations/X509Certificate.json'
             Tag = @('All', 'Config', 'Policies')
-            DelegatedPermission = 'Policy.Read.All'
-            ApplicationPermission = 'Policy.Read.All'
+            DelegatedPermission = 'Policy.Read.AuthenticationMethod'
+            ApplicationPermission = 'Policy.Read.AuthenticationMethod'
         },
         @{
             GraphUri = 'policies/adminConsentRequestPolicy'
