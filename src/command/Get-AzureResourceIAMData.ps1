@@ -72,7 +72,7 @@ authorizationresources
     $kqlResult = Search-AzGraph2 -query $query
 
     # there can be duplicates with different createdOn/updatedOn, keep just the latest one
-    $kqlResult = $kqlResult | Group-Object -Property ($property | ? {$_ -notin "createdOn", "updatedOn"}) | % {if ($_.count -eq 1) {$_.group} else {$_.group | sort updatedOn | select -First 1}}
+    $kqlResult = $kqlResult | Group-Object -Property ($property | ? {$_ -notin "createdOn", "updatedOn"}) | % {if ($_.count -eq 1) {$_.group} else {$_.group | Sort-Object updatedOn | select -First 1}}
 
     if (!$kqlResult) { return }
     #endregion run the query
@@ -80,43 +80,36 @@ authorizationresources
     # get the principal name from its id
     $idToNameList = Get-AzureDirectoryObject -id ($kqlResult.principalId | select -Unique)
 
-    $joinChar = "&"
 
     # output the final results
     $kqlResult | select @{n = 'PrincipalName'; e = { $id = $_.PrincipalId; $result = $idToNameList | ? Id -EQ $id; if ($result.DisplayName) { $result.DisplayName } else { $result.mailNickname } } }, PrincipalId, PrincipalType, RoleDefinitionName, RoleDefinitionId, Scope, @{ n = 'ScopeType'; e = { _scopeType $_.scope } }, ManagementGroupId, SubscriptionId, SubscriptionName, ResourceGroup, CreatedOn, UpdatedOn | % {
         $item = $_
 
-        switch ($item.scopeType) {
-            'root' {
-                $outputPath = Join-Path -Path $assignmentsFolder -ChildPath "Root"
-            }
-            'managementGroup' {
-                $outputPath = Join-Path -Path (Join-Path -Path $assignmentsFolder -ChildPath "ManagementGroups") -ChildPath $item.ManagementGroupId
-            }
-            'subscription' {
-                $outputPath = Join-Path -Path (Join-Path -Path $assignmentsFolder -ChildPath "Subscriptions") -ChildPath $item.SubscriptionId
-            }
-            'resourceGroup' {
-                $outputPath = Join-Path -Path (Join-Path -Path (Join-Path -Path $assignmentsFolder -ChildPath "Subscriptions") -ChildPath $item.SubscriptionId) -ChildPath $item.ResourceGroup
-            }
-            'resource' {
-                # $folder = ($item.Scope.Split("/")[-3..-1] -join $joinChar)
-                $folder = $item.Scope -replace "/", $joinChar
-                $outputPath = Join-Path -Path (Join-Path -Path (Join-Path -Path (Join-Path -Path $assignmentsFolder -ChildPath "Subscriptions") -ChildPath $item.SubscriptionId) -ChildPath $item.ResourceGroup) -ChildPath $folder
-            }
-            default {
-                Write-Warning "Undefined scope type $($item.scopeType)"
-                return
-            }
+        if ($item.scopeType -eq 'root')
+        {
+            $outputPath = Join-Path -Path $assignmentsFolder -ChildPath "root"
+        }
+        else
+        {
+            $joinChar = [System.IO.Path]::DirectorySeparatorChar
+
+            # simplify the scope to create more readable file names and avoid too long path issues
+            $folder = $item.Scope
+            $folder = $folder -replace "/providers/Microsoft.Management/", ""
+            
+            # replace remaining "/" with directory separator char to create folder structure based on the scope
+            $folder = $folder -replace "/", $joinChar
+
+            $outputPath = Join-Path -Path $assignmentsFolder -ChildPath $folder
         }
 
+        $joinChar = "&"
         $itemId = $item.principalId + $joinChar + ($item.roleDefinitionId).split("/")[-1]
 
         $outputFileName = Join-Path -Path $outputPath -ChildPath "$itemId.json"
 
-        if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
-            return
+        if (!(Invoke-FilePathCheck -FilePath $outputFileName)) {
+            continue
         }
 
         if (Test-Path $outputFileName -ErrorAction SilentlyContinue) {
@@ -125,7 +118,7 @@ authorizationresources
             $outputFileName = $outputFileName + ".replace"
         }
 
-        $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $item | SaveAs-SortedJSON -Path $outputFileName 
     }
     #endregion IAM Role assignments export
 
@@ -136,7 +129,7 @@ authorizationresources
         $roleId = $result.name
         $outputPath = Join-Path -Path $definitionsFolder -ChildPath "BuiltInRole"
         $outputFileName = Join-Path -Path $outputPath -ChildPath "$roleId.json"
-        $result | select * -ExcludeProperty RequestName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $result | SaveAs-SortedJSON -Path $outputFileName
     }
     #endregion export built-in RBAC (IAM) roles
 
@@ -166,7 +159,7 @@ ResourceContainers
 
         $outputFileName = Join-Path -Path $outputPath -ChildPath "$roleId.json"
 
-        $result | Select-Object * -ExcludeProperty RequestName | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $result | SaveAs-SortedJSON -Path $outputFileName
     }
     #endregion export custom RBAC (IAM) roles
     #endregion IAM Role definitions export

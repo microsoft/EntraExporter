@@ -940,9 +940,9 @@ function Get-EEDefaultSchema  {
             QueryParameters = @{ expand = 'principals' }
             ApiVersion = 'beta'
             Tag = @('All', 'Config', 'RoleManagement', 'CloudPCRoles')
-            DelegatedPermission = 'DeviceManagementRBAC.Read.All'
-            ApplicationPermission = 'DeviceManagementRBAC.Read.All'
-        }
+            DelegatedPermission = 'RoleManagement.Read.All'
+            ApplicationPermission = 'RoleManagement.Read.All'
+        } 
         # RoleManagement - Entitlement Management Role Definitions
         @{
             GraphUri = 'roleManagement/entitlementManagement/roleDefinitions'

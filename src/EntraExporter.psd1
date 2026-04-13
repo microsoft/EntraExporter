@@ -1,31 +1,31 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule = 'EntraExporter.psm1'
+    RootModule           = 'EntraExporter.psm1'
 
     # Version number of this module.
-    ModuleVersion = '3.0.0'
-    
+    ModuleVersion        = '3.0.1'
+
     # Supported PSEditions
-    CompatiblePSEditions = 'Core','Desktop'
+    CompatiblePSEditions = 'Core', 'Desktop'
 
     # ID used to uniquely identify this module
-    GUID = 'd6c15273-d343-4556-a30d-b333eca3c1ab'
+    GUID                 = 'd6c15273-d343-4556-a30d-b333eca3c1ab'
 
     # Author of this module
-    Author = 'Microsoft Identity'
+    Author               = 'Microsoft Identity'
 
     # Company or vendor of this module
-    CompanyName = 'Microsoft Corporation'
+    CompanyName          = 'Microsoft Corporation'
 
     # Copyright statement for this module
-    Copyright = 'Microsoft Corporation. All rights reserved.'
+    Copyright            = 'Microsoft Corporation. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'This module exports an Entra tenant''s identity related configuration settings and objects and writes them to json files.'
+    Description          = 'This module exports an Entra tenant''s identity related configuration settings and objects and writes them to json files.'
 
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion = '5.1'
+    PowerShellVersion    = '5.1'
 
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
@@ -43,7 +43,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules = @(
+    RequiredModules      = @(
         @{ ModuleName = 'Az.Accounts'; Guid = '17a2feff-488b-47f9-8729-e2cec094624c'; ModuleVersion = '3.0.2' }, @{ ModuleName = 'Microsoft.Graph.Authentication'; Guid = '883916f2-9184-46ee-b1f8-b6a2fb784cee'; ModuleVersion = '2.8.0' }
     )
 
@@ -51,7 +51,7 @@
     # RequiredAssemblies = @()
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-    ScriptsToProcess = @("EntraExporterEnums.ps1")
+    ScriptsToProcess     = @("EntraExporterEnums.ps1")
 
     # Type files (.ps1xml) to be loaded when importing this module
     # TypesToProcess = @()
@@ -60,7 +60,7 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules = @(
+    NestedModules        = @(
         'internal\New-FinalUri.ps1'
         'internal\Get-ObjectProperty.ps1'
         'internal\ConvertTo-OrderedDictionary.ps1'
@@ -73,6 +73,9 @@
         'internal\Search-AzGraph2.ps1'
         'internal\Get-MgGraphAllPages.ps1'
         'internal\Get-AzureDirectoryObject.ps1'
+        'internal\Invoke-FilePathCheck.ps1'
+        'internal\Invoke-RoleEligibilityScheduleRequestIdSimplification.ps1'
+        'internal\SaveAs-SortedJSON.ps1'
         'command\Get-AccessPackageAssignmentPolicies.ps1'
         'command\Get-AccessPackageAssignments.ps1'
         'command\Get-AccessPackageResourceScopes.ps1'
@@ -90,7 +93,7 @@
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @(
+    FunctionsToExport    = @(
         'Connect-EntraExporter'
         'Export-Entra'
         'Get-EERequiredScopes'
@@ -98,13 +101,13 @@
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport = @()
+    CmdletsToExport      = @()
 
     # Variables to export from this module
-    VariablesToExport = @()
+    VariablesToExport    = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport = @()
+    AliasesToExport      = @()
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -116,24 +119,36 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData = @{
+    PrivateData          = @{
 
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = 'Microsoft', 'Identity', 'Azure', 'Entra', 'AzureAD', 'AAD', 'PSEdition_Desktop', 'Windows', 'Export', 'Backup', 'DR'
+            Tags         = 'Microsoft', 'Identity', 'Azure', 'Entra', 'AzureAD', 'AAD', 'PSEdition_Desktop', 'Windows', 'Export', 'Backup', 'DR'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://raw.githubusercontent.com/microsoft/entraexporter/main/LICENSE'
+            LicenseUri   = 'https://raw.githubusercontent.com/microsoft/entraexporter/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/microsoft/entraexporter'
+            ProjectUri   = 'https://github.com/microsoft/entraexporter'
 
             # A URL to an icon representing this module.
             # IconUri = ''
 
             # ReleaseNotes of this module
             ReleaseNotes = '
+            3.0.1
+                FIXED
+                - path processing on linux
+                - sort issues on linux machines (replaced "sort" with "Sort-Object")
+
+                CHANGED
+                - sort JSONs properties before export to avoid clutter in git history when just order of the object properties was changed
+                - optimized batch request processing by running multiple batch requests in parallel (PowerShell Core only!)
+                - added ThrottleLimit parameter to Export-Entra to control the number of concurrent batch requests (PowerShell Core only)
+                - RAM optimization: one schema item (and children) processed at once. Instead of all parent schema (and all children items) items at once.
+                - IAM and AccessPolicies export: creating directory structure to mimic the scope (to minimize long path issues)
+                - reworked how PIM assignments for Resources are being exported to avoid long path issues
             3.0.0
                 CHANGED
                 - Replaced sequential API calls with batch requests where possible to significantly improve performance
@@ -158,7 +173,7 @@
                 - Removed internal function Invoke-Graph (all calls are made via batching now)
                 - Removed module Strict Mode restrictions
             '
-    
+
         } # End of PSData hashtable
 
     } # End of PrivateData hashtable
@@ -169,4 +184,4 @@
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
 
-    }
+}

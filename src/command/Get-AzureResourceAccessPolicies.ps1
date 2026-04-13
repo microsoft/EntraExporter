@@ -53,17 +53,16 @@
         Search-AzGraph2 -query $query
     }
 
-    $joinChar = "&"
+    $joinChar = [System.IO.Path]::DirectorySeparatorChar
 
     Get-AzureResourceAccessPolicy | % {
         $result = $_
-        $scopeId = $result.subscriptionId
-        $id = $result.id -replace "/", $joinChar
+        $id = $result.id
+        $id = $id -replace "/subscriptions/", ""
+        $id = $id -replace "/", $joinChar
 
-        $outputPath = Join-Path -Path (Join-Path -Path $rootFolder -ChildPath "Subscriptions") -ChildPath $scopeId
+        $outputFileName = Join-Path -Path $rootFolder -ChildPath "$id.json"
 
-        $outputFileName = Join-Path -Path $outputPath -ChildPath "$id.json"
-
-        $result | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $result | SaveAs-SortedJSON -Path $outputFileName
     }
 }

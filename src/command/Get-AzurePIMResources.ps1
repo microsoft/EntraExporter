@@ -269,35 +269,31 @@
     }
     #endregion functions
 
-    $joinChar = "&"
-
     Get-PIMManagementGroupEligibleAssignment | % {
         $item = $_
 
-        $itemId = $item.roleEligibilityScheduleRequestId -replace "/", $joinChar
+        $itemId = Invoke-RoleEligibilityScheduleRequestIdSimplification -id $item.roleEligibilityScheduleRequestId
 
         $outputFileName = Join-Path -Path (Join-Path -Path $rootFolder -ChildPath "ManagementGroups") -ChildPath "$itemId.json"
 
-        if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
-            return
+        if (!(Invoke-FilePathCheck -FilePath $outputFileName)) {
+            continue
         }
 
-        $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $item | SaveAs-SortedJSON -Path $outputFileName
     }
 
     Get-PIMSubscriptionEligibleAssignment | ? { $_ } | % {
         $item = $_
 
-        $itemId = $item.roleEligibilityScheduleRequestId -replace "/", $joinChar
+        $itemId = Invoke-RoleEligibilityScheduleRequestIdSimplification -id $item.roleEligibilityScheduleRequestId
 
         $outputFileName = Join-Path -Path (Join-Path -Path $rootFolder -ChildPath "Subscriptions") -ChildPath "$itemId.json"
 
-        if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
-            return
+        if (!(Invoke-FilePathCheck -FilePath $outputFileName)) {
+            continue
         }
 
-        $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $item | SaveAs-SortedJSON -Path $outputFileName
     }
 }

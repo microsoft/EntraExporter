@@ -42,6 +42,17 @@
     .PARAMETER separateErrors
     Switch to return batch request errors one by one instead of all at once.
 
+    .PARAMETER throttleLimit
+    Throttle limit for running batch requests in parallel.
+
+    Parallel processing is ONLY APPLIED if:
+     - there are at least 21 requests (i.e. more than one batch to process (one batch contains at most 20 individual requests)) to avoid unnecessary overhead of parallelization
+     - and if the script is run in PowerShell Core (natively supports parallelization).
+
+    Adjust the value based on your environment and needs. Higher values may speed up the export but can lead to throttling by the Graph API and higher resource consumption, while lower values may reduce the chances of throttling but will take longer to complete.
+
+    By default 10, which means that at most 10 batch requests will be run at the same time.
+
     .EXAMPLE
     [System.Collections.Generic.List[object]] $batchRequest = @()
 
@@ -159,30 +170,33 @@
 
         [switch] $dontFollowNextLink,
 
-        [switch] $separateErrors
+        [switch] $separateErrors,
+
+        [int] $throttleLimit = 10
     )
 
     begin {
-        if ($PSCmdlet.MyInvocation.PipelineLength -eq 1) {
-            Write-Verbose "Total number of requests to process is $($batchRequest.count)"
-        }
+        #region helper functions
+        function ConvertTo-FlatArray {
+            # flattens input in case, that primitive(s) and array(s) are entered at the same time
+            [CmdletBinding()]
+            param (
+                [Parameter(Mandatory = $true)]
+                $inputArray
+            )
 
-        if ($dontBeautifyResult -and $dontAddRequestId) {
-            Write-Verbose "'dontAddRequestId' parameter will be ignored, 'RequestId' property is not being added when 'dontBeautifyResult' parameter is used"
+            foreach ($item in $inputArray) {
+                if ($null -ne $item) {
+                    # recurse for arrays
+                    if ($item.GetType().BaseType -eq [System.Array]) {
+                        ConvertTo-FlatArray $item
+                    } else {
+                        # output non-arrays
+                        $item
+                    }
+                }
+            }
         }
-
-        # api batch requests are limited to 20 requests
-        $chunkSize = 20
-        # base graph api uri
-        $uri = "https://graph.microsoft.com"
-        # batch uri
-        $requestUri = "$uri/$graphVersion/`$batch"
-        # buffer to hold chunks of requests
-        $requestChunk = [System.Collections.Generic.List[Object]]::new()
-        # paginated or remotely failed requests that should be processed too, to get all the results
-        $extraRequestChunk = [System.Collections.Generic.List[Object]]::new()
-        # throttled requests that have to be repeated after given time
-        $throttledRequestChunk = [System.Collections.Generic.List[Object]]::new()
 
         function _processChunk {
             <#
@@ -197,7 +211,34 @@
             [CmdletBinding()]
             param (
                 [Parameter(Mandatory = $true)]
-                [System.Collections.ArrayList] $requestChunk
+                [PSObject[]] $requestChunk,
+
+                [Parameter(Mandatory = $true)]
+                [string] $requestUri,
+
+                [Parameter(Mandatory = $true)]
+                [string] $graphVersion,
+
+                [Parameter(Mandatory = $true)]
+                [bool] $dontBeautifyResult,
+
+                [Parameter(Mandatory = $true)]
+                [bool] $dontAddRequestId,
+
+                [Parameter(Mandatory = $true)]
+                [bool] $dontFollowNextLink,
+
+                [Parameter(Mandatory = $true)]
+                [bool] $separateErrors,
+
+                [Parameter(Mandatory = $true)]
+                [System.Collections.Concurrent.ConcurrentBag[Object]] $extraReqBag,
+
+                [Parameter(Mandatory = $true)]
+                [System.Collections.Concurrent.ConcurrentBag[Object]] $throttledReqBag,
+
+                [Parameter(Mandatory = $true)]
+                [System.Collections.Concurrent.ConcurrentBag[Int32]] $retryAfterBag
             )
 
             function Is-JSON {
@@ -214,9 +255,9 @@
                 }
 
                 switch -Regex ($InputString.TrimStart()) {
-                    '^"'    { return "String" }
-                    '^{'    { return "Object" }
-                    '^\['    { return "Array" }
+                    '^"' { return "String" }
+                    '^{' { return "Object" }
+                    '^\[' { return "Array" }
                     '^true|^false' { return "Boolean" }
                     '^null' { return "Null" }
                     '^-?\d' { return "Number" }
@@ -224,15 +265,14 @@
                 }
             }
 
-            $duplicityId = $requestChunk.id | Group-Object | ? { $_.Count -gt 1 }
+            $duplicityId = $requestChunk.id | Group-Object | Where-Object { $_.Count -gt 1 }
             if ($duplicityId) {
-                Write-Warning "Batch requests must have unique ids. Id(s): '$(($duplicityId.Name | select -Unique) -join ', ')' is there more than once"
-                return
+                throw "Batch requests must have unique ids. Id(s): '$(($duplicityId.Name | Select-Object -Unique) -join ', ')' is there more than once"
             }
 
             Write-Debug ($requestChunk | ConvertTo-Json -Depth 10)
 
-            Write-Host "Processing batch of $($requestChunk.count) request(s):`n$(($requestChunk | Sort-Object Url | % {" → $($_.Url)"} ) -join "`n")"
+            Write-Verbose "Processing batch of $($requestChunk.count) request(s):`n$(($requestChunk | Sort-Object Url | ForEach-Object {" - $($_.Id) - $($_.Url)"} ) -join "`n")"
 
             #region process given chunk of batch requests
             $start = Get-Date
@@ -245,274 +285,325 @@
 
             Write-Verbose $body
 
-            Invoke-MgRestMethod -Method Post -Uri $requestUri -Body $body -ContentType "application/json" -OutputType PSObject | % {
-                $responses = $_.responses
+            $reqError = $null
+            do {
+                try {
+                    Invoke-MgRestMethod -Method Post -Uri $requestUri -Body $body -ContentType "application/json" -OutputType PSObject -ErrorAction Stop | ForEach-Object {
+                        $responses = $_.responses
 
-                #region return the output
-                if ($dontBeautifyResult) {
-                    # return original response
+                        #region return the output
+                        if ($dontBeautifyResult) {
+                            # return original response
 
-                    $responses
-                } else {
-                    # return just actually requested data without batch-related properties and enhance the returned object with 'RequestId' property for easier filtering
-
-                    foreach ($response in $responses) {
-                        $value, $noteProperty = $null
-                        if ($response.body) { $noteProperty = $response.body | Get-Member -MemberType NoteProperty }
-
-                        # there was some error, no real values were returned, skipping
-                        if ($response.Status -in (400..509)) {
-                            continue
-                        }
-
-                        if ($response.body.value) {
-                            # the result is stored in 'value' property
-                            $value = $response.body.value
-                        } elseif ($response.body -and $noteProperty.Name -contains '@odata.context' -and $noteProperty.Name -contains 'value') {
-                            # the result is stored in 'value' property, but no results were returned, skipping
-                            continue
-                        } elseif ($response.body) {
-                            # the result is in the 'body' property itself
-                            $value = $response.body
+                            $responses
                         } else {
-                            # no results in 'body.value' nor 'body' property itself
-                            continue
-                        }
+                            # return just actually requested data without batch-related properties and enhance the returned object with 'RequestId' property for easier filtering
 
-                        # return processed output
-                        $primitiveTypeList = 'String', 'Int32', 'Int64', 'Boolean', 'Float', 'Double', 'Decimal', 'Char'
+                            foreach ($response in $responses) {
+                                $value, $noteProperty = $null
+                                if ($response.body) { $noteProperty = $response.body | Get-Member -MemberType NoteProperty }
 
-                        if ($value.gettype().name -in $primitiveTypeList -or $value[0].gettype().name -in $primitiveTypeList) {
-                            # it is a primitive (or list of primitives)
-
-                            if ($dontAddRequestId) {
-                                $value
-                            } else {
-                                [PSCustomObject]@{
-                                    Value     = $value
-                                    RequestId = $response.Id
+                                # there was some error, no real values were returned, skipping
+                                if ($response.Status -in (400..509)) {
+                                    continue
                                 }
-                            }
-                        } else {
-                            # it is a complex object (hashtable, ..)
 
-                            # properties to return
-                            $property = @("*")
-                            if (!$dontAddRequestId) {
-                                $property += @{n = 'RequestId'; e = { $response.Id } }
-                            }
-
-                            $value | select -Property $property -ExcludeProperty '@odata.context', '@odata.nextLink'
-                        }
-                    }
-                }
-                #endregion return the output
-
-                #region handle the responses based on their status code
-                # load the next pages, retry throttled requests, repeat failed requests, ...
-
-                $failedBatchJob = [System.Collections.Generic.List[Object]]::new()
-
-                foreach ($response in $responses) {
-                    # https://learn.microsoft.com/en-us/graph/errors#http-status-codes
-                    if ($response.Status -in 200, 201, 204) {
-                        # success
-
-                        if ($response.body.'@odata.nextLink') {
-                            # paginated (get remaining results by query returned NextLink URL)
-
-                            if ($dontFollowNextLink) {
-                                Write-Verbose "Batch result for request '$($response.Id)' is paginated. But 'dontFollowNextLink' switch is set, hence nextLink will not be followed"
-
-                                continue
-                            } else {
-                                Write-Verbose "Batch result for request '$($response.Id)' is paginated. Nextlink will be processed in the next batch"
-                            }
-
-                            $relativeNextLink = $response.body.'@odata.nextLink' -replace [regex]::Escape("https://graph.microsoft.com/$graphVersion/")
-                            # make a request object copy, so I can modify it without interfering with the original object
-                            $nextLinkRequest = $requestChunk | ? Id -EQ $response.Id | ConvertTo-Json -Depth 10 | ConvertFrom-Json
-                            # replace original URL with the nextLink
-                            $nextLinkRequest.URL = $relativeNextLink
-                            # add the request for later processing
-                            $extraRequestChunk.Add($nextLinkRequest)
-                        }
-                    } elseif ($response.Status -in 429, 509) {
-                        # throttled (will be repeated after given time)
-
-                        $jobRetryAfter = $response.Headers.'Retry-After'
-                        $throttledBatchRequest = $requestChunk | ? Id -EQ $response.Id
-
-                        Write-Verbose "Batch request with Id: '$($throttledBatchRequest.Id)', Url:'$($throttledBatchRequest.Url)' was throttled, hence will be repeated after $jobRetryAfter seconds"
-
-                        if ($jobRetryAfter -eq 0) {
-                            # request can be repeated without any delay
-                            #TIP for performance reasons adding to $extraRequestChunk batch (to avoid invocation of unnecessary batch job)
-                            $extraRequestChunk.Add($throttledBatchRequest)
-                        } else {
-                            # request can be repeated after delay
-                            # add the request for later processing
-                            $throttledRequestChunk.Add($throttledBatchRequest)
-                        }
-
-                        # get highest retry-after wait time
-                        if ($jobRetryAfter -gt $script:retryAfter) {
-                            Write-Verbose "Setting $jobRetryAfter retry-after time"
-                            $script:retryAfter = $jobRetryAfter
-                        }
-                    } elseif ($response.Status -in 500, 502, 503, 504) {
-                        # some internal error on remote side (will be repeated)
-
-                        $problematicBatchRequest = $requestChunk | ? Id -EQ $response.Id
-
-                        Write-Verbose "Batch request with Id: '$($problematicBatchRequest.Id)', Url:'$($problematicBatchRequest.Url)' had internal error '$($response.body.error.message)', Code: $($response.Status), hence will be repeated"
-
-                        $extraRequestChunk.Add($problematicBatchRequest)
-                    } else {
-                        # failed
-
-                        $failedBatchRequest = $requestChunk | ? Id -EQ $response.Id
-
-                        $innerErrorText = $null
-                        if ($response.body.error.innerError.code) {
-                            $innerErrorText = " (" + $response.body.error.innerError.code + ")"
-                        }
-
-                        $errorText = $null
-                        if ($response.body.error.message) {
-                            # sometimes the error message is not a plain string, but a JSON
-                            if (Is-JSON -InputString $response.body.error.message) {
-                                $errorText = $response.body.error.message | ConvertFrom-Json -ErrorAction Stop
-
-                                if ($errorText.Error.Message) {
-                                    $errorText = $errorText.Error.Message + "($($response.body.error.code))"
-                                } elseif ($errorText.Message) {
-                                    $errorText = $errorText.Message + " ($($response.body.error.code))"
+                                if ($response.body.value) {
+                                    # the result is stored in 'value' property
+                                    $value = $response.body.value
+                                } elseif ($response.body -and $noteProperty.Name -contains '@odata.context' -and $noteProperty.Name -contains 'value') {
+                                    # the result is stored in 'value' property, but no results were returned, skipping
+                                    continue
+                                } elseif ($response.body) {
+                                    # the result is in the 'body' property itself
+                                    $value = $response.body
                                 } else {
+                                    # no results in 'body.value' nor 'body' property itself
+                                    continue
+                                }
+
+                                # return processed output
+                                $primitiveTypeList = 'String', 'Int32', 'Int64', 'Boolean', 'Float', 'Double', 'Decimal', 'Char'
+
+                                if ($value.gettype().name -in $primitiveTypeList -or $value[0].gettype().name -in $primitiveTypeList) {
+                                    # it is a primitive (or list of primitives)
+
+                                    if ($dontAddRequestId) {
+                                        $value
+                                    } else {
+                                        [PSCustomObject]@{
+                                            Value     = $value
+                                            RequestId = $response.Id
+                                        }
+                                    }
+                                } else {
+                                    # it is a complex object (hashtable, ..)
+
+                                    # properties to return
+                                    $property = @("*")
+                                    if (!$dontAddRequestId) {
+                                        $property += @{n = 'RequestId'; e = { $response.Id } }
+                                    }
+
+                                    $value | Select-Object -Property $property -ExcludeProperty '@odata.context', '@odata.nextLink'
+                                }
+                            }
+                        }
+                        #endregion return the output
+
+                        #region handle the responses based on their status code
+                        # load the next pages, retry throttled requests, repeat failed requests, ...
+
+                        $failedBatchJob = [System.Collections.Generic.List[Object]]::new()
+
+                        foreach ($response in $responses) {
+                            # https://learn.microsoft.com/en-us/graph/errors#http-status-codes
+                            if ($response.Status -in 200, 201, 204) {
+                                # success
+
+                                if ($response.body.'@odata.nextLink') {
+                                    # paginated (get remaining results by query returned NextLink URL)
+
+                                    if ($dontFollowNextLink) {
+                                        Write-Verbose "Batch result for request '$($response.Id)' is paginated. But 'dontFollowNextLink' switch is set, hence nextLink will not be followed"
+
+                                        continue
+                                    } else {
+                                        Write-Verbose "Batch result for request '$($response.Id)' is paginated. Nextlink will be processed in the next batch"
+                                    }
+
+                                    $relativeNextLink = $response.body.'@odata.nextLink' -replace [regex]::Escape("https://graph.microsoft.com/$graphVersion/")
+                                    # make a request object copy, so I can modify it without interfering with the original object
+                                    $nextLinkRequest = $requestChunk | Where-Object Id -EQ $response.Id | ConvertTo-Json -Depth 10 | ConvertFrom-Json
+                                    # replace original URL with the nextLink
+                                    $nextLinkRequest.URL = $relativeNextLink
+                                    # add the request for later processing
+                                    $extraReqBag.Add($nextLinkRequest)
+                                }
+                            } elseif ($response.Status -in 429, 509) {
+                                # throttled (will be repeated after given time)
+
+                                $jobRetryAfter = $response.Headers.'Retry-After'
+                                $throttledBatchRequest = $requestChunk | Where-Object Id -EQ $response.Id
+
+                                Write-Verbose "Batch request with Id: '$($throttledBatchRequest.Id)', Url:'$($throttledBatchRequest.Url)' was throttled, hence will be repeated after $jobRetryAfter seconds"
+
+                                if ($jobRetryAfter -eq 0) {
+                                    # request can be repeated without any delay
+                                    #TIP for performance reasons adding to $extraReqBag bag (to avoid invocation of unnecessary batch job)
+                                    $extraReqBag.Add($throttledBatchRequest)
+                                } else {
+                                    # request can be repeated after delay
+                                    # add the request for later processing
+                                    $throttledReqBag.Add($throttledBatchRequest)
+                                }
+
+                                # get highest retry-after wait time
+                                if ($jobRetryAfter -gt 0) {
+                                    Write-Verbose "Setting $jobRetryAfter retry-after time"
+                                }
+                                $retryAfterBag.Add([int]$jobRetryAfter)
+                            } elseif ($response.Status -in 500, 502, 503, 504) {
+                                # some internal error on remote side (will be repeated)
+
+                                $problematicBatchRequest = $requestChunk | Where-Object Id -EQ $response.Id
+
+                                Write-Verbose "Batch request with Id: '$($problematicBatchRequest.Id)', Url:'$($problematicBatchRequest.Url)' had internal error '$($response.body.error.message)', Code: $($response.Status), hence will be repeated"
+
+                                $extraReqBag.Add($problematicBatchRequest)
+                            } else {
+                                # failed
+
+                                $failedBatchRequest = $requestChunk | Where-Object Id -EQ $response.Id
+
+                                $innerErrorText = $null
+                                if ($response.body.error.innerError.code) {
+                                    $innerErrorText = " (" + $response.body.error.innerError.code + ")"
+                                }
+
+                                $errorText = $null
+                                if ($response.body.error.message) {
+                                    # sometimes the error message is not a plain string, but a JSON
+                                    if (Is-JSON -InputString $response.body.error.message) {
+                                        $errorText = $response.body.error.message | ConvertFrom-Json -ErrorAction Stop
+
+                                        if ($errorText.Error.Message) {
+                                            $errorText = $errorText.Error.Message + "($($response.body.error.code))"
+                                        } elseif ($errorText.Message) {
+                                            $errorText = $errorText.Message + " ($($response.body.error.code))"
+                                        } else {
+                                            $errorText = $response.body.error.code
+                                        }
+                                    } else {
+                                        # not a JSON, just a string
+                                        $errorText = $response.body.error.message
+                                    }
+                                } elseif ($response.body.error.code) {
                                     $errorText = $response.body.error.code
+                                } else {
+                                    # no error message, just the status code
+                                }
+
+                                $failedBatchJob.Add(
+                                    @{
+                                        Id         = $response.Id
+                                        Url        = $failedBatchRequest.Url
+                                        StatusCode = $response.Status
+                                        Error      = "$($errorText)$innerErrorText"
+                                        Object     = [ordered]@{
+                                            request  = $failedBatchRequest
+                                            response = $response
+                                        }
+                                    }
+                                )
+                            }
+                        }
+
+                        # return error if critical failure occurred
+                        if ($failedBatchJob) {
+                            if ($separateErrors) {
+                                # output errors one by one, so you can handle them separately if needed
+                                $failedBatchJob | ForEach-Object {
+                                    #TIP only the first one will be returned if $ErrorActionPreference is set to stop!
+                                    $errorMsg = "`nFailed batch request:`n$(" - Id: '$($_.Id)'", " - Url: '$($_.Url)'", " - StatusCode: '$($_.StatusCode)'", " - Error: '$($_.Error)'`n`n" -join "`n")"
+                                    $exception = New-Object System.InvalidOperationException $errorMsg
+                                    $exception.Source = "BatchRequest"
+
+                                    Write-Error -ErrorRecord (New-Object System.Management.Automation.ErrorRecord($exception, $null, "InvalidOperation", $_.Object))
                                 }
                             } else {
-                                # not a JSON, just a string
-                                $errorText = $response.body.error.message
-                            }
-                        } elseif ($response.body.error.code) {
-                                $errorText = $response.body.error.code
-                        } else {
-                            # no error message, just the status code
-                        }
+                                #TIP all errors at once, because batch can contain non-related requests and if errorAction is set to stop, only the first error would be returned, which can be confusing
+                                $errorMsg = "`nFollowing batch request(s) failed:`n`n$(($failedBatchJob | ForEach-Object { " - Id: '$($_.Id)'", " - Url: '$($_.Url)'", " - StatusCode: '$($_.StatusCode)'", " - Error: '$($_.Error)'" -join "`n" }) -join "`n`n")"
+                                $exception = New-Object System.InvalidOperationException $errorMsg
+                                $exception.Source = "BatchRequest"
 
-                        $failedBatchJob.Add(
-                            @{
-                                Id         = $response.Id
-                                Url        = $failedBatchRequest.Url
-                                StatusCode = $response.Status
-                                Error      = "$($errorText)$innerErrorText"
-                                Object     = [ordered]@{
-                                    request  = $failedBatchRequest
-                                    response = $response
-                                }
+                                Write-Error -ErrorRecord (New-Object System.Management.Automation.ErrorRecord($exception, $null, "InvalidOperation", $failedBatchJob.Object))
                             }
-                        )
+                        }
+                        #endregion handle the responses based on their status code
                     }
-                }
-
-                # return error if critical failure occurred
-                if ($failedBatchJob) {
-                    if ($separateErrors) {
-                        # output errors one by one, so you can handle them separately if needed
-                        $failedBatchJob | % {
-                            #TIP only the first one will be returned if $ErrorActionPreference is set to stop!
-                            $errorMsg = "`nFailed batch request:`n$(" - Id: '$($_.Id)'", " - Url: '$($_.Url)'", " - StatusCode: '$($_.StatusCode)'", " - Error: '$($_.Error)'`n`n" -join "`n")"
-                            $exception = New-Object System.InvalidOperationException $errorMsg
-                            $exception.Source = "BatchRequest"
-
-                            Write-Error -ErrorRecord (New-Object System.Management.Automation.ErrorRecord($exception, $null, "InvalidOperation", $_.Object))
-                        }
+                } catch {
+                    if ($_.Exception.Source -eq "System.Net.Http" -and $_.Exception.InnerException.HResult -eq "-2146233083") {
+                        $reqError = "timeOut"
+                        Write-Warning "Network error occurred while trying to invoke Graph batch request ($($_.Exception.Message)). Retrying in 5 seconds..."
+                        Start-Sleep -Seconds 5
                     } else {
-                        #TIP all errors at once, because batch can contain non-related requests and if errorAction is set to stop, only the first error would be returned, which can be confusing
-                        $errorMsg = "`nFollowing batch request(s) failed:`n`n$(($failedBatchJob | % { " - Id: '$($_.Id)'", " - Url: '$($_.Url)'", " - StatusCode: '$($_.StatusCode)'", " - Error: '$($_.Error)'" -join "`n" }) -join "`n`n")"
-                        $exception = New-Object System.InvalidOperationException $errorMsg
-                        $exception.Source = "BatchRequest"
-
-                        Write-Error -ErrorRecord (New-Object System.Management.Automation.ErrorRecord($exception, $null, "InvalidOperation", $failedBatchJob.Object))
+                        throw $_
                     }
                 }
-                #endregion handle the responses based on their status code
-            }
+            } while ($reqError -eq "timeOut")
 
             $end = Get-Date
 
             Write-Verbose "It took $((New-TimeSpan -Start $start -End $end).TotalSeconds) seconds to process the batch"
             #endregion process given chunk of batch requests
         }
+        #endregion helper functions
+
+        # flatten the batch request array
+        if ($batchRequest | Where-Object { $_ -and $_.GetType().BaseType -eq [System.Array] }) {
+            $batchRequest = ConvertTo-FlatArray -inputArray $batchRequest
+        }
+
+        Write-Verbose "Total number of requests to process is $($batchRequest.count)"
+
+        if ($dontBeautifyResult -and $dontAddRequestId) {
+            Write-Verbose "'dontAddRequestId' parameter will be ignored, 'RequestId' property is not being added when 'dontBeautifyResult' parameter is used"
+        }
+
+        # api batch requests are limited to 20 requests
+        $chunkSize = 20
+        # base graph api uri
+        $uri = "https://graph.microsoft.com"
+        # batch uri
+        $requestUri = "$uri/$graphVersion/`$batch"
+        # buffer to hold all incoming requests from pipeline
+        $allRequest = [System.Collections.Generic.List[Object]]::new()
     }
 
     process {
+        # flatten the batch request array
+        if ($batchRequest | Where-Object { $_ -and $_.GetType().BaseType -eq [System.Array] }) {
+            $batchRequest = ConvertTo-FlatArray -inputArray $batchRequest
+        }
+
         # check url validity
-        $batchRequest.URL | % {
+        $batchRequest.URL | ForEach-Object {
             if ($_ -like "http*" -or $_ -like "*/beta/*" -or $_ -like "*/v1.0/*" -or $_ -like "*/graph.microsoft.com/*") {
-                Write-Warning "url '$_' has to be relative (without the whole 'https://graph.microsoft.com/<apiversion>' part)!"
-                return
+                throw "url '$_' has to be relative (without the whole 'https://graph.microsoft.com/<apiversion>' part)!"
             }
         }
 
         foreach ($request in $batchRequest) {
-            $requestChunk.Add($request)
-
-            # check if the buffer has reached the required chunk size
-            if ($requestChunk.count -eq $chunkSize) {
-                [int] $script:retryAfter = 0
-                _processChunk $requestChunk
-
-                # clear the buffer
-                $requestChunk.Clear()
-
-                # process requests that need to be repeated (paginated, failed on remote server,...)
-                if ($extraRequestChunk) {
-                    Write-Verbose "Processing $($extraRequestChunk.count) paginated or server-side-failed request(s)"
-
-                    $PSBoundParameters['batchRequest'] = $extraRequestChunk
-                    Invoke-GraphBatchRequest @PSBoundParameters
-
-                    $extraRequestChunk.Clear()
-                }
-
-                # process throttled requests
-                if ($throttledRequestChunk) {
-                    Write-Verbose "Processing $($throttledRequestChunk.count) throttled request(s) with $script:retryAfter seconds wait time"
-
-                    Start-Sleep -Seconds $script:retryAfter
-
-                    $PSBoundParameters['batchRequest'] = $throttledRequestChunk
-                    Invoke-GraphBatchRequest @PSBoundParameters
-
-                    $throttledRequestChunk.Clear()
-                }
-            }
+            $allRequest.Add($request)
         }
     }
 
     end {
-        # process any remaining requests in the buffer
+        # process all accumulated requests in parallelized 20-item chunks
+        if ($allRequest.Count -gt 0) {
+            $extraReqBag = [System.Collections.Concurrent.ConcurrentBag[Object]]::new()
+            $throttledReqBag = [System.Collections.Concurrent.ConcurrentBag[Object]]::new()
+            $retryAfterBag = [System.Collections.Concurrent.ConcurrentBag[Int32]]::new()
 
-        if ($requestChunk.Count -gt 0) {
+            $requestChunkList = @(for ($i = 0; $i -lt $allRequest.Count; $i += $chunkSize) {
+                    , @($allRequest | Select-Object -Skip $i -First $chunkSize)
+                })
+
+            # if there are at least two request chunks to process, run in parallel, otherwise run sequentially to avoid unnecessary overhead of parallelization
+            $useParallel = $PSVersionTable.PSEdition -eq "Core" -and $allRequest.Count -gt $chunkSize
+
+            if ($useParallel) {
+                $processChunkDefinition = "function _processChunk { ${function:_processChunk} }"
+
+                Write-Verbose "Running in parallel with throttle limit of $throttleLimit threads because both requirements are met (running in PSH Core, number of requests to process ($($allRequest.Count)))"
+                $requestChunkList | ForEach-Object -Parallel {
+                    # recreate the function in the parallel runspace
+                    . ([ScriptBlock]::Create($using:processChunkDefinition))
+
+                    $param = @{
+                        requestChunk       = $_
+                        requestUri         = $using:requestUri
+                        graphVersion       = $using:graphVersion
+                        dontBeautifyResult = [bool]$using:dontBeautifyResult
+                        dontAddRequestId   = [bool]$using:dontAddRequestId
+                        dontFollowNextLink = [bool]$using:dontFollowNextLink
+                        separateErrors     = [bool]$using:separateErrors
+                        extraReqBag        = $using:extraReqBag
+                        throttledReqBag    = $using:throttledReqBag
+                        retryAfterBag      = $using:retryAfterBag
+                    }
+                    if ($using:VerbosePreference) {
+                        $param.Verbose = $true
+                    }
+                    _processChunk @param
+                } -ThrottleLimit $throttleLimit
+            } else {
+                Write-Verbose "Running sequentially as not being run in PowerShell Core and/or there are just $($allRequest.Count) requests to process"
+                $requestChunkList | ForEach-Object {
+                    _processChunk -requestChunk $_ -requestUri $requestUri -graphVersion $graphVersion -dontBeautifyResult ([bool]$dontBeautifyResult) -dontAddRequestId ([bool]$dontAddRequestId) -dontFollowNextLink ([bool]$dontFollowNextLink) -separateErrors ([bool]$separateErrors) -extraReqBag $extraReqBag -throttledReqBag $throttledReqBag -retryAfterBag $retryAfterBag
+                }
+            }
+
             [int] $script:retryAfter = 0
-            _processChunk $requestChunk
+            if ($retryAfterBag.Count -gt 0) {
+                $script:retryAfter = ($retryAfterBag | Measure-Object -Maximum).Maximum
+            }
 
             # process requests that need to be repeated (paginated, failed on remote server,...)
-            if ($extraRequestChunk) {
-                Write-Verbose "Processing $($extraRequestChunk.count) paginated or server-side-failed request(s)"
-                $PSBoundParameters['batchRequest'] = $extraRequestChunk
+            if ($extraReqBag.Count -gt 0) {
+                Write-Warning "Processing $($extraReqBag.count) paginated or server-side-failed request(s)"
+                $PSBoundParameters['batchRequest'] = [Object[]]$extraReqBag
                 Invoke-GraphBatchRequest @PSBoundParameters
             }
 
             # process throttled requests
-            if ($throttledRequestChunk) {
-                Write-Verbose "Processing $($throttledRequestChunk.count) throttled request(s) with $script:retryAfter seconds wait time"
+            if ($throttledReqBag.Count -gt 0) {
+                Write-Warning "Processing $($throttledReqBag.count) throttled request(s) with $script:retryAfter seconds wait time"
 
                 Start-Sleep -Seconds $script:retryAfter
 
-                $PSBoundParameters['batchRequest'] = $throttledRequestChunk
+                $PSBoundParameters['batchRequest'] = [Object[]]$throttledReqBag
                 Invoke-GraphBatchRequest @PSBoundParameters
             }
         }

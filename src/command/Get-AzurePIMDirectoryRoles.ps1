@@ -33,7 +33,7 @@
             if ($skipAssignmentSettings) {
                 $_ | select *, @{n = 'PrincipalName'; e = { $_.principal.displayName } }, @{n = 'RoleName'; e = { $_.roleDefinition.displayName } }
             } else {
-                $rules = Get-PIMDirectoryRoleAssignmentSetting -roleId $_.roleDefinitionId -dontBeautify
+                $rules = Get-PIMDirectoryRoleAssignmentSetting -roleId $_.roleDefinition.templateId -dontBeautify
 
                 $_ | select *, @{n = 'PrincipalName'; e = { $_.principal.displayName } }, @{n = 'RoleName'; e = { $_.roleDefinition.displayName } }, @{n = 'Policy'; e = { $rules } }
             }
@@ -92,6 +92,9 @@
         $response = Invoke-MgGraphRequest -Uri "v1.0/policies/roleManagementPolicyAssignments?`$filter=scopeType eq 'DirectoryRole' and roleDefinitionId eq '$roleID' and scopeId eq '/' " | Get-MgGraphAllPages
         $policyID = $response.policyID
         Write-Verbose "policyID = $policyID"
+        if (!$policyID) {
+            throw "PIM assignment settings for $roleID role wasn't found?!"
+        }
 
         # get the rules
         $response = Invoke-MgGraphRequest -Uri "v1.0/policies/roleManagementPolicies/$policyID/rules" | Get-MgGraphAllPages
@@ -229,11 +232,10 @@
 
         $outputFileName = Join-Path -Path $rootFolder -ChildPath "$itemId.json"
 
-        if ($outputFileName.Length -gt 255 -and (Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -ErrorAction SilentlyContinue) -ne 1) {
-            Write-Warning "Output file path '$outputFileName' is longer than 255 characters. Enable long path support to continue!"
-            return
+        if (!(Invoke-FilePathCheck -FilePath $outputFileName)) {
+            continue
         }
 
-        $item | ConvertTo-Json -depth 100 | Out-File (New-Item -Path $outputFileName -Force)
+        $item | SaveAs-SortedJSON -Path $outputFileName
     }
 }
