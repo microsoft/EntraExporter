@@ -72,7 +72,7 @@ authorizationresources
     $kqlResult = Search-AzGraph2 -query $query
 
     # there can be duplicates with different createdOn/updatedOn, keep just the latest one
-    $kqlResult = $kqlResult | Group-Object -Property ($property | ? {$_ -notin "createdOn", "updatedOn"}) | % {if ($_.count -eq 1) {$_.group} else {$_.group | sort updatedOn | select -First 1}}
+    $kqlResult = $kqlResult | Group-Object -Property ($property | ? {$_ -notin "createdOn", "updatedOn"}) | % {if ($_.count -eq 1) {$_.group} else {$_.group | Sort-Object updatedOn | Select-Object -First 1}}
 
     if (!$kqlResult) { return }
     #endregion run the query
