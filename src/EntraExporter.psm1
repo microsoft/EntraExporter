@@ -1,4 +1,4 @@
-<# 
+<#
 .DISCLAIMER
 	THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
 	ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
@@ -9,7 +9,7 @@
 #>
 
 ## Set Strict Mode for Module. https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/set-strictmode
-Set-StrictMode -Version 3.0
+# Set-StrictMode -Version 3.0
 
 ## Initialize Module Configuration
 
