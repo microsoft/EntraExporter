@@ -6,12 +6,21 @@ $global:TenantID = $null
     Authenticate against Graph Api and/or Azure using delegated permissions (as user).
 
     To authenticate using a certificate or client secret, use Connect-MgGraph or Connect-AzAccount directly.
+.PARAMETER Environment
+    The national / sovereign cloud to connect to. Defaults to 'Global' (commercial cloud).
+
+    The value is passed to Connect-MgGraph (and translated to the matching Azure environment for Connect-AzAccount when an Az-based export type is selected). The list of valid names and their Graph endpoints is provided by the installed Microsoft Graph PowerShell SDK and can be listed with (Get-MgEnvironment).Name.
+
+    Sovereign cloud environments (for example BleuCloud, DelosCloud, GovSGCloud) require a custom application registration and Microsoft.Graph.Authentication v2.36.1 or later. See the "National and sovereign clouds" section of the README for details.
 .EXAMPLE
     PS C:\>Connect-EntraExporter
     Connect to home tenant of authenticated user.
 .EXAMPLE
     PS C:\>Connect-EntraExporter -TenantId 3043-343434-343434 -Type Users, Groups, Devices
     Connect to a specific Tenant. Correct delegated Graph scopes will be automatically requested based on the types specified.
+.EXAMPLE
+    PS C:\>Connect-EntraExporter -Environment USGov
+    Connect to a US Government (GCC High) tenant. Graph requests are directed to the USGov cloud (https://graph.microsoft.us) instead of the commercial cloud.
 #>
 function Connect-EntraExporter {
     param(
@@ -66,8 +75,8 @@ function Connect-EntraExporter {
             {$_ -in 'USGovDoD', 'USGov'} { $AzureEnvironment = 'AzureUSGovernment' }
             'Global'    { $AzureEnvironment = 'AzureCloud' }
             'China'     { $AzureEnvironment = 'AzureChinaCloud' }
-            'Germany'   { throw "'Germany' is deprecated environment." }
-            default     { throw "Unknown environment '$Environment'." }
+            'Germany'   { throw "'Germany' is a deprecated environment." }
+            default     { throw "The '$Environment' environment has no matching Azure Resource Manager (Az) environment, so export types that require Az authentication (e.g. IAM, PIMResources) are not available in this cloud. Re-run the export selecting only Microsoft Graph based types." }
         }
 
         Connect-AzAccount -Tenant $TenantId -Environment $AzureEnvironment
