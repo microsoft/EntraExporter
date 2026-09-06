@@ -173,8 +173,19 @@
 
         # api batch requests are limited to 20 requests
         $chunkSize = 20
-        # base graph api uri
-        $uri = "https://graph.microsoft.com"
+        # base graph api uri - resolved from the currently connected environment so that
+        # sovereign / national clouds (USGov, USGovDoD, China, etc.) are honored instead of
+        # always targeting the commercial cloud, which returns 401 InvalidCloudInstance (issue #117)
+        $graphEndpoint = $null
+        $mgContext = Get-MgContext
+        if ($mgContext -and $mgContext.Environment) {
+            $graphEndpoint = (Get-MgEnvironment -Name $mgContext.Environment -ErrorAction SilentlyContinue).GraphEndpoint
+        }
+        if (-not $graphEndpoint) {
+            # fall back to the commercial cloud endpoint if the environment can't be resolved
+            $graphEndpoint = "https://graph.microsoft.com"
+        }
+        $uri = $graphEndpoint
         # batch uri
         $requestUri = "$uri/$graphVersion/`$batch"
         # buffer to hold chunks of requests
@@ -329,7 +340,7 @@
                                 Write-Verbose "Batch result for request '$($response.Id)' is paginated. Nextlink will be processed in the next batch"
                             }
 
-                            $relativeNextLink = $response.body.'@odata.nextLink' -replace [regex]::Escape("https://graph.microsoft.com/$graphVersion/")
+                            $relativeNextLink = $response.body.'@odata.nextLink' -replace [regex]::Escape("$graphEndpoint/$graphVersion/")
                             # make a request object copy, so I can modify it without interfering with the original object
                             $nextLinkRequest = $requestChunk | ? Id -EQ $response.Id | ConvertTo-Json -Depth 10 | ConvertFrom-Json
                             # replace original URL with the nextLink
