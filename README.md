@@ -26,6 +26,37 @@ Connect-EntraExporter
 Export-Entra -Path 'C:\EntraBackup\'
 ```
 
+#### National and sovereign clouds
+
+By default the module connects to the commercial cloud (`Global`). To export from a national or sovereign cloud, pass the `-Environment` parameter, which is forwarded to `Connect-MgGraph`:
+
+```powershell
+# US Government (GCC High)
+Connect-EntraExporter -Environment USGov
+Export-Entra -Path 'C:\EntraBackup\'
+```
+
+The valid environment names and their Graph endpoints are provided by the installed Microsoft Graph PowerShell SDK, so they stay current with the SDK. List them with:
+
+```powershell
+Get-MgEnvironment | Select-Object Name, GraphEndpoint
+```
+
+Typical values include:
+
+| Name | Graph endpoint |
+| --- | --- |
+| Global | `https://graph.microsoft.com` |
+| USGov | `https://graph.microsoft.us` |
+| USGovDoD | `https://dod-graph.microsoft.us` |
+| China | `https://microsoftgraph.chinacloudapi.cn` |
+
+> [!NOTE]
+> Export types that rely on Azure Resource Manager (for example `IAM`, `PIMResources`) require `Connect-AzAccount` and are only available in clouds that have a matching Azure environment (`Global`, `USGov`, `USGovDoD`, `China`). In other clouds, select only Microsoft Graph based export types.
+
+> [!IMPORTANT]
+> Sovereign cloud environments (for example `BleuCloud`, `DelosCloud`, `GovSGCloud`) require a **custom application registration** — the default Microsoft Graph PowerShell application cannot be used in these environments. When registering your application, add a redirect URI of `ms-appx-web://Microsoft.AAD.BrokerPlugin/<YOUR_APP_CLIENT_ID>` to support WAM broker-based authentication, and use `Microsoft.Graph.Authentication` v2.36.1 or later. Refer to `Get-Help Connect-MgGraph -Full` and the [Microsoft Graph PowerShell SDK](https://github.com/microsoftgraph/msgraph-sdk-powershell) for the current guidance.
+
 While Connect-EntraExporter is available for convenience you can alternatively use Connect-MgGraph with the following scopes to authenticate.
 
 ```powershell
